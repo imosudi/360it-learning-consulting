@@ -156,7 +156,7 @@
             <h3>{{ s.title }}</h3>
             <p>{{ s.short_desc }}</p>
           </div>
-          <a href="{{ url_for('service_detail', slug=s.slug) }}" class="btn-link" id="service-link-{{ s.slug }}">
+          <a href="{{ url_for('main.service_detail', slug=s.slug) }}" class="btn-link" id="service-link-{{ s.slug }}">
             Learn More <i class="fas fa-arrow-right"></i>
           </a>
         </div>
@@ -193,7 +193,7 @@
             </div>
 
             <div class="course-actions">
-              <a href="{{ url_for('course_detail', slug=c.slug) }}" style="font-size: 0.9rem; font-weight: 600; color: #fff;" id="course-details-link-{{ c.slug }}">
+              <a href="{{ url_for('main.course_detail', slug=c.slug) }}" style="font-size: 0.9rem; font-weight: 600; color: #fff;" id="course-details-link-{{ c.slug }}">
                 View Syllabus
               </a>
               <button class="btn btn-gold" style="padding: 0.5rem 1.15rem; font-size: 0.85rem;" data-open-modal="enrollment" data-course="{{ c.title }}" id="enroll-btn-{{ c.slug }}">
@@ -206,7 +206,7 @@
     </div>
 
     <div style="text-align: center; margin-top: 3rem;">
-      <a href="{{ url_for('training') }}" class="btn btn-secondary" id="view-all-courses-btn">
+      <a href="{{ url_for('main.training') }}" class="btn btn-secondary" id="view-all-courses-btn">
         <i class="fas fa-th-large"></i> View All Training Programs
       </a>
     </div>
@@ -241,7 +241,7 @@
             <h3>{{ p.title }}</h3>
             <div class="project-tech"><i class="fas fa-microchip" style="color: var(--accent-cyan);"></i> {{ p.tech_stack }}</div>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">{{ p.short_desc }}</p>
-            <a href="{{ url_for('project_detail', slug=p.slug) }}" class="btn-link" style="margin-top: auto;" id="project-link-{{ p.slug }}">
+            <a href="{{ url_for('main.project_detail', slug=p.slug) }}" class="btn-link" style="margin-top: auto;" id="project-link-{{ p.slug }}">
               View Engagement Details <i class="fas fa-arrow-right"></i>
             </a>
           </div>
@@ -460,7 +460,7 @@
 
       <div class="contact-form-card">
         <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Send Us a Direct Message</h3>
-        <form action="{{ url_for('contact') }}" method="POST" id="main-contact-form">
+        <form action="{{ url_for('main.contact') }}" method="POST" id="main-contact-form">
           {{ contact_form.hidden_tag() }}
           <div class="form-group">
             <label for="contact-name">Full Name *</label>

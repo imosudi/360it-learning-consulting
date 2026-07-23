@@ -32,7 +32,7 @@
               <span><i class="fas fa-desktop" style="color: var(--accent-cyan);"></i> {{ c.delivery_mode }}</span>
             </div>
             <div class="course-actions">
-              <a href="{{ url_for('course_detail', slug=c.slug) }}" style="font-size: 0.9rem; font-weight: 600; color: #fff;">
+              <a href="{{ url_for('main.course_detail', slug=c.slug) }}" style="font-size: 0.9rem; font-weight: 600; color: #fff;">
                 Syllabus & Details
               </a>
               <button class="btn btn-gold" style="padding: 0.5rem 1.15rem; font-size: 0.85rem;" data-open-modal="enrollment" data-course="{{ c.title }}">

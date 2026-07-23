@@ -1,18 +1,18 @@
 <nav class="navbar">
   <div class="container navbar-container">
-    <a href="{{ url_for('index') }}" class="brand-logo" id="nav-brand-logo">
+    <a href="{{ url_for('main.index') }}" class="brand-logo" id="nav-brand-logo">
       <div class="logo-icon"><i class="fas fa-cube"></i></div>
       <div>360IT <span class="accent">Consulting</span></div>
     </a>
     
     <ul class="nav-links" id="main-nav-links">
-      <li><a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
-      <li><a href="{{ url_for('about') }}" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
-      <li><a href="{{ url_for('services') }}" class="nav-link {% if request.endpoint == 'services' or request.endpoint == 'service_detail' %}active{% endif %}">Services</a></li>
-      <li><a href="{{ url_for('training') }}" class="nav-link {% if request.endpoint == 'training' or request.endpoint == 'course_detail' %}active{% endif %}">Training</a></li>
-      <li><a href="{{ url_for('projects') }}" class="nav-link {% if request.endpoint == 'projects' or request.endpoint == 'project_detail' %}active{% endif %}">Projects</a></li>
-      <li><a href="{{ url_for('technologies') }}" class="nav-link {% if request.endpoint == 'technologies' %}active{% endif %}">Technologies</a></li>
-      <li><a href="{{ url_for('contact') }}" class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
+      <li><a href="{{ url_for('main.index') }}" class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}">Home</a></li>
+      <li><a href="{{ url_for('main.about') }}" class="nav-link {% if request.endpoint == 'main.about' %}active{% endif %}">About</a></li>
+      <li><a href="{{ url_for('main.services') }}" class="nav-link {% if request.endpoint == 'main.services' or request.endpoint == 'main.service_detail' %}active{% endif %}">Services</a></li>
+      <li><a href="{{ url_for('main.training') }}" class="nav-link {% if request.endpoint == 'main.training' or request.endpoint == 'main.course_detail' %}active{% endif %}">Training</a></li>
+      <li><a href="{{ url_for('main.projects') }}" class="nav-link {% if request.endpoint == 'main.projects' or request.endpoint == 'main.project_detail' %}active{% endif %}">Projects</a></li>
+      <li><a href="{{ url_for('main.technologies') }}" class="nav-link {% if request.endpoint == 'main.technologies' %}active{% endif %}">Technologies</a></li>
+      <li><a href="{{ url_for('main.contact') }}" class="nav-link {% if request.endpoint == 'main.contact' %}active{% endif %}">Contact</a></li>
     </ul>
 
     <div class="nav-cta">

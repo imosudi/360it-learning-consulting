@@ -23,7 +23,7 @@
             <h3>{{ s.title }}</h3>
             <p>{{ s.short_desc }}</p>
           </div>
-          <a href="{{ url_for('service_detail', slug=s.slug) }}" class="btn-link">
+          <a href="{{ url_for('main.service_detail', slug=s.slug) }}" class="btn-link">
             View Service Details <i class="fas fa-arrow-right"></i>
           </a>
         </div>

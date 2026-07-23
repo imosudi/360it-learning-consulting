@@ -2,7 +2,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-col">
-        <a href="{{ url_for('index') }}" class="brand-logo" style="margin-bottom: 1.25rem;">
+        <a href="{{ url_for('main.index') }}" class="brand-logo" style="margin-bottom: 1.25rem;">
           <div class="logo-icon"><i class="fas fa-cube"></i></div>
           <div>360IT <span class="accent">Consulting</span></div>
         </a>
@@ -20,20 +20,20 @@
       <div class="footer-col">
         <h4>Company</h4>
         <ul class="footer-links">
-          <li><a href="{{ url_for('about') }}">About Us</a></li>
-          <li><a href="{{ url_for('about') }}#leadership">Leadership</a></li>
-          <li><a href="{{ url_for('about') }}#careers">Careers</a></li>
-          <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+          <li><a href="{{ url_for('main.about') }}">About Us</a></li>
+          <li><a href="{{ url_for('main.about') }}#leadership">Leadership</a></li>
+          <li><a href="{{ url_for('main.about') }}#careers">Careers</a></li>
+          <li><a href="{{ url_for('main.contact') }}">Contact Us</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h4>Core Services</h4>
         <ul class="footer-links">
-          <li><a href="{{ url_for('services') }}">IT Consulting</a></li>
-          <li><a href="{{ url_for('training') }}">Professional Training</a></li>
-          <li><a href="{{ url_for('projects') }}">Technology Projects</a></li>
-          <li><a href="{{ url_for('services') }}#managed-it">Managed IT Services</a></li>
+          <li><a href="{{ url_for('main.services') }}">IT Consulting</a></li>
+          <li><a href="{{ url_for('main.training') }}">Professional Training</a></li>
+          <li><a href="{{ url_for('main.projects') }}">Technology Projects</a></li>
+          <li><a href="{{ url_for('main.services') }}#managed-it">Managed IT Services</a></li>
         </ul>
       </div>
 
@@ -42,7 +42,7 @@
         <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
           Subscribe to our tech insights newsletter for weekly cloud, DevOps, and career guides.
         </p>
-        <form action="{{ url_for('newsletter_subscribe') }}" method="POST" id="newsletter-footer-form">
+        <form action="{{ url_for('main.newsletter_subscribe') }}" method="POST" id="newsletter-footer-form">
           <div class="form-group" style="margin-bottom: 0.75rem;">
             <input type="email" name="email" class="form-control" placeholder="Enter your email" required id="newsletter-email-input">
           </div>
@@ -56,8 +56,8 @@
     <div class="footer-bottom">
       <div>&copy; 2026 360IT Learning & Consulting. All rights reserved. Host: mio3.serverafrica.net</div>
       <div style="display: flex; gap: 1.5rem;">
-        <a href="{{ url_for('contact') }}" style="color: var(--text-muted);">Privacy Policy</a>
-        <a href="{{ url_for('contact') }}" style="color: var(--text-muted);">Terms & Conditions</a>
+        <a href="{{ url_for('main.contact') }}" style="color: var(--text-muted);">Privacy Policy</a>
+        <a href="{{ url_for('main.contact') }}" style="color: var(--text-muted);">Terms & Conditions</a>
       </div>
     </div>
   </div>
