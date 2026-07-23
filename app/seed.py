@@ -358,62 +358,62 @@ def seed_database():
     # 4. Testimonials
     Testimonial.query.delete()
     testimonials_data = [
-            {
-                'name': 'David Miller',
-                'position': 'Chief Information Officer',
-                'organization': 'Apex Financial Holdings',
-                'service_type': 'Consulting',
-                'quote': '360IT Learning & Consulting transformed our cloud infrastructure. Their team executed our AWS migration flawlessly with zero disruption to active customer transactions.',
-                'avatar': '/static/images/testimonials/avatar1.jpg',
-                'rating': 5
-            },
-            {
-                'name': 'Dr. Amanda Vance',
-                'position': 'Director of ICT',
-                'organization': 'Federal Ministry of Innovation',
-                'service_type': 'Consulting & Contracts',
-                'quote': 'Their expertise in government technology contracts is unmatched. They delivered our digital portal on time, fully secured, and strictly within budget.',
-                'avatar': '/static/images/testimonials/avatar2.jpg',
-                'rating': 5
-            },
-            {
-                'name': 'James Mitchell',
-                'position': 'Senior DevOps Engineer',
-                'organization': 'FinTech PayGlobal',
-                'service_type': 'Training',
-                'quote': 'The AWS and DevOps Engineering bootcamp completely transformed my career! The hands-on labs with Docker, Kubernetes, and Terraform were directly applicable to enterprise job requirements.',
-                'avatar': '/static/images/testimonials/avatar3.jpg',
-                'rating': 5
-            },
-            {
-                'name': 'Sarah Jenkins',
-                'position': 'VP of Engineering',
-                'organization': 'CloudScale Systems',
-                'service_type': 'Consulting',
-                'quote': 'Working with 360IT Consulting on our CI/CD pipeline automation reduced our product deployment cycle from 2 weeks to under 30 minutes.',
-                'avatar': '/static/images/testimonials/avatar4.jpg',
-                'rating': 5
-            },
-            {
-                'name': 'Michael Reynolds',
-                'position': 'Systems Administrator',
-                'organization': 'FirstHealth Medical Group',
-                'service_type': 'Training',
-                'quote': 'The Linux Administration training was intense, highly practical, and thoroughly engaging. The instructors are real-world consultants who know their stuff inside out.',
-                'avatar': '/static/images/testimonials/avatar5.jpg',
-                'rating': 5
-            },
-            {
-                'name': 'Grace Taylor',
-                'position': 'Operations Lead',
-                'organization': 'Logistics 360',
-                'service_type': 'Managed IT Services',
-                'quote': 'Their 24/7 Managed IT Services give us absolute peace of mind. System bottlenecks are identified and resolved before our teams even notice.',
-                'avatar': '/static/images/testimonials/avatar6.jpg',
-                'rating': 5
-            }
-        ]
-        for t in testimonials_data:
-            db.session.add(Testimonial(**t))
+        {
+            'name': 'David Miller',
+            'position': 'Chief Information Officer',
+            'organization': 'Apex Financial Holdings',
+            'service_type': 'Consulting',
+            'quote': '360IT Learning & Consulting transformed our cloud infrastructure. Their team executed our AWS migration flawlessly with zero disruption to active customer transactions.',
+            'avatar': '/static/images/testimonials/avatar1.jpg',
+            'rating': 5
+        },
+        {
+            'name': 'Dr. Amanda Vance',
+            'position': 'Director of ICT',
+            'organization': 'Federal Ministry of Innovation',
+            'service_type': 'Consulting & Contracts',
+            'quote': 'Their expertise in government technology contracts is unmatched. They delivered our digital portal on time, fully secured, and strictly within budget.',
+            'avatar': '/static/images/testimonials/avatar2.jpg',
+            'rating': 5
+        },
+        {
+            'name': 'James Mitchell',
+            'position': 'Senior DevOps Engineer',
+            'organization': 'FinTech PayGlobal',
+            'service_type': 'Training',
+            'quote': 'The AWS and DevOps Engineering bootcamp completely transformed my career! The hands-on labs with Docker, Kubernetes, and Terraform were directly applicable to enterprise job requirements.',
+            'avatar': '/static/images/testimonials/avatar3.jpg',
+            'rating': 5
+        },
+        {
+            'name': 'Sarah Jenkins',
+            'position': 'VP of Engineering',
+            'organization': 'CloudScale Systems',
+            'service_type': 'Consulting',
+            'quote': 'Working with 360IT Consulting on our CI/CD pipeline automation reduced our product deployment cycle from 2 weeks to under 30 minutes.',
+            'avatar': '/static/images/testimonials/avatar4.jpg',
+            'rating': 5
+        },
+        {
+            'name': 'Michael Reynolds',
+            'position': 'Systems Administrator',
+            'organization': 'FirstHealth Medical Group',
+            'service_type': 'Training',
+            'quote': 'The Linux Administration training was intense, highly practical, and thoroughly engaging. The instructors are real-world consultants who know their stuff inside out.',
+            'avatar': '/static/images/testimonials/avatar5.jpg',
+            'rating': 5
+        },
+        {
+            'name': 'Grace Taylor',
+            'position': 'Operations Lead',
+            'organization': 'Logistics 360',
+            'service_type': 'Managed IT Services',
+            'quote': 'Their 24/7 Managed IT Services give us absolute peace of mind. System bottlenecks are identified and resolved before our teams even notice.',
+            'avatar': '/static/images/testimonials/avatar6.jpg',
+            'rating': 5
+        }
+    ]
+    for t in testimonials_data:
+        db.session.add(Testimonial(**t))
             
     db.session.commit()
