@@ -16,7 +16,7 @@
     <rect x="0" y="-40" width="70" height="70" rx="16" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)"/>
     <text x="35" y="5" font-family="Arial, sans-serif" font-size="32" fill="#00f2fe" text-anchor="middle" dominant-baseline="middle">🔌</text>
     <text x="95" y="-10" font-family="'Space Grotesk', sans-serif" font-size="24" font-weight="bold" fill="#ffffff">24/7 Managed IT Infrastructure</text>
-    <text x="95" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" fill="#94a3b8">Energy & Utilities</text>
+    <text x="95" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" fill="#94a3b8">Energy &amp; Utilities</text>
   </g>
   <rect x="0" y="344" width="600" height="6" fill="#00f2fe" />
 </svg>
