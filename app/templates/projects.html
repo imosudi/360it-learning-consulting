@@ -19,7 +19,7 @@
       {% for p in projects %}
         <div class="project-card" id="projects-page-card-{{ p.id }}">
           <div class="project-image">
-            <img src="{{ p.image }}" alt="{{ p.title }}" loading="lazy">
+            <img src="{% if p.image.startswith('/static/') %}{{ url_for('static', filename=p.image[8:]) }}{% elif p.image.startswith('http') %}{{ p.image }}{% else %}{{ url_for('static', filename=p.image) }}{% endif %}" alt="{{ p.title }}" loading="lazy">
           </div>
           <div class="project-content">
             <div class="project-industry">{{ p.industry }}</div>

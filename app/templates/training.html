@@ -19,7 +19,7 @@
       {% for c in courses %}
         <div class="course-card" id="training-page-card-{{ c.id }}">
           <div class="course-image">
-            <img src="{{ c.image }}" alt="{{ c.title }}" loading="lazy">
+            <img src="{% if c.image.startswith('/static/') %}{{ url_for('static', filename=c.image[8:]) }}{% elif c.image.startswith('http') %}{{ c.image }}{% else %}{{ url_for('static', filename=c.image) }}{% endif %}" alt="{{ c.title }}" loading="lazy">
           </div>
           <div class="course-content">
             <div class="course-tags">

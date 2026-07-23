@@ -118,7 +118,7 @@
       {% for c in courses %}
         <div class="course-card" id="course-card-{{ c.id }}">
           <div class="course-image">
-            <img src="{{ c.image }}" alt="{{ c.title }}" loading="lazy">
+            <img src="{% if c.image.startswith('/static/') %}{{ url_for('static', filename=c.image[8:]) }}{% elif c.image.startswith('http') %}{{ c.image }}{% else %}{{ url_for('static', filename=c.image) }}{% endif %}" alt="{{ c.title }}" loading="lazy">
           </div>
           <div class="course-content">
             <div class="course-tags">
@@ -174,7 +174,7 @@
       {% for p in projects %}
         <div class="project-card" data-category="{{ p.category }}" id="project-card-{{ p.id }}">
           <div class="project-image">
-            <img src="{{ p.image }}" alt="{{ p.title }}" loading="lazy">
+            <img src="{% if p.image.startswith('/static/') %}{{ url_for('static', filename=p.image[8:]) }}{% elif p.image.startswith('http') %}{{ p.image }}{% else %}{{ url_for('static', filename=p.image) }}{% endif %}" alt="{{ p.title }}" loading="lazy">
           </div>
           <div class="project-content">
             <div class="project-industry">{{ p.industry }}</div>
