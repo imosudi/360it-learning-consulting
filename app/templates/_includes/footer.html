@@ -1,12 +1,12 @@
 <footer class="footer">
   <div class="container">
-    <div class="footer-grid">
+    <div class="footer-grid" style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1.2fr; gap: 2rem;">
       <div class="footer-col">
         <a href="{{ url_for('main.index') }}" class="brand-logo" style="margin-bottom: 1.25rem;">
           <img src="{{ url_for('static', filename='images/logo.png') }}" alt="360IT Learning & Consulting Logo" class="brand-logo-img">
         </a>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 320px;">
-          Empowering Businesses Through Technology. Transforming Careers Through Learning. Enterprise IT consulting, hands-on training bootcamps, and full lifecycle project contracts.
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 300px;">
+          Empowering Businesses Through Technology. Transforming Careers Through Learning. Enterprise IT consulting, hands-on bootcamps, and government & corporate tech contracts.
         </p>
         <div class="social-links">
           <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -27,25 +27,35 @@
       </div>
 
       <div class="footer-col">
-        <h4>Core Services</h4>
+        <h4>Services</h4>
         <ul class="footer-links">
           <li><a href="{{ url_for('main.services') }}">IT Consulting</a></li>
           <li><a href="{{ url_for('main.training') }}">Professional Training</a></li>
           <li><a href="{{ url_for('main.projects') }}">Technology Projects</a></li>
-          <li><a href="{{ url_for('main.services') }}#managed-it">Managed IT Services</a></li>
+          <li><a href="{{ url_for('main.services') }}#managed-it">Managed Services</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('main.technologies') }}">Tech Blog</a></li>
+          <li><a href="{{ url_for('main.about') }}#faqs">FAQs</a></li>
+          <li><a href="{{ url_for('main.contact') }}#privacy">Privacy Policy</a></li>
+          <li><a href="{{ url_for('main.contact') }}#terms">Terms & Conditions</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h4>Stay Updated</h4>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
-          Subscribe to our tech insights newsletter for weekly cloud, DevOps, and career guides.
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+          Subscribe to our tech insights newsletter for weekly cloud, DevOps, and career updates.
         </p>
         <form action="{{ url_for('main.newsletter_subscribe') }}" method="POST" id="newsletter-footer-form">
           <div class="form-group" style="margin-bottom: 0.75rem;">
-            <input type="email" name="email" class="form-control" placeholder="Enter your email" required id="newsletter-email-input">
+            <input type="email" name="email" class="form-control" placeholder="Enter your email" required id="newsletter-email-input" style="padding: 0.5rem 0.85rem; font-size: 0.85rem;">
           </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%;" id="newsletter-submit-btn">
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.5rem; font-size: 0.85rem;" id="newsletter-submit-btn">
             <i class="fas fa-paper-plane"></i> Subscribe Now
           </button>
         </form>
