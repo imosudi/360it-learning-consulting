@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero-section" style="min-height: 40vh; padding-top: 8rem; padding-bottom: 3rem;">
+  <div class="container text-center" style="text-align: center;">
+    <span class="badge" style="display: inline-block; padding: 0.4rem 1rem; background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.3); color: var(--accent-cyan); border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem;">
+      Corporate Overview
+    </span>
+    <h1 style="font-size: 3rem;">About 360IT Learning & Consulting</h1>
+    <p style="color: var(--text-muted); max-width: 700px; margin: 1rem auto 0 auto;">
+      Delivering enterprise IT consulting solutions, hands-on professional bootcamps, and government technology contracts with excellence.
+    </p>
+  </div>
+</section>
+
+<section class="section-padding">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <h2 style="font-size: 2.2rem; margin-bottom: 1.25rem;">Building Tomorrow's Digital Infrastructure Today</h2>
+        <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 1.25rem;">
+          Founded with a clear vision to bridge the gap between complex enterprise technology demands and workforce technical capability, 360IT Learning & Consulting operates at the intersection of innovation, reliability, and technical education.
+        </p>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+          Our seasoned consulting team brings over a decade of hands-on experience in cloud migration (AWS, Azure, GCP), automated DevOps infrastructure pipelines, cybersecurity hardening, and high-availability database cluster management.
+        </p>
+      </div>
+
+      <div style="background: var(--card-gradient); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2.5rem;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--accent-cyan);"><i class="fas fa-gem"></i> Core Values</h3>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 1.25rem;">
+          <li style="display: flex; gap: 1rem; align-items: flex-start;">
+            <i class="fas fa-check-circle" style="color: var(--accent-cyan); margin-top: 4px;"></i>
+            <div>
+              <strong style="color: #fff;">Technical Rigor:</strong> We adhere strictly to enterprise-grade architectural standards, security compliance, and automation best practices.
+            </div>
+          </li>
+          <li style="display: flex; gap: 1rem; align-items: flex-start;">
+            <i class="fas fa-check-circle" style="color: var(--accent-cyan); margin-top: 4px;"></i>
+            <div>
+              <strong style="color: #fff;">Client Commitment:</strong> We deliver on time and within scope, guaranteeing high availability and zero-downtime solutions.
+            </div>
+          </li>
+          <li style="display: flex; gap: 1rem; align-items: flex-start;">
+            <i class="fas fa-check-circle" style="color: var(--accent-cyan); margin-top: 4px;"></i>
+            <div>
+              <strong style="color: #fff;">Continuous Upskilling:</strong> We foster continuous learning, giving students and engineers hands-on experience with production-grade tools.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,27 @@
+<nav class="navbar">
+  <div class="container navbar-container">
+    <a href="{{ url_for('index') }}" class="brand-logo" id="nav-brand-logo">
+      <div class="logo-icon"><i class="fas fa-cube"></i></div>
+      <div>360IT <span class="accent">Consulting</span></div>
+    </a>
+    
+    <ul class="nav-links" id="main-nav-links">
+      <li><a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
+      <li><a href="{{ url_for('about') }}" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+      <li><a href="{{ url_for('services') }}" class="nav-link {% if request.endpoint == 'services' or request.endpoint == 'service_detail' %}active{% endif %}">Services</a></li>
+      <li><a href="{{ url_for('training') }}" class="nav-link {% if request.endpoint == 'training' or request.endpoint == 'course_detail' %}active{% endif %}">Training</a></li>
+      <li><a href="{{ url_for('projects') }}" class="nav-link {% if request.endpoint == 'projects' or request.endpoint == 'project_detail' %}active{% endif %}">Projects</a></li>
+      <li><a href="{{ url_for('technologies') }}" class="nav-link {% if request.endpoint == 'technologies' %}active{% endif %}">Technologies</a></li>
+      <li><a href="{{ url_for('contact') }}" class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
+    </ul>
+
+    <div class="nav-cta">
+      <button class="btn btn-primary" data-open-modal="consultation" id="nav-cta-btn">
+        <i class="fas fa-calendar-check"></i> Get a Consultation
+      </button>
+      <button class="mobile-toggle" aria-label="Toggle Menu" id="mobile-menu-toggle">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </div>
+</nav>

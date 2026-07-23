@@ -1,0 +1,89 @@
+<!-- Consultation Request Modal -->
+<div class="modal-overlay" id="consultationModal">
+  <div class="modal-container">
+    <button class="modal-close" aria-label="Close modal">&times;</button>
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+      <span class="badge" style="display: inline-block; margin-bottom: 0.5rem; background: rgba(0,242,254,0.1); color: var(--accent-cyan); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Enterprise IT Consulting</span>
+      <h3 style="font-size: 1.8rem;">Schedule a Free Consultation</h3>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">Speak with our senior solution architects regarding cloud migration, DevOps, infrastructure, or technical training.</p>
+    </div>
+
+    <form action="{{ url_for('request_consultation') }}" method="POST" id="modal-consultation-form">
+      {{ consultation_form.hidden_tag() }}
+      <div class="form-group">
+        <label for="consult-name">Full Name *</label>
+        {{ consultation_form.name(class="form-control", id="consult-name", placeholder="e.g. Sarah Jenkins") }}
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label for="consult-email">Business Email *</label>
+          {{ consultation_form.email(class="form-control", id="consult-email", placeholder="sarah@company.com") }}
+        </div>
+        <div class="form-group">
+          <label for="consult-phone">Phone Number *</label>
+          {{ consultation_form.phone(class="form-control", id="consult-phone", placeholder="+234 / +1 ...") }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="consult-org">Company / Organization</label>
+        {{ consultation_form.organization(class="form-control", id="consult-org", placeholder="Company Name") }}
+      </div>
+      <div class="form-group">
+        <label for="consult-service">Primary Service Needed *</label>
+        {{ consultation_form.service_interest(class="form-control", id="consult-service") }}
+      </div>
+      <div class="form-group">
+        <label for="consult-msg">Project Overview / Goals</label>
+        {{ consultation_form.message(class="form-control", id="consult-msg", rows=3, placeholder="Briefly describe your objectives...") }}
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" id="submit-consultation-btn">
+        <i class="fas fa-paper-plane"></i> Request Consultation
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Enrollment Modal -->
+<div class="modal-overlay" id="enrollmentModal">
+  <div class="modal-container">
+    <button class="modal-close" aria-label="Close modal">&times;</button>
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+      <span class="badge" style="display: inline-block; margin-bottom: 0.5rem; background: rgba(245,158,11,0.15); color: var(--accent-gold); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Professional IT Training</span>
+      <h3 style="font-size: 1.8rem;">Course Enrollment Application</h3>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">Reserve your seat in our upcoming live hands-on tech bootcamps.</p>
+    </div>
+
+    <form action="{{ url_for('enroll_course') }}" method="POST" id="modal-enrollment-form">
+      {{ enrollment_form.hidden_tag() }}
+      <div class="form-group">
+        <label for="enroll-name">Full Name *</label>
+        {{ enrollment_form.name(class="form-control", id="enroll-name", placeholder="Your Full Name") }}
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <label for="enroll-email">Email Address *</label>
+          {{ enrollment_form.email(class="form-control", id="enroll-email", placeholder="you@domain.com") }}
+        </div>
+        <div class="form-group">
+          <label for="enroll-phone">Phone / WhatsApp *</label>
+          {{ enrollment_form.phone(class="form-control", id="enroll-phone", placeholder="Phone number") }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="enroll-course">Select Training Program *</label>
+        {{ enrollment_form.course_title(class="form-control", id="enroll-course") }}
+      </div>
+      <div class="form-group">
+        <label for="enroll-mode">Preferred Delivery Mode *</label>
+        {{ enrollment_form.delivery_mode(class="form-control", id="enroll-mode") }}
+      </div>
+      <div class="form-group">
+        <label for="enroll-msg">Questions / Special Notes</label>
+        {{ enrollment_form.message(class="form-control", id="enroll-msg", rows=2, placeholder="e.g. Weekend batch preference...") }}
+      </div>
+      <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 0.5rem;" id="submit-enrollment-btn">
+        <i class="fas fa-graduation-cap"></i> Submit Application
+      </button>
+    </form>
+  </div>
+</div>

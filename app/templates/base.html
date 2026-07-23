@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title if title else '360IT Learning & Consulting | Enterprise IT Solutions & Professional Training' }}</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="360IT Learning & Consulting delivers enterprise IT consulting, cloud engineering, DevOps automation, professional IT bootcamps, and government & corporate tech contract delivery.">
+  <meta name="keywords" content="360IT Learning, IT Consulting, AWS Cloud, DevOps Training, Cybersecurity, Linux Administration, Software Contracts, Server Africa">
+  <meta name="author" content="360IT Learning & Consulting">
+  
+  <!-- FontAwesome & Custom CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+  <!-- Navigation -->
+  {% include '_includes/nav.html' %}
+
+  <!-- Flash Messages Toast -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div style="position: fixed; top: 85px; right: 20px; z-index: 1500; display: flex; flex-direction: column; gap: 10px; max-width: 450px;" id="flash-toast-container">
+        {% for category, message in messages %}
+          <div style="padding: 1rem 1.25rem; border-radius: 12px; background: rgba(15, 23, 42, 0.95); border-left: 4px solid {% if category == 'success' %}var(--accent-emerald){% else %}#ef4444{% endif %}; color: #ffffff; box-shadow: var(--shadow-md); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between; font-size: 0.95rem;" class="flash-toast">
+            <div>
+              <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}" style="margin-right: 0.5rem; color: {% if category == 'success' %}var(--accent-emerald){% else %}#ef4444{% endif %};"></i>
+              {{ message }}
+            </div>
+            <button onclick="this.parentElement.remove()" style="background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; margin-left: 1rem;">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Main Content Block -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Modals -->
+  {% include '_includes/modals.html' %}
+
+  <!-- Footer -->
+  {% include '_includes/footer.html' %}
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

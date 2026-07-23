@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero-section" style="min-height: 45vh; padding-top: 8rem; padding-bottom: 3rem;">
+  <div class="container">
+    <a href="{{ url_for('training') }}" style="color: var(--accent-cyan); font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+      <i class="fas fa-arrow-left"></i> Back to Training Programs
+    </a>
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2.5rem; align-items: center;">
+      <div>
+        <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+          <span class="tag tag-cyan">{{ course.skill_level }}</span>
+          <span class="tag" style="background: rgba(245,158,11,0.2); color: var(--accent-gold);">{{ course.duration }}</span>
+          <span class="tag">{{ course.delivery_mode }}</span>
+        </div>
+        <h1 style="font-size: 2.8rem; margin-bottom: 1rem;">{{ course.title }} Bootcamp</h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">{{ course.short_desc }}</p>
+      </div>
+
+      <div style="background: var(--card-gradient); border: 1px solid var(--glass-border-hover); border-radius: 20px; padding: 2rem; text-align: center; box-shadow: var(--shadow-gold);">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">Next Cohort Enrollment</div>
+        <div style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 1.25rem;">Live Hands-On Training</div>
+        <button class="btn btn-gold" style="width: 100%;" data-open-modal="enrollment" data-course="{{ course.title }}" id="course-detail-enroll-btn">
+          <i class="fas fa-graduation-cap"></i> Reserve Your Spot
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-padding">
+  <div class="container">
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3.5rem;">
+      <div>
+        <h2 style="font-size: 1.8rem; margin-bottom: 1.25rem;">Course Overview & Objectives</h2>
+        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 2.5rem;">
+          {{ course.long_desc }}
+        </p>
+
+        {% if syllabus_items %}
+          <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;"><i class="fas fa-list-check" style="color: var(--accent-cyan);"></i> Curriculum Modules</h3>
+          <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem;">
+            {% for item in syllabus_items %}
+              <div style="background: var(--card-gradient); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: 12px; display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0,242,254,0.1); display: flex; align-items: center; justify-content: center; color: var(--accent-cyan); font-weight: 700; font-size: 0.9rem;">
+                  {{ loop.index }}
+                </div>
+                <div style="font-weight: 600; font-size: 1.05rem; color: #fff;">{{ item }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div>
+        <div style="background: var(--card-gradient); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; position: sticky; top: 100px;">
+          <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Course Specifications</h3>
+          <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <i class="fas fa-clock" style="color: var(--accent-cyan); font-size: 1.3rem;"></i>
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Duration</div>
+                <div style="font-weight: 700; color: #fff;">{{ course.duration }}</div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <i class="fas fa-laptop-code" style="color: var(--accent-cyan); font-size: 1.3rem;"></i>
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Delivery Format</div>
+                <div style="font-weight: 700; color: #fff;">{{ course.delivery_mode }}</div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <i class="fas fa-layer-group" style="color: var(--accent-cyan); font-size: 1.3rem;"></i>
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Prerequisite Level</div>
+                <div style="font-weight: 700; color: #fff;">{{ course.skill_level }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
