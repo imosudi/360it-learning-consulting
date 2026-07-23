@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section class="hero-section" style="min-height: 45vh; padding-top: 8rem; padding-bottom: 3rem;">
+<section class="hero-section" style="min-height: 40vh; padding-top: 8rem; padding-bottom: 3rem;">
   <div class="container">
-    <a href="{{ url_for('main.services') }}" style="color: var(--accent-cyan); font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+    <a href="{{ url_for('main.services') }}" style="color: var(--primary-blue); font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
       <i class="fas fa-arrow-left"></i> Back to Services
     </a>
     <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1rem;">
@@ -11,10 +11,10 @@
         <i class="fas {{ service.icon }}"></i>
       </div>
       <div>
-        <span class="badge" style="background: rgba(0,242,254,0.1); border-color: rgba(0,242,254,0.3); color: var(--accent-cyan); font-size: 0.8rem; font-weight: 600; padding: 0.2rem 0.75rem; border-radius: 20px;">
+        <span class="badge" style="background: rgba(13,110,253,0.08); border-color: rgba(13,110,253,0.25); color: var(--primary-blue); font-size: 0.8rem; font-weight: 600; padding: 0.2rem 0.75rem; border-radius: 20px;">
           {{ service.category }}
         </span>
-        <h1 style="font-size: 2.8rem; margin-top: 0.3rem;">{{ service.title }}</h1>
+        <h1 style="font-size: 2.6rem; margin-top: 0.3rem; color: var(--text-dark);">{{ service.title }}</h1>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3.5rem;">
       <div>
         <h2 style="font-size: 1.8rem; margin-bottom: 1.25rem;">Overview & Capability</h2>
-        <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem;">
           {{ service.long_desc }}
         </p>
 
@@ -33,17 +33,17 @@
           <h3 style="font-size: 1.4rem; margin-bottom: 1.25rem;">Key Offerings & Scope</h3>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 3rem;">
             {% for item in service.features_list.split(',') %}
-              <div style="background: var(--card-gradient); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: 12px; display: flex; align-items: center; gap: 0.75rem;">
-                <i class="fas fa-check-circle" style="color: var(--accent-cyan); font-size: 1.2rem;"></i>
-                <span style="font-weight: 600; color: #fff;">{{ item.strip() }}</span>
+              <div class="card" style="padding: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-check-circle" style="color: var(--primary-blue); font-size: 1.2rem;"></i>
+                <span style="font-weight: 600; color: var(--text-dark);">{{ item.strip() }}</span>
               </div>
             {% endfor %}
           </div>
         {% endif %}
 
-        <div style="background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 20px; padding: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
+        <div style="background: rgba(13, 110, 253, 0.04); border: 1px solid rgba(13, 110, 253, 0.2); border-radius: 16px; padding: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
           <div>
-            <h4 style="font-size: 1.3rem; margin-bottom: 0.3rem;">Need {{ service.title }} for your business?</h4>
+            <h4 style="font-size: 1.3rem; margin-bottom: 0.3rem; color: var(--text-dark);">Need {{ service.title }} for your business?</h4>
             <p style="color: var(--text-muted); font-size: 0.95rem;">Request an architectural review and proposal from our senior engineering team.</p>
           </div>
           <button class="btn btn-primary" data-open-modal="consultation" id="service-detail-cta-btn">
@@ -53,12 +53,12 @@
       </div>
 
       <div>
-        <div style="background: var(--card-gradient); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; position: sticky; top: 100px;">
-          <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Other Consulting Practices</h3>
+        <div class="card" style="padding: 2rem; position: sticky; top: 100px;">
+          <h3 style="font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--text-dark);">Other Consulting Practices</h3>
           <div style="display: flex; flex-direction: column; gap: 1rem;">
             {% for rs in related_services %}
-              <a href="{{ url_for('main.service_detail', slug=rs.slug) }}" style="display: flex; align-items: center; gap: 1rem; padding: 0.85rem; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid var(--glass-border); color: #fff;">
-                <i class="fas {{ rs.icon }}" style="color: var(--accent-cyan);"></i>
+              <a href="{{ url_for('main.service_detail', slug=rs.slug) }}" style="display: flex; align-items: center; gap: 1rem; padding: 0.85rem; background: var(--bg-body); border-radius: 8px; border: 1px solid var(--border-card); color: var(--text-dark);">
+                <i class="fas {{ rs.icon }}" style="color: var(--primary-blue);"></i>
                 <span style="font-size: 0.95rem; font-weight: 600;">{{ rs.title }}</span>
               </a>
             {% endfor %}

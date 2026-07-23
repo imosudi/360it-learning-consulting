@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<section class="hero-section" style="min-height: 40vh; padding-top: 8rem; padding-bottom: 3rem;">
+<section class="hero-section" style="min-height: 35vh; padding-top: 8rem; padding-bottom: 3rem;">
   <div class="container" style="text-align: center;">
-    <span class="badge" style="display: inline-block; padding: 0.4rem 1rem; background: rgba(0,242,254,0.1); border: 1px solid rgba(0,242,254,0.3); color: var(--accent-cyan); border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem;">
+    <span class="badge" style="display: inline-block; padding: 0.4rem 1rem; background: rgba(13,110,253,0.08); border: 1px solid rgba(13,110,253,0.25); color: var(--primary-blue); border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem;">
       Delivered Engagements
     </span>
-    <h1 style="font-size: 3rem;">Projects & Contracts Portfolio</h1>
+    <h1 style="font-size: 2.8rem; color: var(--text-dark);">Projects & Contracts Portfolio</h1>
     <p style="color: var(--text-muted); max-width: 700px; margin: 1rem auto 0 auto;">
       Explore our enterprise technology projects across Cloud Migration, DevOps Pipelines, Government Digital Transformation, and Managed Services.
     </p>
@@ -24,7 +24,7 @@
           <div class="project-content">
             <div class="project-industry">{{ p.industry }}</div>
             <h3>{{ p.title }}</h3>
-            <div class="project-tech"><i class="fas fa-microchip" style="color: var(--accent-cyan);"></i> {{ p.tech_stack }}</div>
+            <div class="project-tech"><i class="fas fa-microchip" style="color: var(--primary-blue);"></i> {{ p.tech_stack }}</div>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">{{ p.short_desc }}</p>
             <a href="{{ url_for('main.project_detail', slug=p.slug) }}" class="btn-link" style="margin-top: auto;">
               View Full Engagement Summary <i class="fas fa-arrow-right"></i>
