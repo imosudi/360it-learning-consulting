@@ -10,6 +10,18 @@
   <meta name="keywords" content="360IT Learning, IT Consulting, AWS Cloud, DevOps Training, Cybersecurity, Linux Administration, Software Contracts, Server Africa">
   <meta name="author" content="360IT Learning & Consulting">
   
+  <!-- Open Graph / Facebook / LinkedIn SEO Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ title if title else '360IT Learning & Consulting | Enterprise IT Solutions & Professional Training' }}">
+  <meta property="og:description" content="360IT Learning & Consulting delivers enterprise IT consulting, cloud engineering, DevOps automation, professional IT bootcamps, and government & corporate tech contract delivery.">
+  <meta property="og:image" content="{{ url_for('static', filename='images/logo-white.png', _external=True) }}">
+  
+  <!-- Twitter Card SEO Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ title if title else '360IT Learning & Consulting | Enterprise IT Solutions & Professional Training' }}">
+  <meta name="twitter:description" content="360IT Learning & Consulting delivers enterprise IT consulting, cloud engineering, DevOps automation, professional IT bootcamps, and government & corporate tech contract delivery.">
+  <meta name="twitter:image" content="{{ url_for('static', filename='images/logo-white.png', _external=True) }}">
+  
   <!-- Favicon Icons -->
   <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='images/favicon/apple-icon-57x57.png') }}">
   <link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='images/favicon/apple-icon-60x60.png') }}">
