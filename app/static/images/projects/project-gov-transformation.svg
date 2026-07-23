@@ -1,22 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="100%" height="100%">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#020617"/>
-      <stop offset="100%" stop-color="#111827"/>
+    <linearGradient id="pGovBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
     </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="4" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
-    </filter>
+    <linearGradient id="pGovGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
   </defs>
-  <rect width="600" height="350" fill="url(#grad)"/>
-  <circle cx="500" cy="70" r="160" fill="rgba(0, 242, 254, 0.06)" />
-  <circle cx="80" cy="280" r="120" fill="rgba(79, 172, 254, 0.08)" />
-  <g transform="translate(50, 140)">
-    <rect x="0" y="-40" width="70" height="70" rx="16" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)"/>
-    <text x="35" y="5" font-family="Arial, sans-serif" font-size="32" fill="#00f2fe" text-anchor="middle" dominant-baseline="middle">🏛</text>
-    <text x="95" y="-10" font-family="'Space Grotesk', sans-serif" font-size="24" font-weight="bold" fill="#ffffff">Gov Digital Transformation</text>
-    <text x="95" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" fill="#94a3b8">Government Ministry</text>
+  <rect width="600" height="350" fill="url(#pGovBg)"/>
+  <circle cx="500" cy="70" r="140" fill="rgba(51, 65, 85, 0.08)"/>
+  
+  <g transform="translate(60, 80)">
+    <rect x="0" y="0" width="480" height="190" rx="16" fill="#ffffff" stroke="rgba(51, 65, 85, 0.3)" stroke-width="2" filter="drop-shadow(0 4px 12px rgba(0,0,0,0.06))"/>
+    <rect x="30" y="35" width="70" height="70" rx="14" fill="url(#pGovGrad)"/>
+    
+    <!-- Capitol / Gov Pillars Icon -->
+    <path d="M65 48 L48 58 H82 Z M52 62 V82 M65 62 V82 M78 62 V82 M46 82 H84" stroke="#ffffff" stroke-width="3" fill="none"/>
+    
+    <text x="120" y="65" font-family="'Poppins', sans-serif" font-size="20" font-weight="700" fill="#0f172a">Gov Digital Transformation</text>
+    <text x="120" y="92" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" fill="#64748b">Government Ministry • E-Service Portal</text>
+    
+    <rect x="30" y="130" width="160" height="32" rx="16" fill="rgba(51, 65, 85, 0.12)"/>
+    <text x="110" y="151" font-family="'Poppins', sans-serif" font-size="12" font-weight="700" fill="#334155" text-anchor="middle">Workflow Digitization</text>
+    
+    <rect x="205" y="130" width="140" height="32" rx="16" fill="rgba(13, 110, 253, 0.12)"/>
+    <text x="275" y="151" font-family="'Poppins', sans-serif" font-size="12" font-weight="700" fill="#0d6efd" text-anchor="middle">Azure AD SSO</text>
   </g>
-  <rect x="0" y="344" width="600" height="6" fill="#00f2fe" />
+  <rect x="0" y="344" width="600" height="6" fill="url(#pGovGrad)"/>
 </svg>
