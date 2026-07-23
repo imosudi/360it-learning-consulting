@@ -69,6 +69,18 @@ def project_detail(slug):
 def technologies():
     return render_template('technologies.html', title='Technology Stack & Competencies | 360IT')
 
+@bp.route('/faqs')
+def faqs():
+    return render_template('faqs.html', title='Frequently Asked Questions (FAQs) | 360IT Learning & Consulting')
+
+@bp.route('/privacy')
+def privacy():
+    return render_template('privacy.html', title='Privacy Policy | 360IT Learning & Consulting')
+
+@bp.route('/terms')
+def terms():
+    return render_template('terms.html', title='Terms & Conditions | 360IT Learning & Consulting')
+
 @bp.route('/contact', methods=['GET', 'POST'])
 def contact():
     form = ContactForm()

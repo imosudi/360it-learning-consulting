@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section" style="min-height: 38vh; padding-top: 8rem; padding-bottom: 3.5rem;">
+  <div class="container" style="text-align: center;" data-aos="fade-up">
+    <span class="badge" style="display: inline-block; padding: 0.4rem 1rem; background: rgba(13,110,253,0.08); border: 1px solid rgba(13,110,253,0.25); color: var(--primary-blue); border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem;">
+      Help & Knowledge Base
+    </span>
+    <h1 style="font-size: 2.8rem; color: var(--text-dark); margin-bottom: 1rem;">Frequently Asked Questions</h1>
+    <p style="color: var(--text-muted); max-width: 720px; margin: 0 auto;">
+      Find clear, detailed answers regarding our enterprise IT consulting services, professional tech bootcamps, certification pathways, and government engagement delivery.
+    </p>
+  </div>
+</section>
+
+<!-- FAQs Content Section -->
+<section class="section-padding" style="background-color: var(--bg-body);">
+  <div class="container" style="max-width: 960px;">
+
+    <!-- Training & Bootcamps Category -->
+    <div style="margin-bottom: 3.5rem;" data-aos="fade-up">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+        <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(13,110,253,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-blue); font-size: 1.25rem;">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h2 style="font-size: 1.6rem; color: var(--text-dark); margin: 0;">Training Bootcamps & Certifications</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-dark); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-question-circle" style="color: var(--primary-blue);"></i> Are your IT training courses live instructor-led or self-paced?
+          </h3>
+          <p style="color: var(--text-muted); line-height: 1.7; margin: 0;">
+            All 360IT training bootcamps are <strong>100% live instructor-led</strong> by active senior enterprise engineers and cloud architects. Classes feature real-time interaction, practical lab demonstrations, and dedicated Q&A sessions. Students also receive lifetime access to class recordings, lab guides, and code repositories.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-dark); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-question-circle" style="color: var(--primary-blue);"></i> Do you prepare students for official vendor certification exams?
+          </h3>
+          <p style="color: var(--text-muted); line-height: 1.7; margin: 0;">
+            Yes. Our curriculum is mapped directly to global certification standards including <strong>AWS Certified Solutions Architect (SAA-C03)</strong>, <strong>Microsoft Certified: Azure Administrator (AZ-104)</strong>, <strong>Certified Kubernetes Administrator (CKA)</strong>, and <strong>CompTIA Security+</strong>. We provide practice voucher guidance, mock exam simulations, and exam strategy workshops.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-dark); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-question-circle" style="color: var(--primary-blue);"></i> What prerequisites are needed to enroll in AWS or DevOps bootcamps?
+          </h3>
+          <p style="color: var(--text-muted); line-height: 1.7; margin: 0;">
+            Basic computer literacy and a passion for technology are sufficient for our foundational modules. For intermediate courses like DevOps Engineering and Kubernetes, familiarity with basic Linux command-line syntax and core networking concepts is recommended. Free pre-bootcamp prep modules are provided upon enrollment.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-dark); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-question-circle" style="color: var(--primary-blue);"></i> Do you offer flexible payment plans or corporate group discounts?
+          </h3>
+          <p style="color: var(--text-muted); line-height: 1.7; margin: 0;">
+            Yes! We support flexible installment plans for individual learners. For corporate teams of 3 or more employees, we offer tailored enterprise pricing, customized curriculum modules, and private cohort scheduling.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enterprise IT Consulting Category -->
+    <div style="margin-bottom: 3.5rem;" data-aos="fade-up">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+        <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(16,185,129,0.1); display: flex; align-items: center; justify-content: center; color: var(--accent-emerald); font-size: 1.25rem;">
+          <i class="fas fa-building"></i>
+        </div>
+        <h2 style="font-size: 1.6rem; color: var(--text-dark); margin: 0;">Enterprise IT Consulting & Government Contracts</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-dark); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-question-circle" style="color: var(--accent-emerald);"></i> How does 360IT handle zero-downtime cloud migration engagements?
+          </h3>
+          <p style="color: var(--text-muted); line-height: 1.7; margin: 0;">
+            We utilize a phased 6-stage migration framework: Assessment & Discovery, Cloud Architecture Design, Pilot Proof-of-Concept, Data Synchronization, Cutover Execution, and 24/7 Post-Cutover Monitoring. We guarantee strict Service Level Agreements (SLAs) with zero disruption to core business operations.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-dark); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-question-circle" style="color: var(--accent-emerald);"></i> Can 360IT deploy consultants for government technology contracts?
+          </h3>
+          <p style="color: var(--text-muted); line-height: 1.7; margin: 0;">
+            Yes. 360IT Learning & Consulting is an authorized technology partner equipped for public sector engagements, government ministry portal modernizations, healthcare infrastructure, and telecommunications upgrades. Our engineers hold security clearances and follow strict NIST/ISO security standards.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 1.75rem;">
+          <h3 style="font-size: 1.15rem; color: var(--text-dark); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-question-circle" style="color: var(--accent-emerald);"></i> What managed IT support packages do you offer?
+          </h3>
+          <p style="color: var(--text-muted); line-height: 1.7; margin: 0;">
+            We offer 24/7/365 proactive infrastructure monitoring, automated server patch management, backup verification, container cluster health checks, and tier-3 incident escalation. Support plans are fully customizable to meet your compliance requirements.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Need More Help Card -->
+    <div class="card" style="padding: 2.5rem; text-align: center; background: linear-gradient(135deg, rgba(13,110,253,0.04) 0%, rgba(255,193,7,0.06) 100%); border: 1px solid rgba(13,110,253,0.15);" data-aos="fade-up">
+      <h3 style="font-size: 1.5rem; color: var(--text-dark); margin-bottom: 0.75rem;">Still Have Questions?</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem; max-width: 550px; margin-left: auto; margin-right: auto;">
+        Our senior technology advisors are ready to assist with course selection or enterprise consultation requirements.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{{ url_for('main.contact') }}" class="btn btn-primary">
+          <i class="fas fa-envelope"></i> Contact Us
+        </a>
+        <button class="btn btn-gold" data-open-modal="consultation">
+          <i class="fas fa-calendar-check"></i> Request Consultation
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
