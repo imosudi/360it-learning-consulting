@@ -159,12 +159,12 @@ nav.navbar {
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 0.9rem 0;
+  padding: 0.6rem 0;
   transition: var(--transition-smooth);
 }
 
 nav.navbar.scrolled {
-  padding: 0.7rem 0;
+  padding: 0.4rem 0;
   box-shadow: 0 6px 25px rgba(91, 111, 227, 0.45);
 }
 
@@ -185,24 +185,24 @@ nav.navbar.scrolled {
 }
 
 .brand-logo-img {
-  height: 44px;
+  height: 68px;
   width: auto;
-  max-width: 240px;
+  max-width: 340px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
   transition: transform 0.3s ease;
 }
 
 .brand-logo:hover .brand-logo-img {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .footer .brand-logo-img {
-  height: 48px;
+  height: 65px;
   background: #ffffff;
-  padding: 4px 12px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 6px 14px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
 }
 
 .brand-logo .logo-icon {
