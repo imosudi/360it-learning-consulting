@@ -1,8 +1,7 @@
 <nav class="navbar">
   <div class="container navbar-container">
     <a href="{{ url_for('main.index') }}" class="brand-logo" id="nav-brand-logo">
-      <div class="logo-icon"><i class="fas fa-cube"></i></div>
-      <div>360IT <span class="accent">Consulting</span></div>
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="360IT Learning & Consulting Logo" class="brand-logo-img">
     </a>
     
     <ul class="nav-links" id="main-nav-links">
