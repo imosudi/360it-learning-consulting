@@ -1,5 +1,9 @@
-import os
-import pymysql
+try:
+    import pymysql
+    HAS_PYMYSQL = True
+except ImportError:
+    HAS_PYMYSQL = False
+
 from flask import Flask
 from config import Config
 from .extensions import db, mail
@@ -10,17 +14,20 @@ def create_app(config_class=Config):
     
     # Check if primary remote MySQL is reachable
     use_sqlite = False
-    try:
-        connection = pymysql.connect(
-            host=Config.DB_HOST,
-            user=Config.DB_USER,
-            password=Config.DB_PASSWORD,
-            database=Config.DB_NAME,
-            connect_timeout=3
-        )
-        connection.close()
-    except Exception as e:
-        print(f"Notice: Primary MySQL database ({Config.DB_HOST}) not directly reachable from local environment ({e}). Using local SQLite database.")
+    if HAS_PYMYSQL:
+        try:
+            connection = pymysql.connect(
+                host=Config.DB_HOST,
+                user=Config.DB_USER,
+                password=Config.DB_PASSWORD,
+                database=Config.DB_NAME,
+                connect_timeout=3
+            )
+            connection.close()
+        except Exception as e:
+            print(f"Notice: Primary MySQL database ({Config.DB_HOST}) not directly reachable from local environment ({e}). Using local SQLite database.")
+            use_sqlite = True
+    else:
         use_sqlite = True
         
     if use_sqlite:

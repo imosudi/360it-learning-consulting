@@ -356,10 +356,10 @@ def seed_database():
             db.session.add(Project(**p))
 
     # 4. Testimonials
-    if Testimonial.query.count() == 0:
-        testimonials_data = [
+    Testimonial.query.delete()
+    testimonials_data = [
             {
-                'name': 'David Adebayo',
+                'name': 'David Miller',
                 'position': 'Chief Information Officer',
                 'organization': 'Apex Financial Holdings',
                 'service_type': 'Consulting',
@@ -368,7 +368,7 @@ def seed_database():
                 'rating': 5
             },
             {
-                'name': 'Dr. Amina Yusuf',
+                'name': 'Dr. Amanda Vance',
                 'position': 'Director of ICT',
                 'organization': 'Federal Ministry of Innovation',
                 'service_type': 'Consulting & Contracts',
@@ -377,7 +377,7 @@ def seed_database():
                 'rating': 5
             },
             {
-                'name': 'Emmanuel Nwosu',
+                'name': 'James Mitchell',
                 'position': 'Senior DevOps Engineer',
                 'organization': 'FinTech PayGlobal',
                 'service_type': 'Training',
@@ -395,7 +395,7 @@ def seed_database():
                 'rating': 5
             },
             {
-                'name': 'Michael Omole',
+                'name': 'Michael Reynolds',
                 'position': 'Systems Administrator',
                 'organization': 'FirstHealth Medical Group',
                 'service_type': 'Training',
@@ -404,7 +404,7 @@ def seed_database():
                 'rating': 5
             },
             {
-                'name': 'Grace Kalu',
+                'name': 'Grace Taylor',
                 'position': 'Operations Lead',
                 'organization': 'Logistics 360',
                 'service_type': 'Managed IT Services',
