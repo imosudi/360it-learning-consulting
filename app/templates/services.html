@@ -17,7 +17,7 @@
   <div class="container">
     <div class="services-grid">
       {% for s in services %}
-        <div class="service-card" id="services-page-card-{{ s.id }}">
+        <div class="service-card" id="services-page-card-{{ s.id }}" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
           <div>
             <div class="service-icon"><i class="fas {{ s.icon }}"></i></div>
             <h3>{{ s.title }}</h3>

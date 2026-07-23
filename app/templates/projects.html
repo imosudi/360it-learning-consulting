@@ -17,7 +17,7 @@
   <div class="container">
     <div class="projects-grid">
       {% for p in projects %}
-        <div class="project-card" id="projects-page-card-{{ p.id }}">
+        <div class="project-card" id="projects-page-card-{{ p.id }}" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
           <div class="project-image">
             <img src="{% if p.image.startswith('/static/') %}{{ url_for('static', filename=p.image[8:]) }}{% elif p.image.startswith('http') %}{{ p.image }}{% else %}{{ url_for('static', filename=p.image) }}{% endif %}" alt="{{ p.title }}" loading="lazy">
           </div>

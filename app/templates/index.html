@@ -88,7 +88,7 @@
 
     <div class="services-grid">
       {% for s in services %}
-        <div class="service-card" id="service-card-{{ s.id }}">
+        <div class="service-card" id="service-card-{{ s.id }}" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
           <div>
             <div class="service-icon">
               <i class="fas {{ s.icon }}"></i>
@@ -116,7 +116,7 @@
 
     <div class="training-grid">
       {% for c in courses %}
-        <div class="course-card" id="course-card-{{ c.id }}">
+        <div class="course-card" id="course-card-{{ c.id }}" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
           <div class="course-image">
             <img src="{% if c.image.startswith('/static/') %}{{ url_for('static', filename=c.image[8:]) }}{% elif c.image.startswith('http') %}{{ c.image }}{% else %}{{ url_for('static', filename=c.image) }}{% endif %}" alt="{{ c.title }}" loading="lazy">
           </div>
@@ -172,7 +172,7 @@
 
     <div class="projects-grid">
       {% for p in projects %}
-        <div class="project-card" data-category="{{ p.category }}" id="project-card-{{ p.id }}">
+        <div class="project-card" data-category="{{ p.category }}" id="project-card-{{ p.id }}" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
           <div class="project-image">
             <img src="{% if p.image.startswith('/static/') %}{{ url_for('static', filename=p.image[8:]) }}{% elif p.image.startswith('http') %}{{ p.image }}{% else %}{{ url_for('static', filename=p.image) }}{% endif %}" alt="{{ p.title }}" loading="lazy">
           </div>
