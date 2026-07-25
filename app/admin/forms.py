@@ -23,7 +23,11 @@ class CreateAdminUserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=80)])
     email = StringField('Email Address', validators=[DataRequired(), Email(), Length(max=120)])
     full_name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=100)])
-    role = SelectField('Role Permission', choices=[('Admin', 'Admin (Standard)'), ('Super Admin', 'Super Admin')], validators=[DataRequired()])
+    role = SelectField('Role Permission', choices=[
+        ('Admin', 'Admin (Standard - Full Edit)'),
+        ('Readonly Admin', 'Read-Only Admin (View Only)'),
+        ('Super Admin', 'Super Admin (Full Edit + User Management)')
+    ], validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password', message='Passwords must match.')])
     submit = SubmitField('Create Admin User')

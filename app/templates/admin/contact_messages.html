@@ -49,6 +49,7 @@
 
     <!-- Bulk Action Form -->
     <form method="POST" action="{{ url_for('admin.bulk_contact_messages') }}" id="bulkForm">
+        {% if not g.admin_user or not g.admin_user.is_readonly %}
         <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding: 0.5rem 1rem; background: rgba(15, 23, 42, 0.4); border-radius: 8px;">
             <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Bulk Action:</span>
             <select name="action" class="form-select" style="width: auto; padding: 0.35rem 0.75rem; font-size: 0.85rem;">
@@ -58,6 +59,7 @@
             </select>
             <button type="submit" class="btn btn-secondary btn-sm" onclick="return confirm('Apply bulk action to selected items?');">Apply</button>
         </div>
+        {% endif %}
 
         <div class="table-responsive">
             <table class="data-table">

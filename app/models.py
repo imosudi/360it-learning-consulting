@@ -23,6 +23,10 @@ class AdminUser(db.Model):
     def is_super_admin(self):
         return bool(self.role and self.role.lower() == 'super admin')
 
+    @property
+    def is_readonly(self):
+        return bool(self.role and 'readonly' in self.role.lower().replace('-', '').replace(' ', ''))
+
 class Service(db.Model):
     __tablename__ = 'services'
     

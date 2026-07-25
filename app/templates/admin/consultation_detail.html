@@ -5,6 +5,7 @@
     <a href="{{ url_for('admin.consultations') }}" class="btn btn-secondary btn-sm">
         <i class="fa-solid fa-arrow-left"></i> Back to Consultation Requests
     </a>
+    {% if not g.admin_user or not g.admin_user.is_readonly %}
     <div style="display: flex; gap: 0.5rem;">
         <form method="POST" action="{{ url_for('admin.delete_consultation', id=consultation.id) }}" onsubmit="return confirm('Delete this consultation request?');">
             <button type="submit" class="btn btn-danger btn-sm">
@@ -12,7 +13,15 @@
             </button>
         </form>
     </div>
+    {% endif %}
 </div>
+
+{% if g.admin_user and g.admin_user.is_readonly %}
+<div class="alert alert-warning" style="margin-bottom: 1.5rem;">
+    <i class="fa-solid fa-lock"></i>
+    <span><strong>Read-Only Mode:</strong> Your account has view-only permissions. Modifying consultation status, writing notes, deleting requests, and sending emails are disabled.</span>
+</div>
+{% endif %}
 
 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
     <!-- Left Column: Details & Reply -->
@@ -83,7 +92,7 @@
                     {{ reply_form.body(class="form-control", rows=5, placeholder="Dear " ~ consultation.name ~ ",\n\nThank you for requesting a consultation with 360IT Consulting...") }}
                 </div>
 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" {% if g.admin_user and g.admin_user.is_readonly %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
                     <i class="fa-solid fa-paper-plane"></i> Send Email Response
                 </button>
             </form>
@@ -100,7 +109,7 @@
             <form method="POST" action="{{ url_for('admin.update_consultation', id=consultation.id) }}">
                 <div class="form-group">
                     <label class="form-label">Status</label>
-                    <select name="status" class="form-select">
+                    <select name="status" class="form-select" {% if g.admin_user and g.admin_user.is_readonly %}disabled{% endif %}>
                         <option value="Pending" {% if consultation.status == 'Pending' %}selected{% endif %}>Pending</option>
                         <option value="Contacted" {% if consultation.status == 'Contacted' %}selected{% endif %}>Contacted</option>
                         <option value="Scheduled" {% if consultation.status == 'Scheduled' %}selected{% endif %}>Scheduled</option>
@@ -111,10 +120,10 @@
 
                 <div class="form-group">
                     <label class="form-label">Internal Admin Notes</label>
-                    <textarea name="admin_notes" class="form-control" rows="7" placeholder="Add notes regarding preliminary assessment, consultant assigned, meeting date...">{{ consultation.admin_notes or '' }}</textarea>
+                    <textarea name="admin_notes" class="form-control" rows="7" placeholder="Add notes regarding preliminary assessment, consultant assigned, meeting date..." {% if g.admin_user and g.admin_user.is_readonly %}disabled{% endif %}>{{ consultation.admin_notes or '' }}</textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;" {% if g.admin_user and g.admin_user.is_readonly %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
                     <i class="fa-solid fa-floppy-disk"></i> Save Status & Notes
                 </button>
             </form>

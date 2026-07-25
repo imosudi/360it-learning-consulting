@@ -37,6 +37,15 @@ def super_admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def not_readonly_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.admin_user and g.admin_user.is_readonly:
+            flash('Action prohibited: Read-Only Administrators are not permitted to modify data or send replies.', 'warning')
+            return redirect(request.referrer or url_for('admin.dashboard'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @admin_bp.before_request
 def load_logged_in_admin():
     admin_id = session.get('admin_user_id')
@@ -175,6 +184,7 @@ def contact_message_detail(id):
 
 @admin_bp.route('/contact-messages/<int:id>/update', methods=['POST'])
 @admin_required
+@not_readonly_required
 def update_contact_message(id):
     msg = ContactMessage.query.get_or_404(id)
     new_status = request.form.get('status')
@@ -192,6 +202,7 @@ def update_contact_message(id):
 
 @admin_bp.route('/contact-messages/<int:id>/delete', methods=['POST'])
 @admin_required
+@not_readonly_required
 def delete_contact_message(id):
     msg = ContactMessage.query.get_or_404(id)
     db.session.delete(msg)
@@ -201,6 +212,7 @@ def delete_contact_message(id):
 
 @admin_bp.route('/contact-messages/<int:id>/reply', methods=['POST'])
 @admin_required
+@not_readonly_required
 def reply_contact_message(id):
     msg = ContactMessage.query.get_or_404(id)
     reply_form = SendReplyForm()
@@ -231,6 +243,7 @@ def reply_contact_message(id):
 
 @admin_bp.route('/contact-messages/bulk', methods=['POST'])
 @admin_required
+@not_readonly_required
 def bulk_contact_messages():
     action = request.form.get('action')
     message_ids = request.form.getlist('selected_ids')
@@ -329,6 +342,7 @@ def course_enrollment_detail(id):
 
 @admin_bp.route('/course-enrollments/<int:id>/update', methods=['POST'])
 @admin_required
+@not_readonly_required
 def update_course_enrollment(id):
     enrollment = EnrollmentRequest.query.get_or_404(id)
     new_status = request.form.get('status')
@@ -346,6 +360,7 @@ def update_course_enrollment(id):
 
 @admin_bp.route('/course-enrollments/<int:id>/delete', methods=['POST'])
 @admin_required
+@not_readonly_required
 def delete_course_enrollment(id):
     enrollment = EnrollmentRequest.query.get_or_404(id)
     db.session.delete(enrollment)
@@ -355,6 +370,7 @@ def delete_course_enrollment(id):
 
 @admin_bp.route('/course-enrollments/bulk', methods=['POST'])
 @admin_required
+@not_readonly_required
 def bulk_course_enrollments():
     action = request.form.get('action')
     enrollment_ids = request.form.getlist('selected_ids')
@@ -446,6 +462,7 @@ def consultation_detail(id):
 
 @admin_bp.route('/consultations/<int:id>/update', methods=['POST'])
 @admin_required
+@not_readonly_required
 def update_consultation(id):
     req = ConsultationRequest.query.get_or_404(id)
     new_status = request.form.get('status')
@@ -463,6 +480,7 @@ def update_consultation(id):
 
 @admin_bp.route('/consultations/<int:id>/delete', methods=['POST'])
 @admin_required
+@not_readonly_required
 def delete_consultation(id):
     req = ConsultationRequest.query.get_or_404(id)
     db.session.delete(req)

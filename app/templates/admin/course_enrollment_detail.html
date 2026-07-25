@@ -5,6 +5,7 @@
     <a href="{{ url_for('admin.course_enrollments') }}" class="btn btn-secondary btn-sm">
         <i class="fa-solid fa-arrow-left"></i> Back to Enrollment Applications
     </a>
+    {% if not g.admin_user or not g.admin_user.is_readonly %}
     <div style="display: flex; gap: 0.5rem;">
         <form method="POST" action="{{ url_for('admin.delete_course_enrollment', id=enrollment.id) }}" onsubmit="return confirm('Are you sure you want to delete this course application?');">
             <button type="submit" class="btn btn-danger btn-sm">
@@ -12,7 +13,15 @@
             </button>
         </form>
     </div>
+    {% endif %}
 </div>
+
+{% if g.admin_user and g.admin_user.is_readonly %}
+<div class="alert alert-warning" style="margin-bottom: 1.5rem;">
+    <i class="fa-solid fa-lock"></i>
+    <span><strong>Read-Only Mode:</strong> Your account has view-only permissions. Application status modifications, internal notes, deleting applications, and sending emails are disabled.</span>
+</div>
+{% endif %}
 
 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
     <!-- Left Column: Application Details & Email Reply -->
@@ -86,7 +95,7 @@
                     {{ reply_form.body(class="form-control", rows=5, placeholder="Dear " ~ enrollment.name ~ ",\n\nWe have reviewed your application for " ~ enrollment.course_title ~ "...") }}
                 </div>
 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" {% if g.admin_user and g.admin_user.is_readonly %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
                     <i class="fa-solid fa-paper-plane"></i> Send Email Update
                 </button>
             </form>
@@ -103,7 +112,7 @@
             <form method="POST" action="{{ url_for('admin.update_course_enrollment', id=enrollment.id) }}">
                 <div class="form-group">
                     <label class="form-label">Application Status</label>
-                    <select name="status" class="form-select">
+                    <select name="status" class="form-select" {% if g.admin_user and g.admin_user.is_readonly %}disabled{% endif %}>
                         <option value="Pending" {% if enrollment.status == 'Pending' %}selected{% endif %}>Pending</option>
                         <option value="Reviewed" {% if enrollment.status == 'Reviewed' %}selected{% endif %}>Reviewed</option>
                         <option value="Accepted" {% if enrollment.status == 'Accepted' %}selected{% endif %}>Accepted</option>
@@ -114,10 +123,10 @@
 
                 <div class="form-group">
                     <label class="form-label">Internal Admin Notes</label>
-                    <textarea name="admin_notes" class="form-control" rows="7" placeholder="Add private notes regarding interview results, tuition payment status, batch start dates, or advisor calls...">{{ enrollment.admin_notes or '' }}</textarea>
+                    <textarea name="admin_notes" class="form-control" rows="7" placeholder="Add private notes regarding interview results, tuition payment status, batch start dates, or advisor calls..." {% if g.admin_user and g.admin_user.is_readonly %}disabled{% endif %}>{{ enrollment.admin_notes or '' }}</textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;" {% if g.admin_user and g.admin_user.is_readonly %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
                     <i class="fa-solid fa-floppy-disk"></i> Update Lifecycle & Notes
                 </button>
             </form>

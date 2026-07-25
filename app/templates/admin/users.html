@@ -47,6 +47,10 @@
                                 <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.4);">
                                     <i class="fa-solid fa-shield-halved" style="font-size: 0.7rem;"></i> Super Admin
                                 </span>
+                            {% elif user.is_readonly %}
+                                <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3);">
+                                    <i class="fa-solid fa-eye" style="font-size: 0.7rem;"></i> Read-Only Admin
+                                </span>
                             {% else %}
                                 <span class="badge badge-in-review">
                                     <i class="fa-solid fa-user-gear" style="font-size: 0.7rem;"></i> Admin
