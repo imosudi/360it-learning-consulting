@@ -12,6 +12,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Early Theme Setup -->
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem('admin_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <style>
         :root {
             --bg-dark: #090d16;
@@ -21,6 +28,24 @@
             --text-secondary: #94a3b8;
             --accent-cyan: #06b6d4;
             --accent-blue: #3b82f6;
+        }
+
+        [data-theme="light"] {
+            --bg-dark: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --border-color: #cbd5e1;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+        }
+
+        [data-theme="light"] body {
+            background: radial-gradient(circle at top right, #e0f2fe, #f1f5f9 70%);
+            color: #0f172a;
+        }
+
+        [data-theme="light"] .login-card {
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
         }
 
         * {
@@ -267,5 +292,44 @@
         </div>
     </div>
 
+    <button id="themeToggleBtn" style="position: absolute; top: 1.5rem; right: 1.5rem; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; backdrop-filter: blur(10px); transition: all 0.2s ease;" title="Toggle Light/Dark Theme">
+        <i class="fa-solid fa-sun" id="themeIconSun" style="color: #f59e0b;"></i>
+        <i class="fa-solid fa-moon" id="themeIconMoon" style="display: none; color: #8b5cf6;"></i>
+        <span id="themeToggleLabel">Light Mode</span>
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggleBtn = document.getElementById('themeToggleBtn');
+            var themeIconSun = document.getElementById('themeIconSun');
+            var themeIconMoon = document.getElementById('themeIconMoon');
+            var themeLabel = document.getElementById('themeToggleLabel');
+
+            function updateToggleUI(theme) {
+                if (theme === 'light') {
+                    if (themeIconSun) themeIconSun.style.display = 'none';
+                    if (themeIconMoon) themeIconMoon.style.display = 'inline-block';
+                    if (themeLabel) themeLabel.textContent = 'Dark Mode';
+                } else {
+                    if (themeIconSun) themeIconSun.style.display = 'inline-block';
+                    if (themeIconMoon) themeIconMoon.style.display = 'none';
+                    if (themeLabel) themeLabel.textContent = 'Light Mode';
+                }
+            }
+
+            var currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            updateToggleUI(currentTheme);
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    var activeTheme = document.documentElement.getAttribute('data-theme');
+                    var newTheme = activeTheme === 'light' ? 'dark' : 'light';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('admin_theme', newTheme);
+                    updateToggleUI(newTheme);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
