@@ -1,0 +1,137 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 1.5rem;">
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <a href="{{ url_for('admin.contact_messages', status='all', q=search_query) }}" class="tab-item {% if status_filter == 'all' %}active{% endif %}">
+            <span>All Messages</span>
+            <span class="tab-count">{{ counts.all }}</span>
+        </a>
+        <a href="{{ url_for('admin.contact_messages', status='New', q=search_query) }}" class="tab-item {% if status_filter == 'New' %}active{% endif %}">
+            <span>New</span>
+            <span class="tab-count">{{ counts.New }}</span>
+        </a>
+        <a href="{{ url_for('admin.contact_messages', status='In Review', q=search_query) }}" class="tab-item {% if status_filter == 'In Review' %}active{% endif %}">
+            <span>In Review</span>
+            <span class="tab-count">{{ counts['In Review'] }}</span>
+        </a>
+        <a href="{{ url_for('admin.contact_messages', status='Replied', q=search_query) }}" class="tab-item {% if status_filter == 'Replied' %}active{% endif %}">
+            <span>Replied</span>
+            <span class="tab-count">{{ counts.Replied }}</span>
+        </a>
+        <a href="{{ url_for('admin.contact_messages', status='Archived', q=search_query) }}" class="tab-item {% if status_filter == 'Archived' %}active{% endif %}">
+            <span>Archived</span>
+            <span class="tab-count">{{ counts.Archived }}</span>
+        </a>
+    </div>
+
+    <!-- Search & Control Header -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <form method="GET" action="{{ url_for('admin.contact_messages') }}" style="display: flex; gap: 0.5rem; flex: 1; max-width: 450px;">
+            <input type="hidden" name="status" value="{{ status_filter }}">
+            <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search by name, email, subject, or message text...">
+            <button type="submit" class="btn btn-secondary">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            {% if search_query %}
+                <a href="{{ url_for('admin.contact_messages', status=status_filter) }}" class="btn btn-secondary" title="Clear Search">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+            {% endif %}
+        </form>
+
+        <a href="{{ url_for('admin.export_contact_messages') }}" class="btn btn-secondary">
+            <i class="fa-solid fa-file-csv"></i>
+            <span>Export CSV</span>
+        </a>
+    </div>
+
+    <!-- Bulk Action Form -->
+    <form method="POST" action="{{ url_for('admin.bulk_contact_messages') }}" id="bulkForm">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding: 0.5rem 1rem; background: rgba(15, 23, 42, 0.4); border-radius: 8px;">
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Bulk Action:</span>
+            <select name="action" class="form-select" style="width: auto; padding: 0.35rem 0.75rem; font-size: 0.85rem;">
+                <option value="mark_read">Mark Selected as Read</option>
+                <option value="mark_archived">Mark Selected as Archived</option>
+                <option value="delete">Delete Selected</option>
+            </select>
+            <button type="submit" class="btn btn-secondary btn-sm" onclick="return confirm('Apply bulk action to selected items?');">Apply</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;"><input type="checkbox" id="selectAll"></th>
+                        <th style="width: 40px;"></th>
+                        <th>Sender</th>
+                        <th>Subject</th>
+                        <th>Received Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in messages %}
+                        <tr class="{% if not msg.is_read %}unread-row{% endif %}">
+                            <td>
+                                <input type="checkbox" name="selected_ids" value="{{ msg.id }}" class="select-item">
+                            </td>
+                            <td>
+                                {% if not msg.is_read %}
+                                    <span class="unread-dot" title="Unread Message"></span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div><strong>{{ msg.name }}</strong></div>
+                                <div style="font-size: 0.78rem; color: var(--text-secondary);">{{ msg.email }}</div>
+                                {% if msg.phone %}
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);"><i class="fa-solid fa-phone" style="font-size: 0.7rem;"></i> {{ msg.phone }}</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div style="font-weight: 600;">{{ msg.subject }}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 320px;">
+                                    {{ msg.message }}
+                                </div>
+                            </td>
+                            <td>
+                                {{ msg.created_at.strftime('%b %d, %Y %H:%M') if msg.created_at else 'N/A' }}
+                            </td>
+                            <td>
+                                <span class="badge badge-{{ msg.status | lower | replace(' ', '-') }}">
+                                    {{ msg.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 0.35rem;">
+                                    <a href="{{ url_for('admin.contact_message_detail', id=msg.id) }}" class="btn btn-primary btn-sm" title="View Message">
+                                        <i class="fa-solid fa-envelope-open"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2.5rem; color: var(--text-secondary);">
+                                <i class="fa-solid fa-inbox" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></i>
+                                No contact messages found matching criteria.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('selectAll').addEventListener('change', function() {
+        var checkboxes = document.querySelectorAll('.select-item');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    });
+</script>
+{% endblock %}

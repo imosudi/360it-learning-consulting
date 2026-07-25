@@ -1,5 +1,23 @@
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db
+
+class AdminUser(db.Model):
+    __tablename__ = 'admin_users'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    full_name = db.Column(db.String(100), default='Administrator')
+    role = db.Column(db.String(50), default='Super Admin')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 class Service(db.Model):
     __tablename__ = 'services'
@@ -64,7 +82,11 @@ class ContactMessage(db.Model):
     phone = db.Column(db.String(30))
     subject = db.Column(db.String(200), nullable=False)
     message = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(30), default='New') # 'New', 'In Review', 'Replied', 'Archived'
+    admin_notes = db.Column(db.Text)
+    is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class ConsultationRequest(db.Model):
     __tablename__ = 'consultation_requests'
@@ -76,7 +98,11 @@ class ConsultationRequest(db.Model):
     organization = db.Column(db.String(150))
     service_interest = db.Column(db.String(150), nullable=False)
     message = db.Column(db.Text)
+    status = db.Column(db.String(30), default='Pending') # 'Pending', 'Contacted', 'Scheduled', 'Completed', 'Archived'
+    admin_notes = db.Column(db.Text)
+    is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class EnrollmentRequest(db.Model):
     __tablename__ = 'enrollment_requests'
@@ -88,4 +114,9 @@ class EnrollmentRequest(db.Model):
     course_title = db.Column(db.String(150), nullable=False)
     delivery_mode = db.Column(db.String(50), nullable=False)
     message = db.Column(db.Text)
+    status = db.Column(db.String(30), default='Pending') # 'Pending', 'Reviewed', 'Accepted', 'Rejected', 'Enrolled'
+    admin_notes = db.Column(db.Text)
+    is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+

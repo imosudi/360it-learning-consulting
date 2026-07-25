@@ -1,0 +1,151 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 1.5rem;">
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <a href="{{ url_for('admin.course_enrollments', status='all', course=course_filter, q=search_query) }}" class="tab-item {% if status_filter == 'all' %}active{% endif %}">
+            <span>All Applications</span>
+            <span class="tab-count">{{ counts.all }}</span>
+        </a>
+        <a href="{{ url_for('admin.course_enrollments', status='Pending', course=course_filter, q=search_query) }}" class="tab-item {% if status_filter == 'Pending' %}active{% endif %}">
+            <span>Pending</span>
+            <span class="tab-count">{{ counts.Pending }}</span>
+        </a>
+        <a href="{{ url_for('admin.course_enrollments', status='Reviewed', course=course_filter, q=search_query) }}" class="tab-item {% if status_filter == 'Reviewed' %}active{% endif %}">
+            <span>Reviewed</span>
+            <span class="tab-count">{{ counts.Reviewed }}</span>
+        </a>
+        <a href="{{ url_for('admin.course_enrollments', status='Accepted', course=course_filter, q=search_query) }}" class="tab-item {% if status_filter == 'Accepted' %}active{% endif %}">
+            <span>Accepted</span>
+            <span class="tab-count">{{ counts.Accepted }}</span>
+        </a>
+        <a href="{{ url_for('admin.course_enrollments', status='Enrolled', course=course_filter, q=search_query) }}" class="tab-item {% if status_filter == 'Enrolled' %}active{% endif %}">
+            <span>Enrolled</span>
+            <span class="tab-count">{{ counts.Enrolled }}</span>
+        </a>
+        <a href="{{ url_for('admin.course_enrollments', status='Rejected', course=course_filter, q=search_query) }}" class="tab-item {% if status_filter == 'Rejected' %}active{% endif %}">
+            <span>Rejected</span>
+            <span class="tab-count">{{ counts.Rejected }}</span>
+        </a>
+    </div>
+
+    <!-- Search & Course Filter Controls -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <form method="GET" action="{{ url_for('admin.course_enrollments') }}" style="display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1;">
+            <input type="hidden" name="status" value="{{ status_filter }}">
+            
+            <div style="min-width: 200px;">
+                <select name="course" class="form-select" onchange="this.form.submit()">
+                    <option value="all">-- Filter by Course (All) --</option>
+                    {% for c_title in all_courses %}
+                        <option value="{{ c_title }}" {% if course_filter == c_title %}selected{% endif %}>{{ c_title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="flex: 1; min-width: 250px; display: flex; gap: 0.5rem;">
+                <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search applicant name, email, phone...">
+                <button type="submit" class="btn btn-secondary">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                {% if search_query or course_filter != 'all' %}
+                    <a href="{{ url_for('admin.course_enrollments', status=status_filter) }}" class="btn btn-secondary" title="Clear Filters">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+
+        <a href="{{ url_for('admin.export_course_enrollments') }}" class="btn btn-secondary">
+            <i class="fa-solid fa-file-csv"></i>
+            <span>Export CSV</span>
+        </a>
+    </div>
+
+    <!-- Bulk Action Toolbar -->
+    <form method="POST" action="{{ url_for('admin.bulk_course_enrollments') }}" id="bulkEnrollmentForm">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding: 0.5rem 1rem; background: rgba(15, 23, 42, 0.4); border-radius: 8px;">
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Bulk Action:</span>
+            <select name="action" class="form-select" style="width: auto; padding: 0.35rem 0.75rem; font-size: 0.85rem;">
+                <option value="mark_reviewed">Mark Selected as Reviewed</option>
+                <option value="mark_accepted">Mark Selected as Accepted</option>
+                <option value="mark_enrolled">Mark Selected as Enrolled</option>
+                <option value="delete">Delete Selected</option>
+            </select>
+            <button type="submit" class="btn btn-secondary btn-sm" onclick="return confirm('Apply bulk status update to selected enrollment applications?');">Apply</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;"><input type="checkbox" id="selectAll"></th>
+                        <th style="width: 40px;"></th>
+                        <th>Applicant</th>
+                        <th>Course Title</th>
+                        <th>Mode</th>
+                        <th>Date Applied</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in enrollments %}
+                        <tr class="{% if not item.is_read %}unread-row{% endif %}">
+                            <td>
+                                <input type="checkbox" name="selected_ids" value="{{ item.id }}" class="select-item">
+                            </td>
+                            <td>
+                                {% if not item.is_read %}
+                                    <span class="unread-dot" title="New Application"></span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div><strong>{{ item.name }}</strong></div>
+                                <div style="font-size: 0.78rem; color: var(--text-secondary);">{{ item.email }}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);"><i class="fa-solid fa-phone" style="font-size: 0.7rem;"></i> {{ item.phone }}</div>
+                            </td>
+                            <td>
+                                <strong style="color: var(--accent-cyan);">{{ item.course_title }}</strong>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ item.delivery_mode }}</span>
+                            </td>
+                            <td>
+                                {{ item.created_at.strftime('%b %d, %Y %H:%M') if item.created_at else 'N/A' }}
+                            </td>
+                            <td>
+                                <span class="badge badge-{{ item.status | lower | replace(' ', '-') }}">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin.course_enrollment_detail', id=item.id) }}" class="btn btn-primary btn-sm">
+                                    <i class="fa-solid fa-user-gear"></i> Manage
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 2.5rem; color: var(--text-secondary);">
+                                <i class="fa-solid fa-user-graduate" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></i>
+                                No course enrollment applications found matching criteria.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('selectAll').addEventListener('change', function() {
+        var checkboxes = document.querySelectorAll('.select-item');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    });
+</script>
+{% endblock %}

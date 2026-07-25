@@ -1,5 +1,6 @@
+from datetime import datetime, timedelta
 from .extensions import db
-from .models import Service, TrainingCourse, Project, Testimonial
+from .models import Service, TrainingCourse, Project, Testimonial, AdminUser, ContactMessage, ConsultationRequest, EnrollmentRequest
 
 def seed_database():
     """Seed sample catalog data based on dev_requirements.txt specifications."""
@@ -415,5 +416,128 @@ def seed_database():
     ]
     for t in testimonials_data:
         db.session.add(Testimonial(**t))
-            
+
+    # 5. Default Admin User
+    if AdminUser.query.filter_by(username='admin').first() is None:
+        admin_user = AdminUser(
+            username='admin',
+            email='admin@360it-learning.com',
+            full_name='360IT Administrator',
+            role='Super Admin'
+        )
+        admin_user.set_password('Admin@360it!2026')
+        db.session.add(admin_user)
+
+    # 6. Sample Contact Messages
+    if ContactMessage.query.count() == 0:
+        sample_messages = [
+            {
+                'name': 'Robert Chen',
+                'email': 'robert.chen@techcorp.io',
+                'phone': '+1 (555) 234-5678',
+                'subject': 'IT Consulting Services',
+                'message': 'We are looking to migrate our monolithic e-commerce application to AWS microservices and would like to schedule a technical assessment.',
+                'status': 'New',
+                'is_read': False,
+                'created_at': datetime.utcnow() - timedelta(hours=3)
+            },
+            {
+                'name': 'Sarah Jenkins',
+                'email': 'sjenkins@innovatehealth.org',
+                'phone': '+1 (555) 987-6543',
+                'subject': 'General Enquiry',
+                'message': 'Do you offer customized group discounts for corporate tech training cohorts of 15+ engineers?',
+                'status': 'In Review',
+                'admin_notes': 'Reviewed by admissions lead. Follow up scheduled.',
+                'is_read': True,
+                'created_at': datetime.utcnow() - timedelta(days=1)
+            },
+            {
+                'name': 'Marcus Vance',
+                'email': 'mvance@cloudnet.com',
+                'phone': '+1 (555) 345-6789',
+                'subject': 'Projects & Contracts',
+                'message': 'Inquiring about RFP specifications for state government cloud infrastructure modernization contract.',
+                'status': 'Replied',
+                'admin_notes': 'Sent contract portfolio PDF and proposal schedule.',
+                'is_read': True,
+                'created_at': datetime.utcnow() - timedelta(days=3)
+            }
+        ]
+        for m in sample_messages:
+            db.session.add(ContactMessage(**m))
+
+    # 7. Sample Course Enrollment Applications
+    if EnrollmentRequest.query.count() == 0:
+        sample_enrollments = [
+            {
+                'name': 'Alexander Wright',
+                'email': 'alex.wright@devmail.io',
+                'phone': '+1 (555) 876-5432',
+                'course_title': 'AWS Cloud Engineering',
+                'delivery_mode': 'Online Live Interactive',
+                'message': 'I have 2 years of Linux sysadmin experience and want to pivot to Cloud Architecture.',
+                'status': 'Pending',
+                'is_read': False,
+                'created_at': datetime.utcnow() - timedelta(hours=5)
+            },
+            {
+                'name': 'Elena Rostova',
+                'email': 'elena.rostova@datawave.com',
+                'phone': '+1 (555) 654-3210',
+                'course_title': 'DevOps Engineering',
+                'delivery_mode': 'Hybrid',
+                'message': 'Applying for the upcoming weekend batch starting next month.',
+                'status': 'Reviewed',
+                'admin_notes': 'Pre-assessment test sent to candidate.',
+                'is_read': True,
+                'created_at': datetime.utcnow() - timedelta(days=2)
+            },
+            {
+                'name': 'David Miller',
+                'email': 'dmiller@cyberdef.org',
+                'phone': '+1 (555) 432-1098',
+                'course_title': 'Cybersecurity',
+                'delivery_mode': 'Onsite Corporate Training',
+                'message': 'Enrolling 3 junior SOC analysts from our team.',
+                'status': 'Accepted',
+                'admin_notes': 'Approved by training director. Invoice dispatched.',
+                'is_read': True,
+                'created_at': datetime.utcnow() - timedelta(days=4)
+            },
+            {
+                'name': 'Carlos Mendez',
+                'email': 'carlos.mendez@sysops.net',
+                'phone': '+1 (555) 210-9876',
+                'course_title': 'Docker & Kubernetes',
+                'delivery_mode': 'Online Live Interactive',
+                'message': 'Interested in CKA preparation module.',
+                'status': 'Enrolled',
+                'admin_notes': 'Payment verified. Course access credentials generated.',
+                'is_read': True,
+                'created_at': datetime.utcnow() - timedelta(days=6)
+            }
+        ]
+        for e in sample_enrollments:
+            db.session.add(EnrollmentRequest(**e))
+
+    # 8. Sample Consultation Requests
+    if ConsultationRequest.query.count() == 0:
+        sample_consultations = [
+            {
+                'name': 'Patricia Taylor',
+                'email': 'ptaylor@enterprise-ops.com',
+                'phone': '+1 (555) 789-0123',
+                'organization': 'Enterprise Operations Corp',
+                'service_interest': 'Cloud Consulting',
+                'message': 'We require fractional CTO guidance for multi-cloud architecture setup.',
+                'status': 'Pending',
+                'is_read': False,
+                'created_at': datetime.utcnow() - timedelta(hours=8)
+            }
+        ]
+        for c in sample_consultations:
+            db.session.add(ConsultationRequest(**c))
+
     db.session.commit()
+

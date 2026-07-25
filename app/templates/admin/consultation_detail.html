@@ -1,0 +1,124 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+    <a href="{{ url_for('admin.consultations') }}" class="btn btn-secondary btn-sm">
+        <i class="fa-solid fa-arrow-left"></i> Back to Consultation Requests
+    </a>
+    <div style="display: flex; gap: 0.5rem;">
+        <form method="POST" action="{{ url_for('admin.delete_consultation', id=consultation.id) }}" onsubmit="return confirm('Delete this consultation request?');">
+            <button type="submit" class="btn btn-danger btn-sm">
+                <i class="fa-solid fa-trash-can"></i> Delete Request
+            </button>
+        </form>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+    <!-- Left Column: Details & Reply -->
+    <div>
+        <div class="card" style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                <div>
+                    <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--accent-cyan);">
+                        Consultation: {{ consultation.service_interest }}
+                    </h2>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                        Requested on {{ consultation.created_at.strftime('%B %d, %Y at %H:%M UTC') if consultation.created_at else 'N/A' }}
+                    </div>
+                </div>
+                <span class="badge badge-{{ consultation.status | lower | replace(' ', '-') }}" style="font-size: 0.85rem; padding: 0.4rem 0.9rem;">
+                    {{ consultation.status }}
+                </span>
+            </div>
+
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;">
+                <div>
+                    <div class="form-label">Client Name</div>
+                    <div style="font-weight: 700; font-size: 1.05rem;">{{ consultation.name }}</div>
+                </div>
+                <div>
+                    <div class="form-label">Organization / Company</div>
+                    <div style="font-weight: 600; color: var(--accent-amber);">{{ consultation.organization if consultation.organization else 'N/A' }}</div>
+                </div>
+                <div>
+                    <div class="form-label">Email Address</div>
+                    <div><a href="mailto:{{ consultation.email }}" style="color: var(--accent-cyan); font-weight: 600; text-decoration: none;">{{ consultation.email }}</a></div>
+                </div>
+                <div>
+                    <div class="form-label">Phone Number</div>
+                    <div style="font-weight: 600;">{{ consultation.phone }}</div>
+                </div>
+            </div>
+
+            {% if consultation.message %}
+                <div style="margin-bottom: 1.5rem;">
+                    <div class="form-label" style="margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem;">Project Scope & Notes</div>
+                    <div style="background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-color); border-radius: 10px; padding: 1.25rem; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; color: var(--text-primary);">
+                        {{ consultation.message }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-paper-plane" style="color: var(--accent-cyan);"></i>
+                Send Email to Client
+            </h3>
+            <form method="POST" action="{{ url_for('admin.reply_contact_message', id=consultation.id) }}">
+                {{ reply_form.csrf_token }}
+                <div class="form-group">
+                    <label class="form-label">Client Email</label>
+                    {{ reply_form.recipient_email(class="form-control", readonly=True) }}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Subject</label>
+                    {{ reply_form.subject(class="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Message</label>
+                    {{ reply_form.body(class="form-control", rows=5, placeholder="Dear " ~ consultation.name ~ ",\n\nThank you for requesting a consultation with 360IT Consulting...") }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-paper-plane"></i> Send Email Response
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right Column: Status & Notes -->
+    <div>
+        <div class="card" style="position: sticky; top: 90px;">
+            <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                Consultation Status
+            </h3>
+
+            <form method="POST" action="{{ url_for('admin.update_consultation', id=consultation.id) }}">
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="Pending" {% if consultation.status == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Contacted" {% if consultation.status == 'Contacted' %}selected{% endif %}>Contacted</option>
+                        <option value="Scheduled" {% if consultation.status == 'Scheduled' %}selected{% endif %}>Scheduled</option>
+                        <option value="Completed" {% if consultation.status == 'Completed' %}selected{% endif %}>Completed</option>
+                        <option value="Archived" {% if consultation.status == 'Archived' %}selected{% endif %}>Archived</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Internal Admin Notes</label>
+                    <textarea name="admin_notes" class="form-control" rows="7" placeholder="Add notes regarding preliminary assessment, consultant assigned, meeting date...">{{ consultation.admin_notes or '' }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Status & Notes
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

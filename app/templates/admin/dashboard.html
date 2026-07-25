@@ -1,0 +1,306 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<style>
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent-cyan);
+    }
+
+    .stat-info .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.35rem;
+    }
+
+    .stat-info .stat-value {
+        font-size: 1.85rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .stat-info .stat-sub {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.3rem;
+    }
+
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+    }
+
+    .icon-cyan {
+        background: rgba(6, 182, 212, 0.15);
+        color: var(--accent-cyan);
+    }
+
+    .icon-blue {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--accent-blue);
+    }
+
+    .icon-amber {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--accent-amber);
+    }
+
+    .icon-emerald {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--accent-emerald);
+    }
+
+    .grid-2col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+        .grid-2col {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .course-bar-item {
+        margin-bottom: 1rem;
+    }
+
+    .course-bar-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .progress-bar-bg {
+        height: 8px;
+        background: rgba(15, 23, 42, 0.8);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+        border-radius: 999px;
+    }
+</style>
+
+<!-- Stat Cards Grid -->
+<div class="dashboard-grid">
+    <div class="stat-card">
+        <div class="stat-info">
+            <div class="stat-label">Course Applications</div>
+            <div class="stat-value">{{ total_enrollments }}</div>
+            <div class="stat-sub"><strong style="color: var(--accent-amber);">{{ pending_enrollments }}</strong> pending review</div>
+        </div>
+        <div class="stat-icon icon-cyan">
+            <i class="fa-solid fa-user-graduate"></i>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-info">
+            <div class="stat-label">Contact Messages</div>
+            <div class="stat-value">{{ total_messages }}</div>
+            <div class="stat-sub"><strong style="color: var(--accent-cyan);">{{ new_messages }}</strong> unread messages</div>
+        </div>
+        <div class="stat-icon icon-blue">
+            <i class="fa-solid fa-envelope-open-text"></i>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-info">
+            <div class="stat-label">Consultations</div>
+            <div class="stat-value">{{ total_consultations }}</div>
+            <div class="stat-sub"><strong style="color: var(--accent-amber);">{{ pending_consultations }}</strong> pending action</div>
+        </div>
+        <div class="stat-icon icon-amber">
+            <i class="fa-solid fa-handshake"></i>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-info">
+            <div class="stat-label">System Health</div>
+            <div class="stat-value" style="font-size: 1.3rem; color: var(--accent-emerald);">Operational</div>
+            <div class="stat-sub">Database & Mail services active</div>
+        </div>
+        <div class="stat-icon icon-emerald">
+            <i class="fa-solid fa-server"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Main Sections Grid -->
+<div class="grid-2col">
+    <!-- Course Applications Overview -->
+    <div class="card">
+        <div class="section-header">
+            <h2>
+                <i class="fa-solid fa-user-graduate" style="color: var(--accent-cyan);"></i>
+                Recent Course Applications
+            </h2>
+            <a href="{{ url_for('admin.course_enrollments') }}" class="btn btn-secondary btn-sm">View All</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Applicant</th>
+                        <th>Course</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in recent_enrollments %}
+                        <tr class="{% if not item.is_read %}unread-row{% endif %}">
+                            <td>
+                                <div><strong>{{ item.name }}</strong></div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">{{ item.email }}</div>
+                            </td>
+                            <td>{{ item.course_title }}</td>
+                            <td>
+                                <span class="badge badge-{{ item.status | lower | replace(' ', '-') }}">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin.course_enrollment_detail', id=item.id) }}" class="btn btn-secondary btn-sm">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-secondary);">No enrollment applications recorded yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Contact Messages Overview -->
+    <div class="card">
+        <div class="section-header">
+            <h2>
+                <i class="fa-solid fa-inbox" style="color: var(--accent-blue);"></i>
+                Recent Contact Messages
+            </h2>
+            <a href="{{ url_for('admin.contact_messages') }}" class="btn btn-secondary btn-sm">View All</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Sender</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in recent_messages %}
+                        <tr class="{% if not item.is_read %}unread-row{% endif %}">
+                            <td>
+                                <div><strong>{{ item.name }}</strong></div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">{{ item.email }}</div>
+                            </td>
+                            <td>{{ item.subject }}</td>
+                            <td>
+                                <span class="badge badge-{{ item.status | lower | replace(' ', '-') }}">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin.contact_message_detail', id=item.id) }}" class="btn btn-secondary btn-sm">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-secondary);">No contact messages recorded yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Course Enrollment Demand Breakdown -->
+{% if course_stats %}
+<div class="card">
+    <div class="section-header">
+        <h2>
+            <i class="fa-solid fa-chart-bar" style="color: var(--accent-purple);"></i>
+            Popular Courses by Enrollment Volume
+        </h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        {% for cs in course_stats %}
+            <div class="course-bar-item">
+                <div class="course-bar-info">
+                    <span style="font-weight: 600;">{{ cs.title }}</span>
+                    <span style="color: var(--accent-cyan); font-weight: 700;">{{ cs.count }} Application(s)</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: {{ (cs.count / total_enrollments * 100) if total_enrollments > 0 else 0 }}%;"></div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

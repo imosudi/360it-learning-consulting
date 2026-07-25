@@ -1,0 +1,94 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 1.5rem;">
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <a href="{{ url_for('admin.consultations', status='all', q=search_query) }}" class="tab-item {% if status_filter == 'all' %}active{% endif %}">
+            <span>All Consultations</span>
+            <span class="tab-count">{{ counts.all }}</span>
+        </a>
+        <a href="{{ url_for('admin.consultations', status='Pending', q=search_query) }}" class="tab-item {% if status_filter == 'Pending' %}active{% endif %}">
+            <span>Pending</span>
+            <span class="tab-count">{{ counts.Pending }}</span>
+        </a>
+        <a href="{{ url_for('admin.consultations', status='Contacted', q=search_query) }}" class="tab-item {% if status_filter == 'Contacted' %}active{% endif %}">
+            <span>Contacted</span>
+            <span class="tab-count">{{ counts.Contacted }}</span>
+        </a>
+        <a href="{{ url_for('admin.consultations', status='Scheduled', q=search_query) }}" class="tab-item {% if status_filter == 'Scheduled' %}active{% endif %}">
+            <span>Scheduled</span>
+            <span class="tab-count">{{ counts.Scheduled }}</span>
+        </a>
+        <a href="{{ url_for('admin.consultations', status='Completed', q=search_query) }}" class="tab-item {% if status_filter == 'Completed' %}active{% endif %}">
+            <span>Completed</span>
+            <span class="tab-count">{{ counts.Completed }}</span>
+        </a>
+    </div>
+
+    <!-- Search Control Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+        <form method="GET" action="{{ url_for('admin.consultations') }}" style="display: flex; gap: 0.5rem; flex: 1; max-width: 450px;">
+            <input type="hidden" name="status" value="{{ status_filter }}">
+            <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search name, organization, service interest...">
+            <button type="submit" class="btn btn-secondary">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;"></th>
+                    <th>Client / Organization</th>
+                    <th>Service Interest</th>
+                    <th>Date Requested</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in consultations %}
+                    <tr class="{% if not item.is_read %}unread-row{% endif %}">
+                        <td>
+                            {% if not item.is_read %}
+                                <span class="unread-dot" title="New Request"></span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div><strong>{{ item.name }}</strong></div>
+                            <div style="font-size: 0.78rem; color: var(--text-secondary);">{{ item.organization if item.organization else item.email }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);"><i class="fa-solid fa-phone" style="font-size: 0.7rem;"></i> {{ item.phone }}</div>
+                        </td>
+                        <td>
+                            <strong style="color: var(--accent-cyan);">{{ item.service_interest }}</strong>
+                        </td>
+                        <td>
+                            {{ item.created_at.strftime('%b %d, %Y %H:%M') if item.created_at else 'N/A' }}
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ item.status | lower | replace(' ', '-') }}">
+                                {{ item.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.consultation_detail', id=item.id) }}" class="btn btn-primary btn-sm">
+                                <i class="fa-solid fa-folder-open"></i> Manage
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2.5rem; color: var(--text-secondary);">
+                            <i class="fa-solid fa-handshake" style="font-size: 2rem; margin-bottom: 0.5rem; display: block;"></i>
+                            No consultation requests found matching criteria.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

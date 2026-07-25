@@ -1,0 +1,515 @@
+import csv
+import io
+from functools import wraps
+from datetime import datetime
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g, Response
+from flask_mail import Message
+from ..extensions import db, mail
+from ..models import AdminUser, ContactMessage, EnrollmentRequest, ConsultationRequest, TrainingCourse
+from .forms import AdminLoginForm, StatusUpdateForm, SendReplyForm
+
+admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'admin_user_id' not in session:
+            flash('Please log in to access the Admin Dashboard.', 'warning')
+            return redirect(url_for('admin.login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@admin_bp.before_request
+def load_logged_in_admin():
+    admin_id = session.get('admin_user_id')
+    if admin_id is None:
+        g.admin_user = None
+    else:
+        g.admin_user = db.session.get(AdminUser, admin_id)
+        g.unread_messages_count = ContactMessage.query.filter_by(is_read=False).count()
+        g.pending_enrollments_count = EnrollmentRequest.query.filter_by(status='Pending').count()
+
+
+@admin_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if g.admin_user:
+        return redirect(url_for('admin.dashboard'))
+    
+    form = AdminLoginForm()
+    if form.validate_on_submit():
+        login_input = form.username.data.strip()
+        password = form.password.data.strip()
+        
+        user = AdminUser.query.filter(
+            (AdminUser.username == login_input) | (AdminUser.email == login_input)
+        ).first()
+        
+        if user and user.check_password(password):
+            session.clear()
+            session['admin_user_id'] = user.id
+            flash(f'Welcome back, {user.full_name}!', 'success')
+            next_page = request.args.get('next')
+            if not next_page or not next_page.startswith('/admin'):
+                next_page = url_for('admin.dashboard')
+            return redirect(next_page)
+        else:
+            flash('Invalid username/email or password.', 'danger')
+            
+    return render_template('admin/login.html', title='Admin Login | 360IT', form=form)
+
+@admin_bp.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('admin.login'))
+
+@admin_bp.route('/')
+@admin_bp.route('/dashboard')
+@admin_required
+def dashboard():
+    # Metrics
+    total_messages = ContactMessage.query.count()
+    new_messages = ContactMessage.query.filter_by(is_read=False).count()
+    
+    total_enrollments = EnrollmentRequest.query.count()
+    pending_enrollments = EnrollmentRequest.query.filter_by(status='Pending').count()
+    
+    total_consultations = ConsultationRequest.query.count()
+    pending_consultations = ConsultationRequest.query.filter_by(status='Pending').count()
+    
+    # Recent items
+    recent_messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).limit(5).all()
+    recent_enrollments = EnrollmentRequest.query.order_by(EnrollmentRequest.created_at.desc()).limit(5).all()
+    
+    # Course application stats
+    courses = TrainingCourse.query.all()
+    course_stats = []
+    for c in courses:
+        count = EnrollmentRequest.query.filter_by(course_title=c.title).count()
+        if count > 0:
+            course_stats.append({'title': c.title, 'count': count})
+            
+    return render_template('admin/dashboard.html',
+                           title='Dashboard Overview | 360IT Admin',
+                           total_messages=total_messages,
+                           new_messages=new_messages,
+                           total_enrollments=total_enrollments,
+                           pending_enrollments=pending_enrollments,
+                           total_consultations=total_consultations,
+                           pending_consultations=pending_consultations,
+                           recent_messages=recent_messages,
+                           recent_enrollments=recent_enrollments,
+                           course_stats=course_stats)
+
+# ==================== CONTACT MESSAGES ====================
+
+@admin_bp.route('/contact-messages')
+@admin_required
+def contact_messages():
+    status_filter = request.args.get('status', 'all')
+    search_query = request.args.get('q', '').strip()
+    
+    query = ContactMessage.query
+    
+    if status_filter != 'all':
+        query = query.filter_by(status=status_filter)
+        
+    if search_query:
+        like_str = f"%{search_query}%"
+        query = query.filter(
+            (ContactMessage.name.ilike(like_str)) |
+            (ContactMessage.email.ilike(like_str)) |
+            (ContactMessage.subject.ilike(like_str)) |
+            (ContactMessage.message.ilike(like_str))
+        )
+        
+    messages = query.order_by(ContactMessage.created_at.desc()).all()
+    
+    # Counts for status filter tabs
+    counts = {
+        'all': ContactMessage.query.count(),
+        'New': ContactMessage.query.filter_by(status='New').count(),
+        'In Review': ContactMessage.query.filter_by(status='In Review').count(),
+        'Replied': ContactMessage.query.filter_by(status='Replied').count(),
+        'Archived': ContactMessage.query.filter_by(status='Archived').count()
+    }
+    
+    return render_template('admin/contact_messages.html',
+                           title='Contact Messages | 360IT Admin',
+                           messages=messages,
+                           status_filter=status_filter,
+                           search_query=search_query,
+                           counts=counts)
+
+@admin_bp.route('/contact-messages/<int:id>')
+@admin_required
+def contact_message_detail(id):
+    msg = ContactMessage.query.get_or_404(id)
+    if not msg.is_read:
+        msg.is_read = True
+        db.session.commit()
+        
+    reply_form = SendReplyForm(recipient_email=msg.email, subject=f"Re: {msg.subject}")
+    return render_template('admin/contact_message_detail.html',
+                           title=f'Message #{msg.id} - {msg.name} | 360IT Admin',
+                           message=msg,
+                           reply_form=reply_form)
+
+@admin_bp.route('/contact-messages/<int:id>/update', methods=['POST'])
+@admin_required
+def update_contact_message(id):
+    msg = ContactMessage.query.get_or_404(id)
+    new_status = request.form.get('status')
+    notes = request.form.get('admin_notes')
+    
+    if new_status:
+        msg.status = new_status
+    if notes is not None:
+        msg.admin_notes = notes
+    msg.updated_at = datetime.utcnow()
+    
+    db.session.commit()
+    flash(f'Contact Message #{msg.id} updated successfully.', 'success')
+    return redirect(request.referrer or url_for('admin.contact_message_detail', id=msg.id))
+
+@admin_bp.route('/contact-messages/<int:id>/delete', methods=['POST'])
+@admin_required
+def delete_contact_message(id):
+    msg = ContactMessage.query.get_or_404(id)
+    db.session.delete(msg)
+    db.session.commit()
+    flash(f'Contact Message #{id} has been deleted.', 'success')
+    return redirect(url_for('admin.contact_messages'))
+
+@admin_bp.route('/contact-messages/<int:id>/reply', methods=['POST'])
+@admin_required
+def reply_contact_message(id):
+    msg = ContactMessage.query.get_or_404(id)
+    reply_form = SendReplyForm()
+    
+    if reply_form.validate_on_submit():
+        body = reply_form.body.data
+        subject = reply_form.subject.data
+        try:
+            email_msg = Message(
+                subject=subject,
+                recipients=[msg.email],
+                body=body
+            )
+            mail.send(email_msg)
+            msg.status = 'Replied'
+            if msg.admin_notes:
+                msg.admin_notes += f"\n[{datetime.utcnow().strftime('%Y-%m-%d %H:%M')}] Replied via Admin Dashboard."
+            else:
+                msg.admin_notes = f"[{datetime.utcnow().strftime('%Y-%m-%d %H:%M')}] Replied via Admin Dashboard."
+            db.session.commit()
+            flash(f'Email reply sent successfully to {msg.email}.', 'success')
+        except Exception as e:
+            flash(f'Message saved as Replied, but email dispatch failed: {e}', 'warning')
+            msg.status = 'Replied'
+            db.session.commit()
+            
+    return redirect(url_for('admin.contact_message_detail', id=msg.id))
+
+@admin_bp.route('/contact-messages/bulk', methods=['POST'])
+@admin_required
+def bulk_contact_messages():
+    action = request.form.get('action')
+    message_ids = request.form.getlist('selected_ids')
+    
+    if not message_ids:
+        flash('No messages selected for bulk action.', 'warning')
+        return redirect(url_for('admin.contact_messages'))
+        
+    ids = [int(i) for i in message_ids if i.isdigit()]
+    messages = ContactMessage.query.filter(ContactMessage.id.in_(ids)).all()
+    
+    if action == 'mark_read':
+        for m in messages:
+            m.is_read = True
+        flash(f'Marked {len(messages)} message(s) as read.', 'success')
+    elif action == 'mark_archived':
+        for m in messages:
+            m.status = 'Archived'
+        flash(f'Archived {len(messages)} message(s).', 'success')
+    elif action == 'delete':
+        for m in messages:
+            db.session.delete(m)
+        flash(f'Deleted {len(messages)} message(s).', 'success')
+        
+    db.session.commit()
+    return redirect(url_for('admin.contact_messages'))
+
+
+# ==================== COURSE ENROLLMENT APPLICATIONS ====================
+
+@admin_bp.route('/course-enrollments')
+@admin_required
+def course_enrollments():
+    status_filter = request.args.get('status', 'all')
+    course_filter = request.args.get('course', 'all')
+    search_query = request.args.get('q', '').strip()
+    
+    query = EnrollmentRequest.query
+    
+    if status_filter != 'all':
+        query = query.filter_by(status=status_filter)
+        
+    if course_filter != 'all':
+        query = query.filter_by(course_title=course_filter)
+        
+    if search_query:
+        like_str = f"%{search_query}%"
+        query = query.filter(
+            (EnrollmentRequest.name.ilike(like_str)) |
+            (EnrollmentRequest.email.ilike(like_str)) |
+            (EnrollmentRequest.phone.ilike(like_str)) |
+            (EnrollmentRequest.course_title.ilike(like_str)) |
+            (EnrollmentRequest.message.ilike(like_str))
+        )
+        
+    enrollments = query.order_by(EnrollmentRequest.created_at.desc()).all()
+    
+    # Available courses for filter dropdown
+    all_courses = [c.title for c in TrainingCourse.query.all()]
+    
+    # Counts for status filter tabs
+    counts = {
+        'all': EnrollmentRequest.query.count(),
+        'Pending': EnrollmentRequest.query.filter_by(status='Pending').count(),
+        'Reviewed': EnrollmentRequest.query.filter_by(status='Reviewed').count(),
+        'Accepted': EnrollmentRequest.query.filter_by(status='Accepted').count(),
+        'Enrolled': EnrollmentRequest.query.filter_by(status='Enrolled').count(),
+        'Rejected': EnrollmentRequest.query.filter_by(status='Rejected').count()
+    }
+    
+    return render_template('admin/course_enrollments.html',
+                           title='Course Enrollment Applications | 360IT Admin',
+                           enrollments=enrollments,
+                           status_filter=status_filter,
+                           course_filter=course_filter,
+                           search_query=search_query,
+                           all_courses=all_courses,
+                           counts=counts)
+
+@admin_bp.route('/course-enrollments/<int:id>')
+@admin_required
+def course_enrollment_detail(id):
+    enrollment = EnrollmentRequest.query.get_or_404(id)
+    if not enrollment.is_read:
+        enrollment.is_read = True
+        db.session.commit()
+        
+    reply_form = SendReplyForm(
+        recipient_email=enrollment.email,
+        subject=f"Update regarding your enrollment application for {enrollment.course_title}"
+    )
+    return render_template('admin/course_enrollment_detail.html',
+                           title=f'Enrollment #{enrollment.id} - {enrollment.name} | 360IT Admin',
+                           enrollment=enrollment,
+                           reply_form=reply_form)
+
+@admin_bp.route('/course-enrollments/<int:id>/update', methods=['POST'])
+@admin_required
+def update_course_enrollment(id):
+    enrollment = EnrollmentRequest.query.get_or_404(id)
+    new_status = request.form.get('status')
+    notes = request.form.get('admin_notes')
+    
+    if new_status:
+        enrollment.status = new_status
+    if notes is not None:
+        enrollment.admin_notes = notes
+    enrollment.updated_at = datetime.utcnow()
+    
+    db.session.commit()
+    flash(f'Enrollment Application #{enrollment.id} updated to status "{enrollment.status}".', 'success')
+    return redirect(request.referrer or url_for('admin.course_enrollment_detail', id=enrollment.id))
+
+@admin_bp.route('/course-enrollments/<int:id>/delete', methods=['POST'])
+@admin_required
+def delete_course_enrollment(id):
+    enrollment = EnrollmentRequest.query.get_or_404(id)
+    db.session.delete(enrollment)
+    db.session.commit()
+    flash(f'Course Enrollment Application #{id} deleted.', 'success')
+    return redirect(url_for('admin.course_enrollments'))
+
+@admin_bp.route('/course-enrollments/bulk', methods=['POST'])
+@admin_required
+def bulk_course_enrollments():
+    action = request.form.get('action')
+    enrollment_ids = request.form.getlist('selected_ids')
+    
+    if not enrollment_ids:
+        flash('No applications selected for bulk action.', 'warning')
+        return redirect(url_for('admin.course_enrollments'))
+        
+    ids = [int(i) for i in enrollment_ids if i.isdigit()]
+    enrollments = EnrollmentRequest.query.filter(EnrollmentRequest.id.in_(ids)).all()
+    
+    if action == 'mark_reviewed':
+        for e in enrollments:
+            e.status = 'Reviewed'
+        flash(f'Updated {len(enrollments)} application(s) to Reviewed.', 'success')
+    elif action == 'mark_accepted':
+        for e in enrollments:
+            e.status = 'Accepted'
+        flash(f'Updated {len(enrollments)} application(s) to Accepted.', 'success')
+    elif action == 'mark_enrolled':
+        for e in enrollments:
+            e.status = 'Enrolled'
+        flash(f'Updated {len(enrollments)} application(s) to Enrolled.', 'success')
+    elif action == 'delete':
+        for e in enrollments:
+            db.session.delete(e)
+        flash(f'Deleted {len(enrollments)} application(s).', 'success')
+        
+    db.session.commit()
+    return redirect(url_for('admin.course_enrollments'))
+
+
+# ==================== CONSULTATION REQUESTS ====================
+
+@admin_bp.route('/consultations')
+@admin_required
+def consultations():
+    status_filter = request.args.get('status', 'all')
+    search_query = request.args.get('q', '').strip()
+    
+    query = ConsultationRequest.query
+    
+    if status_filter != 'all':
+        query = query.filter_by(status=status_filter)
+        
+    if search_query:
+        like_str = f"%{search_query}%"
+        query = query.filter(
+            (ConsultationRequest.name.ilike(like_str)) |
+            (ConsultationRequest.email.ilike(like_str)) |
+            (ConsultationRequest.organization.ilike(like_str)) |
+            (ConsultationRequest.service_interest.ilike(like_str))
+        )
+        
+    consultations = query.order_by(ConsultationRequest.created_at.desc()).all()
+    
+    counts = {
+        'all': ConsultationRequest.query.count(),
+        'Pending': ConsultationRequest.query.filter_by(status='Pending').count(),
+        'Contacted': ConsultationRequest.query.filter_by(status='Contacted').count(),
+        'Scheduled': ConsultationRequest.query.filter_by(status='Scheduled').count(),
+        'Completed': ConsultationRequest.query.filter_by(status='Completed').count(),
+        'Archived': ConsultationRequest.query.filter_by(status='Archived').count()
+    }
+    
+    return render_template('admin/consultations.html',
+                           title='Consultation Requests | 360IT Admin',
+                           consultations=consultations,
+                           status_filter=status_filter,
+                           search_query=search_query,
+                           counts=counts)
+
+@admin_bp.route('/consultations/<int:id>')
+@admin_required
+def consultation_detail(id):
+    req = ConsultationRequest.query.get_or_404(id)
+    if not req.is_read:
+        req.is_read = True
+        db.session.commit()
+        
+    reply_form = SendReplyForm(
+        recipient_email=req.email,
+        subject=f"360IT Consultation Request: {req.service_interest}"
+    )
+    return render_template('admin/consultation_detail.html',
+                           title=f'Consultation #{req.id} - {req.name} | 360IT Admin',
+                           consultation=req,
+                           reply_form=reply_form)
+
+@admin_bp.route('/consultations/<int:id>/update', methods=['POST'])
+@admin_required
+def update_consultation(id):
+    req = ConsultationRequest.query.get_or_404(id)
+    new_status = request.form.get('status')
+    notes = request.form.get('admin_notes')
+    
+    if new_status:
+        req.status = new_status
+    if notes is not None:
+        req.admin_notes = notes
+    req.updated_at = datetime.utcnow()
+    
+    db.session.commit()
+    flash(f'Consultation Request #{req.id} updated.', 'success')
+    return redirect(request.referrer or url_for('admin.consultation_detail', id=req.id))
+
+@admin_bp.route('/consultations/<int:id>/delete', methods=['POST'])
+@admin_required
+def delete_consultation(id):
+    req = ConsultationRequest.query.get_or_404(id)
+    db.session.delete(req)
+    db.session.commit()
+    flash(f'Consultation Request #{id} deleted.', 'success')
+    return redirect(url_for('admin.consultations'))
+
+
+# ==================== DATA EXPORTS (CSV) ====================
+
+@admin_bp.route('/export/contact-messages')
+@admin_required
+def export_contact_messages():
+    messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).all()
+    
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['ID', 'Name', 'Email', 'Phone', 'Subject', 'Message', 'Status', 'Is Read', 'Admin Notes', 'Date Submitted'])
+    
+    for m in messages:
+        writer.writerow([
+            m.id,
+            m.name,
+            m.email,
+            m.phone or '',
+            m.subject,
+            m.message,
+            m.status,
+            'Yes' if m.is_read else 'No',
+            m.admin_notes or '',
+            m.created_at.strftime('%Y-%m-%d %H:%M:%S') if m.created_at else ''
+        ])
+        
+    return Response(
+        output.getvalue(),
+        mimetype='text/csv',
+        headers={"Content-disposition": "attachment; filename=360it_contact_messages.csv"}
+    )
+
+@admin_bp.route('/export/course-enrollments')
+@admin_required
+def export_course_enrollments():
+    enrollments = EnrollmentRequest.query.order_by(EnrollmentRequest.created_at.desc()).all()
+    
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['ID', 'Applicant Name', 'Email', 'Phone', 'Course Title', 'Delivery Mode', 'Applicant Notes', 'Status', 'Is Read', 'Admin Notes', 'Date Applied'])
+    
+    for e in enrollments:
+        writer.writerow([
+            e.id,
+            e.name,
+            e.email,
+            e.phone or '',
+            e.course_title,
+            e.delivery_mode,
+            e.message or '',
+            e.status,
+            'Yes' if e.is_read else 'No',
+            e.admin_notes or '',
+            e.created_at.strftime('%Y-%m-%d %H:%M:%S') if e.created_at else ''
+        ])
+        
+    return Response(
+        output.getvalue(),
+        mimetype='text/csv',
+        headers={"Content-disposition": "attachment; filename=360it_course_enrollments.csv"}
+    )
