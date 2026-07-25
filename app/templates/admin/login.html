@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Sign In | 360IT Control Center</title>
     <!-- Favicon Icons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/favicon/apple-icon-180x180.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon/favicon-16x16.png') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon/favicon-32x32.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/dashboard-icon.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/dashboard-icon.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/dashboard-icon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -57,18 +56,17 @@
             margin-bottom: 2rem;
         }
 
-        .brand-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            border-radius: 14px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            color: #fff;
+        .login-brand-img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
             margin-bottom: 1rem;
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+            filter: drop-shadow(0 8px 20px rgba(6, 182, 212, 0.45));
+            animation: pulse-glow 3s infinite alternate ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0% { transform: scale(1); filter: drop-shadow(0 8px 15px rgba(6, 182, 212, 0.35)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 12px 25px rgba(245, 158, 11, 0.5)); }
         }
 
         .brand-header h1 {
@@ -203,9 +201,7 @@
 
     <div class="login-card">
         <div class="brand-header">
-            <div class="brand-icon">
-                <i class="fa-solid fa-shield-halved"></i>
-            </div>
+            <img src="{{ url_for('static', filename='images/dashboard-icon.png') }}" alt="360IT Admin Portal Logo" class="login-brand-img">
             <h1>360IT Admin Portal</h1>
             <p>Enter your administrative credentials to continue</p>
         </div>
