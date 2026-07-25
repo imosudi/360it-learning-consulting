@@ -56,13 +56,24 @@
             margin-bottom: 2rem;
         }
 
-        .login-brand-img {
-            width: 72px;
-            height: 72px;
-            object-fit: contain;
+        .brand-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 1rem;
-            filter: drop-shadow(0 8px 20px rgba(6, 182, 212, 0.45));
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+            padding: 7px;
             animation: pulse-glow 3s infinite alternate ease-in-out;
+        }
+
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         @keyframes pulse-glow {
             0% { transform: scale(1); filter: drop-shadow(0 8px 15px rgba(6, 182, 212, 0.35)); }
@@ -201,7 +212,9 @@
 
     <div class="login-card">
         <div class="brand-header">
-            <img src="{{ url_for('static', filename='images/dashboard-icon.png') }}" alt="360IT Admin Portal Logo" class="login-brand-img">
+            <div class="brand-icon">
+                <img src="{{ url_for('static', filename='images/dashboard-icon.png') }}" alt="360IT Admin Portal Logo">
+            </div>
             <h1>360IT Admin Portal</h1>
             <p>Enter your administrative credentials to continue</p>
         </div>
