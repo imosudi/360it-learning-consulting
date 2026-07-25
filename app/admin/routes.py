@@ -1,14 +1,23 @@
+import os
 import csv
 import io
 from functools import wraps
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g, Response
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g, Response, send_from_directory, current_app
 from flask_mail import Message
 from ..extensions import db, mail
 from ..models import AdminUser, ContactMessage, EnrollmentRequest, ConsultationRequest, TrainingCourse
 from .forms import AdminLoginForm, StatusUpdateForm, SendReplyForm
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+@admin_bp.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(current_app.root_path, 'static', 'images', 'favicon'),
+        'favicon.ico',
+        mimetype='image/vnd.microsoft.icon'
+    )
 
 def admin_required(f):
     @wraps(f)

@@ -1,9 +1,18 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+import os
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_from_directory, current_app
 from .extensions import db
 from .models import Service, TrainingCourse, Project, Testimonial, ContactMessage, ConsultationRequest, EnrollmentRequest
 from .forms import ContactForm, ConsultationForm, EnrollmentForm
 
 bp = Blueprint('main', __name__)
+
+@bp.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(current_app.root_path, 'static', 'images', 'favicon'),
+        'favicon.ico',
+        mimetype='image/vnd.microsoft.icon'
+    )
 
 @bp.app_context_processor
 def inject_global_forms():
