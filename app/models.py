@@ -19,6 +19,10 @@ class AdminUser(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    @property
+    def is_super_admin(self):
+        return bool(self.role and self.role.lower() == 'super admin')
+
 class Service(db.Model):
     __tablename__ = 'services'
     

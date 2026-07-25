@@ -1,0 +1,88 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div style="margin-bottom: 1rem;">
+        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back to User List</span>
+        </a>
+    </div>
+
+    <div class="card">
+        <div style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #fff;">
+                <i class="fa-solid fa-user-plus" style="color: var(--accent-cyan); margin-right: 0.5rem;"></i>
+                Create Dashboard Administrator
+            </h2>
+            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                Add a new administrative account with role-based dashboard permissions.
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('admin.create_user') }}">
+            {{ form.csrf_token }}
+
+            <div class="form-group">
+                <label class="form-label" for="full_name">Full Name</label>
+                {{ form.full_name(class="form-control", placeholder="e.g. Sarah Jenkins", id="full_name", required=True) }}
+                {% if form.full_name.errors %}
+                    <div style="color: var(--accent-rose); font-size: 0.8rem; margin-top: 0.25rem;">{{ form.full_name.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                {{ form.username(class="form-control", placeholder="e.g. sjenkins", id="username", required=True) }}
+                {% if form.username.errors %}
+                    <div style="color: var(--accent-rose); font-size: 0.8rem; margin-top: 0.25rem;">{{ form.username.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                {{ form.email(class="form-control", placeholder="e.g. sjenkins@360it-consulting.com", id="email", required=True) }}
+                {% if form.email.errors %}
+                    <div style="color: var(--accent-rose); font-size: 0.8rem; margin-top: 0.25rem;">{{ form.email.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="role">Role Permission</label>
+                {{ form.role(class="form-select", id="role", required=True) }}
+                {% if form.role.errors %}
+                    <div style="color: var(--accent-rose); font-size: 0.8rem; margin-top: 0.25rem;">{{ form.role.errors[0] }}</div>
+                {% endif %}
+                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.35rem;">
+                    <strong>Super Admin:</strong> Full access including user creation/deletion.<br>
+                    <strong>Admin:</strong> Standard access to view/update applications, messages, and export reports.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                {{ form.password(class="form-control", placeholder="Minimum 6 characters", id="password", required=True) }}
+                {% if form.password.errors %}
+                    <div style="color: var(--accent-rose); font-size: 0.8rem; margin-top: 0.25rem;">{{ form.password.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="confirm_password">Confirm Password</label>
+                {{ form.confirm_password(class="form-control", placeholder="Re-enter password", id="confirm_password", required=True) }}
+                {% if form.confirm_password.errors %}
+                    <div style="color: var(--accent-rose); font-size: 0.8rem; margin-top: 0.25rem;">{{ form.confirm_password.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                <a href="{{ url_for('admin.manage_users') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Create Administrator</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

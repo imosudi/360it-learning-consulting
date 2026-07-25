@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_mail import Message
 from ..extensions import db, mail
 from ..models import AdminUser, ContactMessage, EnrollmentRequest, ConsultationRequest, TrainingCourse
-from .forms import AdminLoginForm, StatusUpdateForm, SendReplyForm
+from .forms import AdminLoginForm, StatusUpdateForm, SendReplyForm, CreateAdminUserForm
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -25,6 +25,15 @@ def admin_required(f):
         if 'admin_user_id' not in session:
             flash('Please log in to access the Admin Dashboard.', 'warning')
             return redirect(url_for('admin.login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def super_admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not g.admin_user or not g.admin_user.is_super_admin:
+            flash('Access restricted: Only Super Administrators can manage dashboard users.', 'danger')
+            return redirect(url_for('admin.dashboard'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -522,3 +531,58 @@ def export_course_enrollments():
         mimetype='text/csv',
         headers={"Content-disposition": "attachment; filename=360it_course_enrollments.csv"}
     )
+
+# --- User Management Routes (Super Admin Only) ---
+
+@admin_bp.route('/users')
+@admin_required
+@super_admin_required
+def manage_users():
+    users = AdminUser.query.order_by(AdminUser.id.asc()).all()
+    return render_template('admin/users.html', title='User Management | 360IT Admin', users=users)
+
+@admin_bp.route('/users/create', methods=['GET', 'POST'])
+@admin_required
+@super_admin_required
+def create_user():
+    form = CreateAdminUserForm()
+    if form.validate_on_submit():
+        existing_username = AdminUser.query.filter_by(username=form.username.data.strip()).first()
+        existing_email = AdminUser.query.filter_by(email=form.email.data.strip().lower()).first()
+        if existing_username:
+            flash(f'Username "{form.username.data}" is already taken.', 'danger')
+        elif existing_email:
+            flash(f'Email "{form.email.data}" is already registered to another user.', 'danger')
+        else:
+            new_user = AdminUser(
+                username=form.username.data.strip(),
+                email=form.email.data.strip().lower(),
+                full_name=form.full_name.data.strip(),
+                role=form.role.data
+            )
+            new_user.set_password(form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            flash(f'Dashboard user "{new_user.username}" ({new_user.role}) was created successfully!', 'success')
+            return redirect(url_for('admin.manage_users'))
+            
+    return render_template('admin/user_create.html', title='Create Dashboard User | 360IT Admin', form=form)
+
+@admin_bp.route('/users/<int:user_id>/delete', methods=['POST'])
+@admin_required
+@super_admin_required
+def delete_user(user_id):
+    if user_id == g.admin_user.id:
+        flash('Security Warning: You cannot delete your own active administrator account.', 'danger')
+        return redirect(url_for('admin.manage_users'))
+        
+    target_user = db.session.get(AdminUser, user_id)
+    if not target_user:
+        flash('Specified administrator account was not found.', 'warning')
+        return redirect(url_for('admin.manage_users'))
+        
+    user_name = target_user.username
+    db.session.delete(target_user)
+    db.session.commit()
+    flash(f'Administrator user "{user_name}" has been permanently deleted.', 'success')
+    return redirect(url_for('admin.manage_users'))

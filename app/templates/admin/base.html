@@ -622,6 +622,16 @@
                 </div>
             </a>
 
+            {% if g.admin_user and g.admin_user.is_super_admin %}
+            <div class="nav-section-label" style="margin-top: 1rem;">System Control</div>
+            <a href="{{ url_for('admin.manage_users') }}" class="nav-item {% if 'users' in request.endpoint %}active{% endif %}">
+                <div class="nav-item-content">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>Dashboard Users</span>
+                </div>
+            </a>
+            {% endif %}
+
             <div class="nav-section-label" style="margin-top: 1rem;">Export & Tools</div>
 
             <a href="{{ url_for('admin.export_course_enrollments') }}" class="nav-item">
