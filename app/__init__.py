@@ -6,8 +6,9 @@ except ImportError:
     HAS_PYMYSQL = False
 
 from flask import Flask
+from flask_security import SQLAlchemyUserDatastore
 from config import Config
-from .extensions import db, mail
+from .extensions import db, mail, migrate, security
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -36,21 +37,29 @@ if use_sqlite:
 
 db.init_app(app)
 mail.init_app(app)
+migrate.init_app(app, db)
 
 with app.app_context():
+    from . import models
+    user_datastore = SQLAlchemyUserDatastore(db, models.AdminUser, models.Role)
+    security.init_app(app, user_datastore)
+
     from .routes import bp as main_bp
     app.register_blueprint(main_bp)
     
     from .admin import admin_bp
     app.register_blueprint(admin_bp)
     
-    from . import models
     db.create_all()
     
     # Schema migration helper for new admin columns
     try:
         inspector = db.inspect(db.engine)
         tables_columns = {
+            'admin_users': [
+                ('active', 'BOOLEAN DEFAULT 1'),
+                ('fs_uniquifier', 'VARCHAR(255)')
+            ],
             'contact_messages': [
                 ('status', 'VARCHAR(30) DEFAULT "New"'),
                 ('admin_notes', 'TEXT'),
@@ -80,6 +89,19 @@ with app.app_context():
                             conn.commit()
     except Exception as mig_err:
         print(f"Migration note: {mig_err}")
+
+    # Backfill missing fs_uniquifier on existing users
+    try:
+        import uuid
+        users = models.AdminUser.query.filter((models.AdminUser.fs_uniquifier == None) | (models.AdminUser.fs_uniquifier == '')).all()
+        for u in users:
+            u.fs_uniquifier = str(uuid.uuid4())
+            if u.active is None:
+                u.active = True
+        if users:
+            db.session.commit()
+    except Exception as u_err:
+        print(f"User backfill note: {u_err}")
 
     # Seed database catalog if empty
     from .seed import seed_database

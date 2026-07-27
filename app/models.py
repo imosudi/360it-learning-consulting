@@ -1,8 +1,23 @@
+import uuid
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_security import UserMixin, RoleMixin
 from .extensions import db
 
-class AdminUser(db.Model):
+roles_users = db.Table(
+    'roles_users',
+    db.Column('user_id', db.Integer(), db.ForeignKey('admin_users.id')),
+    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+)
+
+class Role(db.Model, RoleMixin):
+    __tablename__ = 'role'
+    
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+class AdminUser(db.Model, UserMixin):
     __tablename__ = 'admin_users'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -11,21 +26,35 @@ class AdminUser(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     full_name = db.Column(db.String(100), default='Administrator')
     role = db.Column(db.String(50), default='Super Admin')
+    active = db.Column(db.Boolean(), default=True)
+    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
+
+    @property
+    def password(self):
+        return self.password_hash
+
+    @password.setter
+    def password(self, val):
+        self.password_hash = val
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
+        if not self.password_hash:
+            return False
         return check_password_hash(self.password_hash, password)
 
     @property
     def is_super_admin(self):
-        return bool(self.role and self.role.lower() == 'super admin')
+        return bool((self.role and self.role.lower() == 'super admin') or any(r.name.lower() == 'super admin' for r in self.roles))
 
     @property
     def is_readonly(self):
-        return bool(self.role and 'readonly' in self.role.lower().replace('-', '').replace(' ', ''))
+        return bool((self.role and 'readonly' in self.role.lower().replace('-', '').replace(' ', '')) or any('readonly' in r.name.lower().replace('-', '').replace(' ', '') for r in self.roles))
 
 class Service(db.Model):
     __tablename__ = 'services'

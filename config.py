@@ -27,5 +27,10 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or os.environ.get('360_MAIL_PASSWORD') or 'BHo62PF5AJhI8DTvIxr7u0K1Se1dEI/sG9GoY+b9jXK9'
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER') or os.environ.get('360_MAIL_DEFAULT_SENDER') or 'noreply@serverafrica.net'
 
+    # Flask-Security-Too Config
+    SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT', '360it-learning-security-salt-2026')
+    SECURITY_REGISTERABLE = False
+    SECURITY_SEND_REGISTER_EMAIL = False
+
 IP_ADDRESS='0.0.0.0'
 PORT=5000
