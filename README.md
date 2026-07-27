@@ -10,7 +10,7 @@
   <a href="#-database-architecture--entities"><img src="https://img.shields.io/badge/Database-MySQL%20%7C%20SQLite-00758F.svg?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL | SQLite"/></a>
   <a href="#-database-architecture--entities"><img src="https://img.shields.io/badge/ORM-SQLAlchemy%202.0-red.svg?style=for-the-badge&logo=python&logoColor=white" alt="SQLAlchemy 2.0"/></a>
   <a href="#-role-based-access-control-rbac"><img src="https://img.shields.io/badge/Security-RBAC%20Enabled-green.svg?style=for-the-badge&logo=shield&logoColor=white" alt="RBAC Enabled"/></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-purple.svg?style=for-the-badge" alt="License MIT"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-BSD--3--Clause-blue.svg?style=for-the-badge" alt="License BSD 3-Clause"/></a>
 </p>
 
 ---
@@ -338,7 +338,7 @@ The project includes a pre-configured WSGI entry point (`main.wsgi`) for web ser
 
 ## 📜 License
 
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for full details.
+This project is licensed under the **BSD 3-Clause License**. See the [LICENSE](LICENSE) file for full details.
 
 ---
 
