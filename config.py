@@ -7,7 +7,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or '360it-learning-consulting-secret-key-2026'
     
     # Primary DB configuration as specified in dev_requirements.txt
-    DB_USER = os.environ.get('DB_USER', 'debian-sys-maint')
+    DB_USER = os.environ.get('DB_USER', '360it-learning')
     DB_PASSWORD = os.environ.get('DB_PASSWORD', 'just4it-Learning')
     DB_HOST = os.environ.get('DB_HOST', 'mio3.serverafrica.net')
     DB_NAME = os.environ.get('DB_NAME', '360it-learning')
