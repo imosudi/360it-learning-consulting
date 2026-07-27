@@ -343,5 +343,5 @@ This project is licensed under the **BSD 3-Clause License**. See the [LICENSE](L
 ---
 
 <p align="center">
-  Developed with ❤️ by <strong>360IT Learning &amp; Consulting Team</strong>
+  Developed with ❤️ by <a href="https://daybreakafrika.com.ng"><strong>Daybreak Afrika Technologies</strong></a>
 </p>
