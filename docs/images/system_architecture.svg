@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="primary-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="accent-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="success-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="warning-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="520" fill="url(#bg-grad)" rx="12"/>
+  <rect x="2" y="2" width="896" height="516" fill="none" stroke="#334155" stroke-width="1.5" rx="10"/>
+
+  <!-- Title Banner -->
+  <text x="450" y="38" text-anchor="middle" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700">360IT Learning &amp; Consulting — System Architecture</text>
+  <text x="450" y="58" text-anchor="middle" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">High-level components, request flow, and resilient persistence layer</text>
+
+  <!-- Container 1: Client & Presentation Layer -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="90" width="230" height="380" fill="#1e293b" stroke="#334155" stroke-width="1.5" rx="8"/>
+    <rect x="40" y="90" width="230" height="40" fill="url(#primary-grad)" rx="8"/>
+    <rect x="40" y="120" width="230" height="10" fill="url(#primary-grad)"/>
+    <text x="155" y="115" text-anchor="middle" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600">Client / Presentation</text>
+
+    <!-- Component Cards -->
+    <rect x="55" y="150" width="200" height="55" fill="#0f172a" stroke="#3b82f6" stroke-width="1" rx="6"/>
+    <text x="155" y="173" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="13" font-weight="600">Public Portal UI</text>
+    <text x="155" y="191" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">Services, Courses, Projects</text>
+
+    <rect x="55" y="220" width="200" height="55" fill="#0f172a" stroke="#3b82f6" stroke-width="1" rx="6"/>
+    <text x="155" y="243" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="13" font-weight="600">Interactive Forms</text>
+    <text x="155" y="261" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">Contact, Consultation, Enrollment</text>
+
+    <rect x="55" y="290" width="200" height="55" fill="#0f172a" stroke="#8b5cf6" stroke-width="1" rx="6"/>
+    <text x="155" y="313" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="13" font-weight="600">Admin Dashboard UI</text>
+    <text x="155" y="331" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">Role-based Management Suite</text>
+
+    <rect x="55" y="360" width="200" height="90" fill="#0f172a" stroke="#475569" stroke-width="1" rx="6"/>
+    <text x="155" y="382" text-anchor="middle" fill="#cbd5e1" font-family="sans-serif" font-size="12" font-weight="600">Frontend Stack</text>
+    <text x="155" y="402" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">HTML5 • Custom CSS3</text>
+    <text x="155" y="420" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">Bootstrap 5 • Vanilla JS</text>
+    <text x="155" y="438" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">FontAwesome 6</text>
+  </g>
+
+  <!-- Connection Line 1 -->
+  <line x1="270" y1="280" x2="320" y2="280" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+
+  <!-- Container 2: Application Layer (Flask) -->
+  <g filter="url(#shadow)">
+    <rect x="330" y="90" width="260" height="380" fill="#1e293b" stroke="#334155" stroke-width="1.5" rx="8"/>
+    <rect x="330" y="90" width="260" height="40" fill="url(#accent-grad)" rx="8"/>
+    <rect x="330" y="120" width="260" height="10" fill="url(#accent-grad)"/>
+    <text x="460" y="115" text-anchor="middle" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600">Application Core (Flask 3.0)</text>
+
+    <!-- Sub-components -->
+    <rect x="345" y="145" width="230" height="50" fill="#0f172a" stroke="#8b5cf6" stroke-width="1" rx="6"/>
+    <text x="460" y="167" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="12" font-weight="600">Application Factory &amp; WSGI</text>
+    <text x="460" y="184" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="10">app = Flask(__name__) • main.wsgi • config.py</text>
+
+    <rect x="345" y="205" width="230" height="70" fill="#0f172a" stroke="#3b82f6" stroke-width="1" rx="6"/>
+    <text x="460" y="225" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="12" font-weight="600">Flask Blueprints</text>
+    <text x="460" y="244" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11">Main BP: Routes &amp; Templates</text>
+    <text x="460" y="261" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11">Admin BP: RBAC &amp; Workflows</text>
+
+    <rect x="345" y="285" width="230" height="50" fill="#0f172a" stroke="#ec4899" stroke-width="1" rx="6"/>
+    <text x="460" y="307" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="12" font-weight="600">Flask-WTF / Security</text>
+    <text x="460" y="324" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="10">Validation • CSRF • Password Hashing</text>
+
+    <rect x="345" y="345" width="230" height="50" fill="#0f172a" stroke="#10b981" stroke-width="1" rx="6"/>
+    <text x="460" y="367" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="12" font-weight="600">Flask-Mail Integration</text>
+    <text x="460" y="384" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="10">SMTP Dispatch &amp; Admin Email Replies</text>
+
+    <rect x="345" y="405" width="230" height="50" fill="#0f172a" stroke="#f59e0b" stroke-width="1" rx="6"/>
+    <text x="460" y="427" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="12" font-weight="600">Flask-SQLAlchemy ORM</text>
+    <text x="460" y="444" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="10">Models • Migrations • Seeding</text>
+  </g>
+
+  <!-- Connection Line 2 -->
+  <line x1="590" y1="280" x2="640" y2="280" stroke="#8b5cf6" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+
+  <!-- Container 3: Persistence & Data Layer -->
+  <g filter="url(#shadow)">
+    <rect x="650" y="90" width="210" height="380" fill="#1e293b" stroke="#334155" stroke-width="1.5" rx="8"/>
+    <rect x="650" y="90" width="210" height="40" fill="url(#success-grad)" rx="8"/>
+    <rect x="650" y="120" width="210" height="10" fill="url(#success-grad)"/>
+    <text x="755" y="115" text-anchor="middle" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600">Resilient Data Layer</text>
+
+    <!-- Primary MySQL -->
+    <rect x="665" y="150" width="180" height="95" fill="#0f172a" stroke="#10b981" stroke-width="1.5" rx="6"/>
+    <rect x="675" y="160" width="60" height="18" fill="#10b981" rx="3"/>
+    <text x="705" y="173" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="9" font-weight="700">PRIMARY</text>
+    <text x="755" y="190" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="13" font-weight="600">MySQL Database</text>
+    <text x="755" y="208" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">PyMySQL Engine</text>
+    <text x="755" y="226" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Remote Server / Prod</text>
+
+    <!-- Fallback Connector Arrow -->
+    <path d="M 755 245 L 755 270" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+    <rect x="705" y="250" width="100" height="16" fill="#0f172a" stroke="#f59e0b" stroke-width="1" rx="3"/>
+    <text x="755" y="261" text-anchor="middle" fill="#f59e0b" font-family="sans-serif" font-size="9" font-weight="600">Auto-Fallback</text>
+
+    <!-- Fallback SQLite -->
+    <rect x="665" y="275" width="180" height="95" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5" rx="6"/>
+    <rect x="675" y="285" width="65" height="18" fill="#f59e0b" rx="3"/>
+    <text x="707" y="298" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="9" font-weight="700">FALLBACK</text>
+    <text x="755" y="315" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="13" font-weight="600">SQLite Database</text>
+    <text x="755" y="333" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">360it_learning.db</text>
+    <text x="755" y="351" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Local Dev &amp; Offline Mode</text>
+
+    <!-- Data Tables summary -->
+    <rect x="665" y="385" width="180" height="65" fill="#0f172a" stroke="#334155" stroke-width="1" rx="6"/>
+    <text x="755" y="404" text-anchor="middle" fill="#cbd5e1" font-family="sans-serif" font-size="11" font-weight="600">ORM Entities (8)</text>
+    <text x="755" y="421" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">AdminUsers, Services, Courses</text>
+    <text x="755" y="437" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Projects, Inquiries, Enrollments</text>
+  </g>
+</svg>

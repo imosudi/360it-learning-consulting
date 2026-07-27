@@ -22,3 +22,6 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'info@360it-learning.serverafrica.net')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', '')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'info@360it-learning.serverafrica.net')
+
+IP_ADDRESS='0.0.0.0'
+PORT=5000

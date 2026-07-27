@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="step-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="step-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="step-grad-3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ec4899"/>
+      <stop offset="100%" stop-color="#be185d"/>
+    </linearGradient>
+    <linearGradient id="step-grad-4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="920" height="460" fill="url(#bg-grad)" rx="12"/>
+  <rect x="2" y="2" width="916" height="456" fill="none" stroke="#334155" stroke-width="1.5" rx="10"/>
+
+  <!-- Title Banner -->
+  <text x="460" y="38" text-anchor="middle" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700">360IT Inquiry &amp; Enrollment Application Workflow</text>
+  <text x="460" y="58" text-anchor="middle" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">End-to-end processing pipeline from user submission to administrative action</text>
+
+  <!-- Workflow Step 1: User Request -->
+  <g filter="url(#shadow)">
+    <rect x="35" y="100" width="180" height="300" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" rx="8"/>
+    <rect x="35" y="100" width="180" height="36" fill="url(#step-grad-1)" rx="8"/>
+    <rect x="35" y="126" width="180" height="10" fill="url(#step-grad-1)"/>
+    <text x="125" y="123" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="13" font-weight="700">1. Client Action</text>
+
+    <circle cx="125" cy="180" r="28" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="125" y="185" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="22">📝</text>
+
+    <text x="125" y="230" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="13" font-weight="600">Form Submission</text>
+    <text x="125" y="255" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Contact Message</text>
+    <text x="125" y="275" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Consultation Request</text>
+    <text x="125" y="295" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Course Enrollment</text>
+    <text x="125" y="315" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Newsletter Opt-in</text>
+
+    <rect x="50" y="340" width="150" height="42" fill="#0f172a" stroke="#3b82f6" stroke-width="1" rx="5"/>
+    <text x="125" y="365" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="11" font-weight="600">POST /contact, etc.</text>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="215" y1="250" x2="255" y2="250" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Workflow Step 2: Flask App Validation & DB Persistence -->
+  <g filter="url(#shadow)">
+    <rect x="260" y="100" width="180" height="300" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5" rx="8"/>
+    <rect x="260" y="100" width="180" height="36" fill="url(#step-grad-2)" rx="8"/>
+    <rect x="260" y="126" width="180" height="10" fill="url(#step-grad-2)"/>
+    <text x="350" y="123" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="13" font-weight="700">2. App Engine</text>
+
+    <circle cx="350" cy="180" r="28" fill="#0f172a" stroke="#8b5cf6" stroke-width="1.5"/>
+    <text x="350" y="185" text-anchor="middle" fill="#a78bfa" font-family="sans-serif" font-size="22">⚡</text>
+
+    <text x="350" y="230" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="13" font-weight="600">Validate &amp; Persist</text>
+    <text x="350" y="255" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• WTForms Sanitization</text>
+    <text x="350" y="275" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• CSRF Security Token</text>
+    <text x="350" y="295" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• SQLAlchemy Insert</text>
+    <text x="350" y="315" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Default status 'Pending'</text>
+
+    <rect x="275" y="340" width="150" height="42" fill="#0f172a" stroke="#8b5cf6" stroke-width="1" rx="5"/>
+    <text x="350" y="365" text-anchor="middle" fill="#a78bfa" font-family="sans-serif" font-size="11" font-weight="600">Flash Feedback Msg</text>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <line x1="440" y1="250" x2="480" y2="250" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Workflow Step 3: Admin Review & Operations -->
+  <g filter="url(#shadow)">
+    <rect x="485" y="100" width="180" height="300" fill="#1e293b" stroke="#ec4899" stroke-width="1.5" rx="8"/>
+    <rect x="485" y="100" width="180" height="36" fill="url(#step-grad-3)" rx="8"/>
+    <rect x="485" y="126" width="180" height="10" fill="url(#step-grad-3)"/>
+    <text x="575" y="123" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="13" font-weight="700">3. Admin Management</text>
+
+    <circle cx="575" cy="180" r="28" fill="#0f172a" stroke="#ec4899" stroke-width="1.5"/>
+    <text x="575" y="185" text-anchor="middle" fill="#f472b6" font-family="sans-serif" font-size="22">📊</text>
+
+    <text x="575" y="230" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="13" font-weight="600">Review &amp; Status</text>
+    <text x="575" y="255" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Inbox Filter &amp; Search</text>
+    <text x="575" y="275" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Status Updates</text>
+    <text x="575" y="295" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Internal Admin Notes</text>
+    <text x="575" y="315" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Bulk Actions &amp; CSV</text>
+
+    <rect x="500" y="340" width="150" height="42" fill="#0f172a" stroke="#ec4899" stroke-width="1" rx="5"/>
+    <text x="575" y="365" text-anchor="middle" fill="#f472b6" font-family="sans-serif" font-size="11" font-weight="600">Accepted/Enrolled</text>
+  </g>
+
+  <!-- Arrow 3 -> 4 -->
+  <line x1="665" y1="250" x2="705" y2="250" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Workflow Step 4: Email Response & Resolution -->
+  <g filter="url(#shadow)">
+    <rect x="710" y="100" width="175" height="300" fill="#1e293b" stroke="#10b981" stroke-width="1.5" rx="8"/>
+    <rect x="710" y="100" width="175" height="36" fill="url(#step-grad-4)" rx="8"/>
+    <rect x="710" y="126" width="175" height="10" fill="url(#step-grad-4)"/>
+    <text x="797" y="123" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="13" font-weight="700">4. Email Dispatch</text>
+
+    <circle cx="797" cy="180" r="28" fill="#0f172a" stroke="#10b981" stroke-width="1.5"/>
+    <text x="797" y="185" text-anchor="middle" fill="#34d399" font-family="sans-serif" font-size="22">✉️</text>
+
+    <text x="797" y="230" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="13" font-weight="600">Client Resolution</text>
+    <text x="797" y="255" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• SMTP Transport</text>
+    <text x="797" y="275" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Direct Admin Reply</text>
+    <text x="797" y="295" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Automated Logs</text>
+    <text x="797" y="315" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="11">• Case Closed / Replied</text>
+
+    <rect x="722" y="340" width="150" height="42" fill="#0f172a" stroke="#10b981" stroke-width="1" rx="5"/>
+    <text x="797" y="365" text-anchor="middle" fill="#34d399" font-family="sans-serif" font-size="11" font-weight="600">Flask-Mail Delivery</text>
+  </g>
+</svg>
