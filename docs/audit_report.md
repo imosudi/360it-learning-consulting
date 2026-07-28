@@ -43,3 +43,77 @@ This technical and business audit benchmarks the **360IT Learning & Consulting**
 * **Gap to Top 5%**: Substantial. The admin suite provides basic CRUD management but lacks automated CRM and lead lifecycle capabilities.
 
 ---
+
+## Step 2 — Security Audit
+
+This section evaluates the security posture of the platform across credential management, session hardening, rate limiting, secrets management, input sanitization, and regulatory compliance.
+
+---
+
+### 1. Credential Hygiene & Authentication (Blocking Finding)
+* **Code Evidence**:
+  * **Default Account Seeding**: `app/seed.py` lines 421–429 auto-seeds a default administrator (`username='admin'`, `password='Admin@360it!2026'`) on database initialization.
+  * **Login Interface**: `app/templates/admin/login.html` lines 285–288 renders the default username and password in cleartext on the public login page.
+  * **Forced Reset**: `app/admin/routes.py` lines 60–85 (`login` route) contains no forced password change logic, no `must_change_password` flag, and no first-login rotation enforcement.
+* **Severity / Score**: **Critical / Disqualifying for Top 5%**.
+* **Impact**: If deployed with seed data unchanged, unauthorized administrative access can be gained immediately via publicly displayed default credentials.
+
+---
+
+### 2. Password Hashing Architecture
+* **Code Evidence**:
+  * `AdminUser` model (`app/models.py` lines 33–37) implements `set_password()` using `werkzeug.security.generate_password_hash()`.
+  * Flask-Security-Too configuration is present in `config.py` (`SECURITY_PASSWORD_SALT` line 31), but password hashing delegates to Werkzeug's default algorithm (`scrypt` / `pbkdf2:sha256`).
+* **Severity / Score**: **Moderate / Acceptable baseline, below top 5%**.
+* **Impact**: Werkzeug defaults are secure against basic attacks, but lack explicit work-factor tuning (e.g. Argon2id or high-work-factor Bcrypt) standard in financial/enterprise security platforms.
+
+---
+
+### 3. Session & Cookie Hardening
+* **Code Evidence**:
+  * `config.py` lines 6–34 lacks explicit definitions for `SESSION_COOKIE_SECURE`, `SESSION_COOKIE_HTTPONLY`, `SESSION_COOKIE_SAMESITE`, and `PERMANENT_SESSION_LIFETIME`.
+  * `app/admin/routes.py` line 76 sets `session['admin_user_id'] = user.id` without specifying session expiration or IP binding.
+* **Severity / Score**: **High / Non-compliant with top 5% standards**.
+* **Impact**:
+  * `SESSION_COOKIE_SECURE` absent: Session cookies can be transmitted over unencrypted HTTP connections.
+  * `SESSION_COOKIE_SAMESITE` absent: Increased vulnerability to Cross-Site Request Forgery (CSRF) in cross-domain contexts.
+  * Incomplete session timeout: Sessions persist indefinitely until browser termination or explicit logout (`app/admin/routes.py` line 88).
+
+---
+
+### 4. Rate Limiting & Brute-Force Protection
+* **Code Evidence**:
+  * `app/admin/routes.py` lines 60–85 (`/admin/login` endpoint) has no rate-limiting decorator (`Flask-Limiter`) or IP-based login attempt throttling.
+  * Failed login attempts trigger a basic flash alert (`flash('Invalid username/email or password.', 'danger')`) without delay or account lockout mechanisms.
+* **Severity / Score**: **High / Non-compliant**.
+* **Impact**: Vulnerable to automated dictionary and brute-force authentication attacks on the administrative interface.
+
+---
+
+### 5. Secrets Management & Environment Configuration
+* **Code Evidence**:
+  * `config.py` lines 7, 10–13, 22–28 provide fallback values (`'360it-learning-consulting-secret-key-2026'`, AWS SES credentials, and MySQL connection parameters) if environment variables are missing.
+  * Local `.env` is properly declared in `.gitignore`.
+* **Severity / Score**: **Moderate / Below top 5% standard**.
+* **Impact**: Insecure fallback defaults in `config.py` could allow unauthorized environments to boot with weak or hardcoded secret keys if `.env` loading fails.
+
+---
+
+### 6. SQL Injection & Cross-Site Scripting (XSS) Surface
+* **Code Evidence**:
+  * Data queries across `app/routes.py` and `app/admin/routes.py` rely exclusively on SQLAlchemy ORM methods (`filter_by`, `get`, `query.all()`). Zero raw SQL string concantenation detected.
+  * HTML templates use Jinja2 autoescaping. No unescaped `|safe` filters are applied to user input variables.
+* **Severity / Score**: **Low Risk / Fully Compliant**.
+* **Impact**: Robust defense against SQL injection and standard stored/reflected XSS.
+
+---
+
+### 7. GDPR & Privacy Compliance Posture
+* **Code Evidence**:
+  * Public forms (`ContactForm`, `ConsultationForm`, `EnrollmentForm` in `app/forms.py`) collect PII (Name, Email, Phone, Organization).
+  * `app/templates/index.html` and `contact.html` forms lack explicit opt-in privacy consent checkboxes ("I agree to the processing of my personal data").
+  * `app/admin/routes.py` contains no PII export or right-to-be-forgotten deletion workflows.
+* **Severity / Score**: **High / Non-compliant for EU/Austrian target market**.
+* **Impact**: Legal non-compliance risk under GDPR Article 6 (Lawfulness of processing) and Article 17 (Right to erasure).
+
+---
