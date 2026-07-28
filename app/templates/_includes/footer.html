@@ -6,7 +6,7 @@
           <img src="{{ url_for('static', filename='images/logo.png') }}" alt="360IT Learning & Consulting Logo"
             class="brand-logo-img">
         </a>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 300px;">
+        <p style="color: #e0e7ff; font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 320px; line-height: 1.6;">
           Empowering Businesses Through Technology. Transforming Careers Through Learning. Enterprise IT consulting,
           hands-on bootcamps, and government & corporate tech contracts.
         </p>
@@ -51,7 +51,7 @@
 
       <div class="footer-col">
         <h4>Stay Updated</h4>
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        <p style="color: #e0e7ff; font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">
           Subscribe to our tech insights newsletter for weekly cloud, DevOps, and career updates.
         </p>
         <form action="{{ url_for('main.newsletter_subscribe') }}" method="POST" id="newsletter-footer-form">
@@ -69,12 +69,12 @@
 
     <div class="footer-bottom">
       <div>&copy; 2026 360IT Learning &amp; Consulting. Developed by <a href="https://daybreakafrika.com.ng"
-          target="_blank" style="color: var(--primary-blue); font-weight: 600;">Daybreak Afrika Technologies</a>. All
+          target="_blank" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">Daybreak Afrika Technologies</a>. All
         rights reserved. </div>
       <div style="display: flex; gap: 1.5rem;">
-        <a href="{{ url_for('main.privacy') }}" style="color: var(--text-muted);">Privacy Policy</a>
-        <a href="{{ url_for('main.terms') }}" style="color: var(--text-muted);">Terms & Conditions</a>
-        <a href="{{ url_for('admin.dashboard') }}" style="color: var(--accent-cyan); font-weight: 600;"><i
+        <a href="{{ url_for('main.privacy') }}" style="color: #cbd5e1;">Privacy Policy</a>
+        <a href="{{ url_for('main.terms') }}" style="color: #cbd5e1;">Terms & Conditions</a>
+        <a href="{{ url_for('admin.dashboard') }}" style="color: #38bdf8; font-weight: 700;"><i
             class="fas fa-lock" style="font-size: 0.75rem;"></i> Admin Portal</a>
       </div>
     </div>
