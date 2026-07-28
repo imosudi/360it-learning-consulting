@@ -29,5 +29,6 @@ jobs:
         env:
           SECRET_KEY: 'ci-testing-secret-key'
           ALLOW_SQLITE_FALLBACK: 'true'
+          TESTING: 'true'
         run: |
           pytest --verbose tests/

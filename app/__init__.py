@@ -27,9 +27,13 @@ if Config.SENTRY_DSN:
     except Exception as e:
         print(f"Notice: Sentry DSN configured but SDK failed to initialize: {e}")
 
-# Check if primary remote MySQL is reachable
+# Check if testing mode is active or primary remote MySQL is reachable
+is_testing = app.config.get('TESTING') or os.environ.get('TESTING') == 'True' or os.environ.get('FLASK_ENV') == 'testing'
+
 use_sqlite = False
-if HAS_PYMYSQL:
+if is_testing:
+    use_sqlite = True
+elif HAS_PYMYSQL:
     try:
         connection = pymysql.connect(
             host=Config.DB_HOST,
@@ -46,11 +50,10 @@ if HAS_PYMYSQL:
         else:
             print(f"CRITICAL: Primary MySQL database ({Config.DB_HOST}) is unreachable ({e}). Silent SQLite fallback is disabled to prevent split-brain data corruption.")
             use_sqlite = False
-else:
-    if Config.ALLOW_SQLITE_FALLBACK:
-        use_sqlite = True
+elif Config.ALLOW_SQLITE_FALLBACK:
+    use_sqlite = True
 
-if use_sqlite:
+if use_sqlite and not is_testing and not app.config.get('SQLALCHEMY_DATABASE_URI'):
     os.makedirs(os.path.join(app.root_path, '..', 'instance'), exist_ok=True)
     app.config['SQLALCHEMY_DATABASE_URI'] = Config.LOCAL_SQLITE_URI
 
