@@ -46,3 +46,28 @@ def test_forced_password_change_redirect(client, app):
     response = client.get('/admin/dashboard')
     assert response.status_code == 302
     assert '/admin/change-password' in response.headers['Location']
+
+def test_admin_create_course_flow(client, admin_user):
+    client.post('/admin/login', data={
+        'username': 'testadmin',
+        'password': 'StrongTestPass123!'
+    })
+    
+    # Render create course form
+    get_res = client.get('/admin/courses/create')
+    assert get_res.status_code == 200
+    assert b'Create New Training Course' in get_res.data
+    
+    # Submit create course
+    post_res = client.post('/admin/courses/create', data={
+        'title': 'Test Kubernetes Masterclass',
+        'icon': 'fa-cubes',
+        'duration': '6 Weeks',
+        'delivery_mode': 'Online Live Interactive',
+        'skill_level': 'Intermediate to Advanced',
+        'short_desc': 'Comprehensive hands-on Kubernetes orchestration training.',
+        'syllabus_list': 'Module 1|Module 2',
+        'featured': 'y'
+    }, follow_redirects=True)
+    assert post_res.status_code == 200
+    assert b'Test Kubernetes Masterclass' in post_res.data

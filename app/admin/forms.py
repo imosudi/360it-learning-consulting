@@ -37,3 +37,20 @@ class ChangePasswordForm(FlaskForm):
     new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8, message='Password must be at least 8 characters long.')])
     confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password', message='Passwords must match.')])
     submit = SubmitField('Update Password')
+
+class CourseForm(FlaskForm):
+    title = StringField('Course Title', validators=[DataRequired(), Length(min=3, max=150)])
+    icon = StringField('FontAwesome Icon Class (e.g. fa-aws, fa-cubes)', default='fa-graduation-cap', validators=[DataRequired(), Length(max=100)])
+    duration = StringField('Duration (e.g. 8 Weeks)', validators=[DataRequired(), Length(max=50)])
+    delivery_mode = StringField('Delivery Mode (e.g. Online, Onsite, Hybrid)', validators=[DataRequired(), Length(max=100)])
+    skill_level = SelectField('Skill Level', choices=[
+        ('Beginner to Advanced', 'Beginner to Advanced'),
+        ('Intermediate to Advanced', 'Intermediate to Advanced'),
+        ('Advanced Professional', 'Advanced Professional'),
+        ('All Levels Welcome', 'All Levels Welcome')
+    ], validators=[DataRequired()])
+    short_desc = TextAreaField('Short Summary Description', validators=[DataRequired(), Length(min=10)])
+    long_desc = TextAreaField('Detailed Course Overview', validators=[Optional()])
+    syllabus_list = TextAreaField('Syllabus Topics (Pipe-separated: Topic 1|Topic 2|Topic 3)', validators=[Optional()])
+    featured = BooleanField('Featured Course', default=True)
+    submit = SubmitField('Save Course')

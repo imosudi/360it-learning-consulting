@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_mail import Message
 from ..extensions import db, mail
 from ..models import AdminUser, ContactMessage, EnrollmentRequest, ConsultationRequest, TrainingCourse
-from .forms import AdminLoginForm, StatusUpdateForm, SendReplyForm, CreateAdminUserForm, ChangePasswordForm
+from .forms import AdminLoginForm, StatusUpdateForm, SendReplyForm, CreateAdminUserForm, ChangePasswordForm, CourseForm
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -748,3 +748,89 @@ def api_update_status():
             return jsonify({'success': True, 'message': 'Message status updated'})
             
     return jsonify({'success': False, 'message': 'Item not found'}), 404
+
+import re
+
+def slugify(text):
+    text = text.lower().strip()
+    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'[\s_-]+', '-', text)
+    return re.sub(r'^-+|-+$', '', text) or 'course'
+
+@admin_bp.route('/courses')
+@admin_required
+def manage_courses():
+    courses = TrainingCourse.query.order_by(TrainingCourse.id.desc()).all()
+    return render_template('admin/courses.html', title='Manage Training Courses | 360IT Admin', courses=courses)
+
+@admin_bp.route('/courses/create', methods=['GET', 'POST'])
+@admin_required
+@not_readonly_required
+def create_course():
+    form = CourseForm()
+    if form.validate_on_submit():
+        slug = slugify(form.title.data)
+        existing = TrainingCourse.query.filter_by(slug=slug).first()
+        if existing:
+            slug = f"{slug}-{int(datetime.utcnow().timestamp())}"
+            
+        course = TrainingCourse(
+            title=form.title.data.strip(),
+            slug=slug,
+            icon=form.icon.data.strip() or 'fa-graduation-cap',
+            duration=form.duration.data.strip(),
+            delivery_mode=form.delivery_mode.data.strip(),
+            skill_level=form.skill_level.data,
+            short_desc=form.short_desc.data.strip(),
+            long_desc=form.long_desc.data.strip() if form.long_desc.data else None,
+            syllabus_list=form.syllabus_list.data.strip() if form.syllabus_list.data else None,
+            featured=form.featured.data
+        )
+        db.session.add(course)
+        db.session.commit()
+        flash(f'Training course "{course.title}" created successfully!', 'success')
+        return redirect(url_for('admin.manage_courses'))
+        
+    return render_template('admin/course_form.html', title='Create Training Course | 360IT Admin', form=form, is_edit=False)
+
+@admin_bp.route('/courses/<int:course_id>/edit', methods=['GET', 'POST'])
+@admin_required
+@not_readonly_required
+def edit_course(course_id):
+    course = db.session.get(TrainingCourse, course_id)
+    if not course:
+        flash('Course not found.', 'danger')
+        return redirect(url_for('admin.manage_courses'))
+        
+    form = CourseForm(obj=course)
+    if form.validate_on_submit():
+        course.title = form.title.data.strip()
+        course.icon = form.icon.data.strip()
+        course.duration = form.duration.data.strip()
+        course.delivery_mode = form.delivery_mode.data.strip()
+        course.skill_level = form.skill_level.data
+        course.short_desc = form.short_desc.data.strip()
+        course.long_desc = form.long_desc.data.strip() if form.long_desc.data else None
+        course.syllabus_list = form.syllabus_list.data.strip() if form.syllabus_list.data else None
+        course.featured = form.featured.data
+        
+        db.session.commit()
+        flash(f'Course "{course.title}" updated successfully!', 'success')
+        return redirect(url_for('admin.manage_courses'))
+        
+    return render_template('admin/course_form.html', title=f'Edit Course: {course.title} | 360IT Admin', form=form, is_edit=True, course=course)
+
+@admin_bp.route('/courses/<int:course_id>/delete', methods=['POST'])
+@admin_required
+@not_readonly_required
+def delete_course(course_id):
+    course = db.session.get(TrainingCourse, course_id)
+    if not course:
+        flash('Course not found.', 'danger')
+        return redirect(url_for('admin.manage_courses'))
+        
+    title = course.title
+    db.session.delete(course)
+    db.session.commit()
+    flash(f'Course "{title}" deleted successfully.', 'info')
+    return redirect(url_for('admin.manage_courses'))

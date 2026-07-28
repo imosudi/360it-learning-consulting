@@ -746,6 +746,13 @@
                 </div>
             </a>
 
+            <a href="{{ url_for('admin.manage_courses') }}" class="nav-item {% if 'courses' in request.endpoint or 'course' in request.endpoint and not 'enrollment' in request.endpoint %}active{% endif %}">
+                <div class="nav-item-content">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Training Courses</span>
+                </div>
+            </a>
+
             <a href="{{ url_for('admin.course_enrollments') }}" class="nav-item {% if 'course_enrollment' in request.endpoint %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-user-graduate"></i>

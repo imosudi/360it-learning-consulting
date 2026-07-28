@@ -1,0 +1,100 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="dashboard-header" style="margin-bottom: 2rem;">
+    <a href="{{ url_for('admin.manage_courses') }}" style="color: var(--accent-cyan); text-decoration: none; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 0.75rem;">
+        <i class="fa-solid fa-arrow-left"></i> Back to Courses
+    </a>
+    <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">
+        {% if is_edit %}Edit Course: {{ course.title }}{% else %}Create New Training Course{% endif %}
+    </h1>
+    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">
+        Fill out the details below to publish or update a training program on the 360IT platform.
+    </p>
+</div>
+
+<div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; max-width: 800px;">
+    <form method="POST" action="{% if is_edit %}{{ url_for('admin.edit_course', course_id=course.id) }}{% else %}{{ url_for('admin.create_course') }}{% endif %}">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+            <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                {{ form.title.label.text }} *
+            </label>
+            {{ form.title(class="form-control", style="width: 100%; padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px;", placeholder="e.g. AWS Cloud Engineering & Architecture") }}
+            {% if form.title.errors %}
+                <span style="color: #ef4444; font-size: 0.85rem; margin-top: 0.25rem; display: block;">{{ form.title.errors[0] }}</span>
+            {% endif %}
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+            <div class="form-group">
+                <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    {{ form.duration.label.text }} *
+                </label>
+                {{ form.duration(class="form-control", style="width: 100%; padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px;", placeholder="e.g. 10 Weeks") }}
+            </div>
+            
+            <div class="form-group">
+                <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    {{ form.delivery_mode.label.text }} *
+                </label>
+                {{ form.delivery_mode(class="form-control", style="width: 100%; padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px;", placeholder="e.g. Online Live Interactive") }}
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+            <div class="form-group">
+                <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    {{ form.skill_level.label.text }} *
+                </label>
+                {{ form.skill_level(class="form-control", style="width: 100%; padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px;") }}
+            </div>
+
+            <div class="form-group">
+                <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    {{ form.icon.label.text }} *
+                </label>
+                {{ form.icon(class="form-control", style="width: 100%; padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px;", placeholder="e.g. fa-aws") }}
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+            <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                {{ form.short_desc.label.text }} *
+            </label>
+            {{ form.short_desc(class="form-control", style="width: 100%; padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px;", rows=3, placeholder="High-level summary of the training course...") }}
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+            <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                {{ form.long_desc.label.text }}
+            </label>
+            {{ form.long_desc(class="form-control", style="width: 100%; padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px;", rows=5, placeholder="Comprehensive description of learning outcomes, prerequisites, and project work...") }}
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+            <label style="display: block; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+                {{ form.syllabus_list.label.text }}
+            </label>
+            {{ form.syllabus_list(class="form-control", style="width: 100%; padding: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 8px;", rows=3, placeholder="Module 1: AWS Fundamentals | Module 2: EC2 & VPC Networking | Module 3: S3 & Security") }}
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem;">
+            {{ form.featured(id="featured-check", style="width: 18px; height: 18px; cursor: pointer;") }}
+            <label for="featured-check" style="font-weight: 600; color: var(--text-primary); cursor: pointer;">
+                {{ form.featured.label.text }}
+            </label>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-gold" style="padding: 0.8rem 1.75rem; font-weight: 700; border-radius: 8px;">
+                <i class="fa-solid fa-floppy-disk"></i> {% if is_edit %}Update Course{% else %}Publish Course{% endif %}
+            </button>
+            <a href="{{ url_for('admin.manage_courses') }}" class="btn" style="background: rgba(255,255,255,0.08); color: var(--text-secondary); padding: 0.8rem 1.5rem; border-radius: 8px; text-decoration: none;">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
