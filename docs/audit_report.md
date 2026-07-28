@@ -178,3 +178,53 @@ This section evaluates the application's infrastructure resilience, database han
 * **Architectural Gap**: As record counts grow into tens of thousands, unbounded queries will cause memory spikes and WSGI worker process crashes.
 
 ---
+
+## Step 4 — Product & UX Audit
+
+This section evaluates the user experience, conversion funnel friction, content depth, administrative workflow design, and accessibility standards.
+
+---
+
+### 1. Public Portal Conversion Path & Funnel Friction
+* **Code Evidence**:
+  * Services (`app/routes.py` lines 49–54) and Course pages (`app/routes.py` lines 60–65) rely on global modal web forms (`ConsultationForm` and `EnrollmentForm` injected in `app/routes.py` lines 17–22).
+* **UX Gap vs. Benchmarks**:
+  * **Thoughtworks / Slalom**: Enterprise consulting prospects expect direct calendar integration (e.g. HubSpot Meetings / Calendly embeds) or instant whitepaper downloads in exchange for contact information. 360IT requires submitting a static form and awaiting a manual email response.
+  * **Pluralsight / Coursera**: Edtech buyers expect self-service video previews, diagnostic quizzes, or interactive sandbox trial access. 360IT requires manual application review for every enrollment.
+
+---
+
+### 2. Credibility Signals & Social Proof Depth
+* **Code Evidence**:
+  * `Testimonial` seed records (`app/seed.py` lines 360–416) use generic persona titles ("David Miller - CIO at Apex Financial Holdings").
+  * `Project` records (`app/seed.py` lines 242–358) feature high-level text summaries paired with generic SVG illustrations (`/static/images/projects/project-cloud-migration.svg`).
+* **UX Gap vs. Benchmarks**:
+  * Absence of verifiable client case study PDFs, downloadable architecture diagrams, real client company logos, or recorded video testimonials creates a credibility deficit for high-ticket enterprise IT contracts.
+
+---
+
+### 3. Content Specificity & Course Syllabus Depth
+* **Code Evidence**:
+  * `TrainingCourse.syllabus_list` (`app/models.py` line 52) stores single pipe-delimited strings (`"AWS Architecture Fundamentals|VPC & Networking Security|..."`) split via `course.syllabus_list.split('|')` in `app/routes.py` line 63.
+* **UX Gap vs. Benchmarks**:
+  * Technical buyers evaluate course quality by curriculum depth. Top-5% platforms provide module-by-module breakdown, hands-on lab exercise specifications, prerequisites, target certification alignment, and downloadable PDF syllabi.
+
+---
+
+### 4. Admin Suite UX vs Lightweight CRM (HubSpot Free Tier)
+* **Code Evidence**:
+  * Admin dashboard (`app/admin/routes.py` lines 93–180) renders static metric cards and tabular lists for `ContactMessage`, `EnrollmentRequest`, and `ConsultationRequest`.
+* **UX Gap vs. Benchmarks**:
+  * **No Visual Kanban Board**: Inquiries exist in flat table views without drag-and-drop pipeline stages.
+  * **No Automated Lead Scoring**: High-intent corporate enterprise leads are mixed together with standard inquiries.
+  * **No Activity Timeline**: Admins cannot view past interaction logs, call notes, or response history for a specific contact.
+
+---
+
+### 5. Accessibility & Responsive Standards
+* **Code Evidence**:
+  * Interface relies on Vanilla CSS (`app/static/css/style.css`) and custom inline styles in `app/templates/admin/base.html`.
+  * Dynamic modal dialogs lack explicit WCAG 2.1 ARIA attributes (`aria-labelledby`, `aria-modal="true"`) and focus-locking keyboard navigation.
+* **UX Gap vs. Benchmarks**: Non-compliant with WCAG 2.1 AA accessibility standards for public sector and enterprise contracts.
+
+---
