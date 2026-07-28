@@ -6,7 +6,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g, Response, send_from_directory, current_app, jsonify
 from flask_mail import Message
 from ..extensions import db, mail
-from ..models import AdminUser, ContactMessage, EnrollmentRequest, ConsultationRequest, TrainingCourse
+from ..models import AdminUser, ContactMessage, EnrollmentRequest, ConsultationRequest, TrainingCourse, NewsletterSubscriber
 from .forms import AdminLoginForm, StatusUpdateForm, SendReplyForm, CreateAdminUserForm, ChangePasswordForm, CourseForm
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -836,32 +836,26 @@ def delete_course(course_id):
     return redirect(url_for('admin.manage_courses'))
 
 
-# Dummy Newsletter Subscribers Management
-MOCK_NEWSLETTER_SUBSCRIBERS = [
-    {'id': 1, 'email': 'john.doe@enterprise.com', 'status': 'Subscribed', 'source': 'Footer Form', 'created_at': '2026-07-28 14:30'},
-    {'id': 2, 'email': 'sarah.connor@cyberdyne.org', 'status': 'Subscribed', 'source': 'Homepage Modal', 'created_at': '2026-07-27 09:15'},
-    {'id': 3, 'email': 'alex.rivera@techsolutions.io', 'status': 'Unsubscribed', 'source': 'Blog Subscription', 'created_at': '2026-07-25 18:45'},
-    {'id': 4, 'email': 'emily.watson@consulting.co', 'status': 'Subscribed', 'source': 'Footer Form', 'created_at': '2026-07-24 11:20'},
-    {'id': 5, 'email': 'michael.brown@cloudnet.com', 'status': 'Subscribed', 'source': 'Training Page', 'created_at': '2026-07-22 16:10'},
-]
-
+# Newsletter Subscribers Management
 @admin_bp.route('/newsletter-subscribers')
 @admin_required
 def newsletter_subscribers():
     status = request.args.get('status', 'all')
-    q = request.args.get('q', '').strip().lower()
+    q = request.args.get('q', '').strip()
 
-    subscribers = list(MOCK_NEWSLETTER_SUBSCRIBERS)
+    query = NewsletterSubscriber.query
 
     if status and status != 'all':
-        subscribers = [s for s in subscribers if s['status'].lower() == status.lower()]
+        query = query.filter(NewsletterSubscriber.status == status)
 
     if q:
-        subscribers = [s for s in subscribers if q in s['email'].lower()]
+        query = query.filter(NewsletterSubscriber.email.ilike(f'%{q}%'))
 
-    total_count = len(MOCK_NEWSLETTER_SUBSCRIBERS)
-    subscribed_count = sum(1 for s in MOCK_NEWSLETTER_SUBSCRIBERS if s['status'] == 'Subscribed')
-    unsubscribed_count = sum(1 for s in MOCK_NEWSLETTER_SUBSCRIBERS if s['status'] == 'Unsubscribed')
+    subscribers = query.order_by(NewsletterSubscriber.id.desc()).all()
+
+    total_count = NewsletterSubscriber.query.count()
+    subscribed_count = NewsletterSubscriber.query.filter_by(status='Subscribed').count()
+    unsubscribed_count = NewsletterSubscriber.query.filter_by(status='Unsubscribed').count()
 
     return render_template(
         'admin/newsletter_subscribers.html',
@@ -881,8 +875,10 @@ def export_newsletter_subscribers():
     writer = csv.writer(output)
     writer.writerow(['ID', 'Email Address', 'Status', 'Acquisition Source', 'Subscribed Date'])
 
-    for sub in MOCK_NEWSLETTER_SUBSCRIBERS:
-        writer.writerow([sub['id'], sub['email'], sub['status'], sub['source'], sub['created_at']])
+    subscribers = NewsletterSubscriber.query.order_by(NewsletterSubscriber.id.asc()).all()
+    for sub in subscribers:
+        date_str = sub.created_at.strftime('%Y-%m-%d %H:%M') if sub.created_at else ''
+        writer.writerow([sub.id, sub.email, sub.status, sub.source, date_str])
 
     output.seek(0)
     return Response(
@@ -895,10 +891,14 @@ def export_newsletter_subscribers():
 @admin_required
 @not_readonly_required
 def toggle_newsletter_subscriber(subscriber_id):
-    for sub in MOCK_NEWSLETTER_SUBSCRIBERS:
-        if sub['id'] == subscriber_id:
-            sub['status'] = 'Unsubscribed' if sub['status'] == 'Subscribed' else 'Subscribed'
-            flash(f'Subscription status updated for {sub["email"]}', 'success')
-            break
+    subscriber = db.session.get(NewsletterSubscriber, subscriber_id)
+    if subscriber:
+        subscriber.status = 'Unsubscribed' if subscriber.status == 'Subscribed' else 'Subscribed'
+        subscriber.updated_at = datetime.utcnow()
+        db.session.commit()
+        flash(f'Subscription status updated for {subscriber.email}', 'success')
+    else:
+        flash('Subscriber not found.', 'danger')
     return redirect(url_for('admin.newsletter_subscribers'))
+
 

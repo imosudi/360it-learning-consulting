@@ -158,3 +158,15 @@ class EnrollmentRequest(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+
+class NewsletterSubscriber(db.Model):
+    __tablename__ = 'newsletter_subscribers'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    status = db.Column(db.String(20), default='Subscribed')  # 'Subscribed', 'Unsubscribed'
+    source = db.Column(db.String(100), default='Footer Form')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+

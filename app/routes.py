@@ -1,7 +1,8 @@
 import os
+from datetime import datetime
 from flask import Blueprint, render_template, redirect, url_for, flash, request, send_from_directory, current_app
 from .extensions import db
-from .models import Service, TrainingCourse, Project, Testimonial, ContactMessage, ConsultationRequest, EnrollmentRequest
+from .models import Service, TrainingCourse, Project, Testimonial, ContactMessage, ConsultationRequest, EnrollmentRequest, NewsletterSubscriber
 from .forms import ContactForm, ConsultationForm, EnrollmentForm
 
 bp = Blueprint('main', __name__)
@@ -148,7 +149,32 @@ def enroll_course():
 
 @bp.route('/newsletter-subscribe', methods=['POST'])
 def newsletter_subscribe():
-    email = request.form.get('email')
-    if email:
-        flash('Thank you for subscribing to 360IT Tech Insights newsletter!', 'success')
+    email = request.form.get('email', '').strip().lower()
+    source = request.form.get('source', 'Footer Form').strip()
+    
+    if not email or '@' not in email:
+        flash('Please enter a valid email address to subscribe.', 'danger')
+        return redirect(request.referrer or url_for('main.index'))
+        
+    try:
+        subscriber = NewsletterSubscriber.query.filter_by(email=email).first()
+        if subscriber:
+            if subscriber.status == 'Unsubscribed':
+                subscriber.status = 'Subscribed'
+                subscriber.updated_at = datetime.utcnow()
+                db.session.commit()
+                flash('Welcome back! Your newsletter subscription has been reactivated.', 'success')
+            else:
+                flash('You are already subscribed to 360IT Tech Insights newsletter.', 'info')
+        else:
+            new_sub = NewsletterSubscriber(email=email, source=source, status='Subscribed')
+            db.session.add(new_sub)
+            db.session.commit()
+            flash('Thank you for subscribing to 360IT Tech Insights newsletter!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error subscribing email: {e}")
+        flash('An error occurred while processing your subscription. Please try again.', 'danger')
+
     return redirect(request.referrer or url_for('main.index'))
+
