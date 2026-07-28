@@ -11,8 +11,8 @@ def test_services_route(client):
     response = client.get('/services')
     assert response.status_code == 200
 
-def test_courses_route(client):
-    response = client.get('/courses')
+def test_training_route(client):
+    response = client.get('/training')
     assert response.status_code == 200
 
 def test_contact_route_get(client):

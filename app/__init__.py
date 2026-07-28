@@ -1,4 +1,5 @@
 import os
+import sys
 try:
     import pymysql
     HAS_PYMYSQL = True
@@ -28,11 +29,14 @@ if Config.SENTRY_DSN:
         print(f"Notice: Sentry DSN configured but SDK failed to initialize: {e}")
 
 # Check if testing mode is active or primary remote MySQL is reachable
-is_testing = app.config.get('TESTING') or os.environ.get('TESTING') == 'True' or os.environ.get('FLASK_ENV') == 'testing'
+is_testing = app.config.get('TESTING') or os.environ.get('TESTING') == 'True' or os.environ.get('FLASK_ENV') == 'testing' or 'pytest' in sys.modules
 
 use_sqlite = False
 if is_testing:
     use_sqlite = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    app.config['TESTING'] = True
+    app.config['WTF_CSRF_ENABLED'] = False
 elif HAS_PYMYSQL:
     try:
         connection = pymysql.connect(
@@ -53,7 +57,7 @@ elif HAS_PYMYSQL:
 elif Config.ALLOW_SQLITE_FALLBACK:
     use_sqlite = True
 
-if use_sqlite and not is_testing and not app.config.get('SQLALCHEMY_DATABASE_URI'):
+if use_sqlite and not is_testing:
     os.makedirs(os.path.join(app.root_path, '..', 'instance'), exist_ok=True)
     app.config['SQLALCHEMY_DATABASE_URI'] = Config.LOCAL_SQLITE_URI
 
