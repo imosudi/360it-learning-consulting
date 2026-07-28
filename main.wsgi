@@ -7,3 +7,5 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, f'{dir_path}')
 
 from main import app as application
+
+# Trigger WSGI Application Process Reload
