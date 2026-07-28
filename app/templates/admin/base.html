@@ -734,8 +734,15 @@
             
             <a href="{{ url_for('admin.dashboard') }}" class="nav-item {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
                 <div class="nav-item-content">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Dashboard</span>
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard Overview</span>
+                </div>
+            </a>
+
+            <a href="{{ url_for('admin.kanban_pipeline') }}" class="nav-item {% if 'kanban' in request.endpoint %}active{% endif %}">
+                <div class="nav-item-content">
+                    <i class="fa-solid fa-table-columns"></i>
+                    <span>Lead Pipeline (Kanban)</span>
                 </div>
             </a>
 

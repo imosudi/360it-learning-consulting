@@ -3,7 +3,7 @@ import csv
 import io
 from functools import wraps
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g, Response, send_from_directory, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g, Response, send_from_directory, current_app, jsonify
 from flask_mail import Message
 from ..extensions import db, mail
 from ..models import AdminUser, ContactMessage, EnrollmentRequest, ConsultationRequest, TrainingCourse
@@ -657,3 +657,94 @@ def delete_user(user_id):
     db.session.commit()
     flash(f'Administrator user "{user_name}" has been permanently deleted.', 'success')
     return redirect(url_for('admin.manage_users'))
+
+@admin_bp.route('/kanban')
+@admin_required
+def kanban_pipeline():
+    enrollments = EnrollmentRequest.query.order_by(EnrollmentRequest.created_at.desc()).all()
+    consultations = ConsultationRequest.query.order_by(ConsultationRequest.created_at.desc()).all()
+    messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).all()
+    
+    stages = {
+        'New': [],
+        'In Progress': [],
+        'Completed': [],
+        'Archived': []
+    }
+    
+    for item in enrollments:
+        stage = item.status if item.status in stages else 'New'
+        stages[stage].append({
+            'id': item.id,
+            'type': 'enrollment',
+            'title': item.course_title,
+            'client': item.full_name,
+            'email': item.email,
+            'phone': item.phone,
+            'date': item.created_at.strftime('%b %d, %Y'),
+            'status': item.status
+        })
+        
+    for item in consultations:
+        stage = item.status if item.status in stages else 'New'
+        stages[stage].append({
+            'id': item.id,
+            'type': 'consultation',
+            'title': item.service_interest,
+            'client': item.full_name,
+            'org': item.organization or 'N/A',
+            'email': item.email,
+            'phone': item.phone,
+            'date': item.created_at.strftime('%b %d, %Y'),
+            'status': item.status
+        })
+        
+    for item in messages:
+        stage = 'New' if not item.is_read else ('Completed' if item.status == 'Replied' else 'In Progress')
+        stages[stage].append({
+            'id': item.id,
+            'type': 'message',
+            'title': item.subject or item.subject_choice,
+            'client': item.full_name,
+            'email': item.email,
+            'phone': item.phone or 'N/A',
+            'date': item.created_at.strftime('%b %d, %Y'),
+            'status': 'Replied' if item.status == 'Replied' else ('Read' if item.is_read else 'Unread')
+        })
+
+    return render_template('admin/kanban.html', title='Lead Pipeline (Kanban) | 360IT Admin', stages=stages)
+
+@admin_bp.route('/api/update-status', methods=['POST'])
+@admin_required
+@not_readonly_required
+def api_update_status():
+    data = request.get_json() or {}
+    item_type = data.get('type')
+    item_id = data.get('id')
+    new_status = data.get('status')
+    
+    if not item_type or not item_id or not new_status:
+        return jsonify({'success': False, 'message': 'Missing required fields'}), 400
+        
+    if item_type == 'enrollment':
+        item = db.session.get(EnrollmentRequest, item_id)
+        if item:
+            item.status = new_status
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Enrollment status updated'})
+    elif item_type == 'consultation':
+        item = db.session.get(ConsultationRequest, item_id)
+        if item:
+            item.status = new_status
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Consultation status updated'})
+    elif item_type == 'message':
+        item = db.session.get(ContactMessage, item_id)
+        if item:
+            item.is_read = True
+            if new_status in ['Completed', 'Replied']:
+                item.status = 'Replied'
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Message status updated'})
+            
+    return jsonify({'success': False, 'message': 'Item not found'}), 404

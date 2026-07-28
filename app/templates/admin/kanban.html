@@ -1,0 +1,96 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="dashboard-header" style="margin-bottom: 2rem;">
+    <div>
+        <span class="badge" style="background: rgba(0, 242, 254, 0.1); color: var(--accent-cyan); padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem; display: inline-block;">
+            CRM Operations
+        </span>
+        <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">Visual Lead Pipeline (Kanban)</h1>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">
+            Manage inquiries, course enrollments, and enterprise consultations across lifecycle stages.
+        </p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; min-height: 600px; align-items: start;">
+    {% for stage_name, items in stages.items() %}
+    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; min-height: 550px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 2px solid {% if stage_name == 'New' %}var(--accent-cyan){% elif stage_name == 'In Progress' %}var(--accent-gold){% elif stage_name == 'Completed' %}#10b981{% else %}var(--text-muted){% endif %};">
+            <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                {% if stage_name == 'New' %}<i class="fa-solid fa-sparkles" style="color: var(--accent-cyan);"></i>{% elif stage_name == 'In Progress' %}<i class="fa-solid fa-spinner" style="color: var(--accent-gold);"></i>{% elif stage_name == 'Completed' %}<i class="fa-solid fa-circle-check" style="color: #10b981;"></i>{% else %}<i class="fa-solid fa-box-archive" style="color: var(--text-muted);"></i>{% endif %}
+                {{ stage_name }}
+            </h3>
+            <span style="background: rgba(255,255,255,0.1); color: var(--text-primary); font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 12px;">
+                {{ items|length }}
+            </span>
+        </div>
+
+        <div class="kanban-lane" data-stage="{{ stage_name }}" style="display: flex; flex-direction: column; gap: 0.85rem; flex: 1;">
+            {% for item in items %}
+            <div class="kanban-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 6px; {% if item.type == 'enrollment' %}background: rgba(245,158,11,0.15); color: var(--accent-gold);{% elif item.type == 'consultation' %}background: rgba(0,242,254,0.15); color: var(--accent-cyan);{% else %}background: rgba(139,92,246,0.15); color: #8b5cf6;{% endif %}">
+                        {{ item.type }}
+                    </span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">{{ item.date }}</span>
+                </div>
+
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.35rem;">{{ item.title }}</h4>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-user" style="font-size: 0.75rem; margin-right: 0.3rem;"></i> <strong>{{ item.client }}</strong>
+                    {% if item.org %}<br><i class="fa-solid fa-building" style="font-size: 0.75rem; margin-right: 0.3rem;"></i> {{ item.org }}{% endif %}
+                </p>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; border-top: 1px solid var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem;">
+                    <a href="mailto:{{ item.email }}" style="color: var(--accent-cyan); text-decoration: none;" title="{{ item.email }}">
+                        <i class="fa-solid fa-envelope"></i> Email
+                    </a>
+                    
+                    <select onchange="moveLead('{{ item.type }}', {{ item.id }}, this.value)" style="background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.75rem; padding: 0.2rem 0.4rem; border-radius: 6px; cursor: pointer;">
+                        <option value="New" {% if stage_name == 'New' %}selected{% endif %}>Move to New</option>
+                        <option value="In Progress" {% if stage_name == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Completed" {% if stage_name == 'Completed' %}selected{% endif %}>Completed</option>
+                        <option value="Archived" {% if stage_name == 'Archived' %}selected{% endif %}>Archived</option>
+                    </select>
+                </div>
+            </div>
+            {% else %}
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 2rem 0; border: 1px dashed var(--border-color); border-radius: 8px;">
+                No items in {{ stage_name }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function moveLead(itemType, itemId, newStatus) {
+    fetch("{{ url_for('admin.api_update_status') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token() if csrf_token else '' }}"
+        },
+        body: JSON.stringify({
+            type: itemType,
+            id: itemId,
+            status: newStatus
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert("Status update failed: " + data.message);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Error connecting to server.");
+    });
+}
+</script>
+{% endblock %}
