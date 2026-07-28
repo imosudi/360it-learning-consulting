@@ -71,3 +71,13 @@ def test_admin_create_course_flow(client, admin_user):
     }, follow_redirects=True)
     assert post_res.status_code == 200
     assert b'Test Kubernetes Masterclass' in post_res.data
+
+def test_kanban_pipeline_route(client, admin_user):
+    client.post('/admin/login', data={
+        'username': 'testadmin',
+        'password': 'StrongTestPass123!'
+    })
+    
+    res = client.get('/admin/kanban')
+    assert res.status_code == 200
+    assert b'Lead Pipeline' in res.data or b'Kanban' in res.data

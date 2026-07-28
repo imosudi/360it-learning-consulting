@@ -678,10 +678,10 @@ def kanban_pipeline():
             'id': item.id,
             'type': 'enrollment',
             'title': item.course_title,
-            'client': item.full_name,
+            'client': getattr(item, 'full_name', None) or getattr(item, 'name', 'N/A'),
             'email': item.email,
-            'phone': item.phone,
-            'date': item.created_at.strftime('%b %d, %Y'),
+            'phone': item.phone or 'N/A',
+            'date': item.created_at.strftime('%b %d, %Y') if item.created_at else 'N/A',
             'status': item.status
         })
         
@@ -691,11 +691,11 @@ def kanban_pipeline():
             'id': item.id,
             'type': 'consultation',
             'title': item.service_interest,
-            'client': item.full_name,
+            'client': getattr(item, 'full_name', None) or getattr(item, 'name', 'N/A'),
             'org': item.organization or 'N/A',
             'email': item.email,
-            'phone': item.phone,
-            'date': item.created_at.strftime('%b %d, %Y'),
+            'phone': item.phone or 'N/A',
+            'date': item.created_at.strftime('%b %d, %Y') if item.created_at else 'N/A',
             'status': item.status
         })
         
@@ -704,11 +704,11 @@ def kanban_pipeline():
         stages[stage].append({
             'id': item.id,
             'type': 'message',
-            'title': item.subject or item.subject_choice,
-            'client': item.full_name,
+            'title': getattr(item, 'subject', 'General Inquiry'),
+            'client': getattr(item, 'full_name', None) or getattr(item, 'name', 'N/A'),
             'email': item.email,
             'phone': item.phone or 'N/A',
-            'date': item.created_at.strftime('%b %d, %Y'),
+            'date': item.created_at.strftime('%b %d, %Y') if item.created_at else 'N/A',
             'status': 'Replied' if item.status == 'Replied' else ('Read' if item.is_read else 'Unread')
         })
 
