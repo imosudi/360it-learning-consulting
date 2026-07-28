@@ -13,6 +13,20 @@ from .extensions import db, mail, migrate, security
 app = Flask(__name__)
 app.config.from_object(Config)
 
+# Initialize Sentry Error Monitoring & Telemetry
+if Config.SENTRY_DSN:
+    try:
+        import sentry_sdk
+        from sentry_sdk.integrations.flask import FlaskIntegration
+        sentry_sdk.init(
+            dsn=Config.SENTRY_DSN,
+            integrations=[FlaskIntegration()],
+            traces_sample_rate=1.0
+        )
+        print("Sentry Telemetry: Error monitoring initialized successfully.")
+    except Exception as e:
+        print(f"Notice: Sentry DSN configured but SDK failed to initialize: {e}")
+
 # Check if primary remote MySQL is reachable
 use_sqlite = False
 if HAS_PYMYSQL:

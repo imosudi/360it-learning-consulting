@@ -60,10 +60,42 @@ def load_logged_in_admin():
         g.pending_enrollments_count = EnrollmentRequest.query.filter_by(status='Pending').count()
 
 
+LOGIN_ATTEMPTS = {}
+MAX_LOGIN_ATTEMPTS = 5
+LOCKOUT_TIME_SECONDS = 900  # 15 minutes
+
+def is_rate_limited(ip_address):
+    now = datetime.utcnow().timestamp()
+    if ip_address in LOGIN_ATTEMPTS:
+        attempts, lock_until = LOGIN_ATTEMPTS[ip_address]
+        if now < lock_until:
+            return True, int(lock_until - now)
+        elif now >= lock_until and attempts >= MAX_LOGIN_ATTEMPTS:
+            LOGIN_ATTEMPTS[ip_address] = (0, 0)
+    return False, 0
+
+def record_failed_attempt(ip_address):
+    now = datetime.utcnow().timestamp()
+    attempts, lock_until = LOGIN_ATTEMPTS.get(ip_address, (0, 0))
+    attempts += 1
+    if attempts >= MAX_LOGIN_ATTEMPTS:
+        lock_until = now + LOCKOUT_TIME_SECONDS
+    LOGIN_ATTEMPTS[ip_address] = (attempts, lock_until)
+
+def clear_failed_attempts(ip_address):
+    LOGIN_ATTEMPTS.pop(ip_address, None)
+
 @admin_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if g.admin_user:
         return redirect(url_for('admin.dashboard'))
+    
+    client_ip = request.remote_addr or '127.0.0.1'
+    limited, wait_seconds = is_rate_limited(client_ip)
+    if limited:
+        flash(f'Security Lockout: Too many failed login attempts. Please try again in {wait_seconds // 60 + 1} minutes.', 'danger')
+        form = AdminLoginForm()
+        return render_template('admin/login.html', title='Admin Login | 360IT', form=form), 429
     
     form = AdminLoginForm()
     if form.validate_on_submit():
@@ -75,6 +107,7 @@ def login():
         ).first()
         
         if user and user.check_password(password):
+            clear_failed_attempts(client_ip)
             session.clear()
             session['admin_user_id'] = user.id
             flash(f'Welcome back, {user.full_name}!', 'success')
@@ -83,6 +116,7 @@ def login():
                 next_page = url_for('admin.dashboard')
             return redirect(next_page)
         else:
+            record_failed_attempt(client_ip)
             flash('Invalid username/email or password.', 'danger')
             
     return render_template('admin/login.html', title='Admin Login | 360IT', form=form)

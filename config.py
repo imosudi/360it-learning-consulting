@@ -33,6 +33,7 @@ class Config:
     SESSION_COOKIE_SAMESITE = 'Lax'
     PERMANENT_SESSION_LIFETIME = 86400  # 24 hours in seconds
     ALLOW_SQLITE_FALLBACK = str(os.environ.get('ALLOW_SQLITE_FALLBACK', 'False')).lower() in ['true', 'on', '1']
+    SENTRY_DSN = os.environ.get('SENTRY_DSN')
 
     # Flask-Security-Too Config
     SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT', '360it-learning-security-salt-2026')
