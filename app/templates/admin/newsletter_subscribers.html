@@ -1,0 +1,116 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="dashboard-header" style="margin-bottom: 2rem; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <span class="badge" style="background: rgba(0, 242, 254, 0.1); color: var(--accent-cyan); padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem; display: inline-block;">
+            Lead Growth & Marketing
+        </span>
+        <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.25rem;">Newsletter Subscribers</h1>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Manage platform newsletter subscriptions, capture channels, and export audience email lists.
+        </p>
+    </div>
+    <a href="{{ url_for('admin.export_newsletter_subscribers') }}" class="btn btn-secondary" style="padding: 0.75rem 1.25rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.5rem; border-radius: 8px; white-space: nowrap;">
+        <i class="fa-solid fa-file-csv" style="color: var(--accent-cyan);"></i> Export CSV
+    </a>
+</div>
+
+<!-- Filters and Search -->
+<div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <a href="{{ url_for('admin.newsletter_subscribers', status='all', q=query) }}" 
+           class="btn btn-sm {% if current_status == 'all' or not current_status %}btn-primary{% else %}btn-secondary{% endif %}"
+           style="border-radius: 20px; font-weight: 600;">
+           All ({{ total_count }})
+        </a>
+        <a href="{{ url_for('admin.newsletter_subscribers', status='Subscribed', q=query) }}" 
+           class="btn btn-sm {% if current_status == 'Subscribed' %}btn-primary{% else %}btn-secondary{% endif %}"
+           style="border-radius: 20px; font-weight: 600;">
+           Subscribed ({{ subscribed_count }})
+        </a>
+        <a href="{{ url_for('admin.newsletter_subscribers', status='Unsubscribed', q=query) }}" 
+           class="btn btn-sm {% if current_status == 'Unsubscribed' %}btn-primary{% else %}btn-secondary{% endif %}"
+           style="border-radius: 20px; font-weight: 600;">
+           Unsubscribed ({{ unsubscribed_count }})
+        </a>
+    </div>
+
+    <form method="GET" action="{{ url_for('admin.newsletter_subscribers') }}" style="display: flex; gap: 0.5rem; align-items: center;">
+        <input type="hidden" name="status" value="{{ current_status or 'all' }}">
+        <input type="text" name="q" value="{{ query or '' }}" placeholder="Search by email..." 
+               style="background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.45rem 0.85rem; border-radius: 8px; font-size: 0.85rem; min-width: 220px;">
+        <button type="submit" class="btn btn-secondary btn-sm" style="padding: 0.45rem 0.85rem;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </form>
+</div>
+
+<!-- Subscribers Data Table -->
+<div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
+    <div class="table-responsive">
+        <table class="data-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; white-space: nowrap;">
+            <thead>
+                <tr style="background: var(--bg-surface); border-bottom: 1px solid var(--border-color); color: var(--text-secondary); font-weight: 700;">
+                    <th style="padding: 1rem 1.25rem;">Email Address</th>
+                    <th style="padding: 1rem 1.25rem;">Status</th>
+                    <th style="padding: 1rem 1.25rem;">Acquisition Source</th>
+                    <th style="padding: 1rem 1.25rem;">Subscribed Date</th>
+                    <th style="padding: 1rem 1.25rem; text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in subscribers %}
+                <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-primary);">
+                    <td style="padding: 1rem 1.25rem; font-weight: 600;">
+                        <i class="fa-solid fa-envelope" style="color: var(--accent-cyan); margin-right: 0.5rem;"></i>
+                        {{ sub.email }}
+                    </td>
+                    <td style="padding: 1rem 1.25rem;">
+                        {% if sub.status == 'Subscribed' %}
+                        <span style="background: rgba(16,185,129,0.15); color: #10b981; padding: 0.25rem 0.65rem; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">
+                            <i class="fa-solid fa-circle-check"></i> Subscribed
+                        </span>
+                        {% else %}
+                        <span style="background: rgba(239,68,68,0.15); color: #ef4444; padding: 0.25rem 0.65rem; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">
+                            <i class="fa-solid fa-circle-xmark"></i> Unsubscribed
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1rem 1.25rem;">
+                        <span style="background: rgba(255,255,255,0.06); color: var(--text-secondary); padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.8rem;">
+                            {{ sub.source }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem 1.25rem; color: var(--text-secondary); font-size: 0.85rem;">
+                        {{ sub.created_at }}
+                    </td>
+                    <td style="padding: 1rem 1.25rem; text-align: right;">
+                        {% if not g.admin_user or not g.admin_user.is_readonly %}
+                        <form action="{{ url_for('admin.toggle_newsletter_subscriber', subscriber_id=sub.id) }}" method="POST" style="display: inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() if csrf_token is defined else '' }}">
+                            {% if sub.status == 'Subscribed' %}
+                            <button type="submit" class="btn" style="background: rgba(245,158,11,0.15); color: var(--accent-gold); border: 1px solid rgba(245,158,11,0.3); padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.8rem;" title="Unsubscribe Lead">
+                                Unsubscribe
+                            </button>
+                            {% else %}
+                            <button type="submit" class="btn" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.8rem;" title="Re-subscribe Lead">
+                                Subscribe
+                            </button>
+                            {% endif %}
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="padding: 3rem; text-align: center; color: var(--text-muted);">
+                        No subscribers found matching the criteria.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

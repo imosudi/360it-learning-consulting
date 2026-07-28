@@ -930,17 +930,25 @@
             </a>
 
             <a href="{{ url_for('admin.consultations') }}"
-                class="nav-item {% if 'consultation' in request.endpoint %}active{% endif %}">
+                class="nav-item {% if request.endpoint and 'consultation' in request.endpoint %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-handshake"></i>
                     <span>Consultation Requests</span>
                 </div>
             </a>
 
+            <a href="{{ url_for('admin.newsletter_subscribers') }}"
+                class="nav-item {% if request.endpoint and 'newsletter' in request.endpoint %}active{% endif %}">
+                <div class="nav-item-content">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Newsletter Subscribers</span>
+                </div>
+            </a>
+
             {% if g.admin_user and g.admin_user.is_super_admin %}
             <div class="nav-section-label" style="margin-top: 1rem;">System Control</div>
             <a href="{{ url_for('admin.manage_users') }}"
-                class="nav-item {% if 'users' in request.endpoint %}active{% endif %}">
+                class="nav-item {% if request.endpoint and 'users' in request.endpoint %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-users-gear"></i>
                     <span>Dashboard Users</span>
@@ -961,6 +969,13 @@
                 <div class="nav-item-content">
                     <i class="fa-solid fa-file-csv"></i>
                     <span>Export Messages</span>
+                </div>
+            </a>
+
+            <a href="{{ url_for('admin.export_newsletter_subscribers') }}" class="nav-item">
+                <div class="nav-item-content">
+                    <i class="fa-solid fa-file-csv"></i>
+                    <span>Export Subscribers</span>
                 </div>
             </a>
 

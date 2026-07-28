@@ -834,3 +834,71 @@ def delete_course(course_id):
     db.session.commit()
     flash(f'Course "{title}" deleted successfully.', 'info')
     return redirect(url_for('admin.manage_courses'))
+
+
+# Dummy Newsletter Subscribers Management
+MOCK_NEWSLETTER_SUBSCRIBERS = [
+    {'id': 1, 'email': 'john.doe@enterprise.com', 'status': 'Subscribed', 'source': 'Footer Form', 'created_at': '2026-07-28 14:30'},
+    {'id': 2, 'email': 'sarah.connor@cyberdyne.org', 'status': 'Subscribed', 'source': 'Homepage Modal', 'created_at': '2026-07-27 09:15'},
+    {'id': 3, 'email': 'alex.rivera@techsolutions.io', 'status': 'Unsubscribed', 'source': 'Blog Subscription', 'created_at': '2026-07-25 18:45'},
+    {'id': 4, 'email': 'emily.watson@consulting.co', 'status': 'Subscribed', 'source': 'Footer Form', 'created_at': '2026-07-24 11:20'},
+    {'id': 5, 'email': 'michael.brown@cloudnet.com', 'status': 'Subscribed', 'source': 'Training Page', 'created_at': '2026-07-22 16:10'},
+]
+
+@admin_bp.route('/newsletter-subscribers')
+@admin_required
+def newsletter_subscribers():
+    status = request.args.get('status', 'all')
+    q = request.args.get('q', '').strip().lower()
+
+    subscribers = list(MOCK_NEWSLETTER_SUBSCRIBERS)
+
+    if status and status != 'all':
+        subscribers = [s for s in subscribers if s['status'].lower() == status.lower()]
+
+    if q:
+        subscribers = [s for s in subscribers if q in s['email'].lower()]
+
+    total_count = len(MOCK_NEWSLETTER_SUBSCRIBERS)
+    subscribed_count = sum(1 for s in MOCK_NEWSLETTER_SUBSCRIBERS if s['status'] == 'Subscribed')
+    unsubscribed_count = sum(1 for s in MOCK_NEWSLETTER_SUBSCRIBERS if s['status'] == 'Unsubscribed')
+
+    return render_template(
+        'admin/newsletter_subscribers.html',
+        title='Newsletter Subscribers | 360IT Admin',
+        subscribers=subscribers,
+        current_status=status,
+        query=q,
+        total_count=total_count,
+        subscribed_count=subscribed_count,
+        unsubscribed_count=unsubscribed_count
+    )
+
+@admin_bp.route('/export/newsletter-subscribers')
+@admin_required
+def export_newsletter_subscribers():
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['ID', 'Email Address', 'Status', 'Acquisition Source', 'Subscribed Date'])
+
+    for sub in MOCK_NEWSLETTER_SUBSCRIBERS:
+        writer.writerow([sub['id'], sub['email'], sub['status'], sub['source'], sub['created_at']])
+
+    output.seek(0)
+    return Response(
+        output.getvalue(),
+        mimetype='text/csv',
+        headers={'Content-Disposition': 'attachment; filename=newsletter_subscribers.csv'}
+    )
+
+@admin_bp.route('/newsletter-subscribers/<int:subscriber_id>/toggle', methods=['POST'])
+@admin_required
+@not_readonly_required
+def toggle_newsletter_subscriber(subscriber_id):
+    for sub in MOCK_NEWSLETTER_SUBSCRIBERS:
+        if sub['id'] == subscriber_id:
+            sub['status'] = 'Unsubscribed' if sub['status'] == 'Subscribed' else 'Subscribed'
+            flash(f'Subscription status updated for {sub["email"]}', 'success')
+            break
+    return redirect(url_for('admin.newsletter_subscribers'))
+
