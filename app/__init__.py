@@ -84,7 +84,8 @@ with app.app_context():
         tables_columns = {
             'admin_users': [
                 ('active', 'BOOLEAN DEFAULT 1'),
-                ('fs_uniquifier', 'VARCHAR(255)')
+                ('fs_uniquifier', 'VARCHAR(255)'),
+                ('must_change_password', 'BOOLEAN DEFAULT 0')
             ],
             'contact_messages': [
                 ('status', 'VARCHAR(30) DEFAULT "New"'),
