@@ -31,6 +31,9 @@ class Config:
     SESSION_COOKIE_SECURE = str(os.environ.get('SESSION_COOKIE_SECURE', 'False')).lower() in ['true', 'on', '1']
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
+    REMEMBER_COOKIE_HTTPONLY = True
+    REMEMBER_COOKIE_SECURE = str(os.environ.get('SESSION_COOKIE_SECURE', 'False')).lower() in ['true', 'on', '1']
+    REMEMBER_COOKIE_SAMESITE = 'Lax'
     PERMANENT_SESSION_LIFETIME = 86400  # 24 hours in seconds
     ALLOW_SQLITE_FALLBACK = str(os.environ.get('ALLOW_SQLITE_FALLBACK', 'False')).lower() in ['true', 'on', '1']
     SENTRY_DSN = os.environ.get('SENTRY_DSN')

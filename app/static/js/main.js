@@ -172,4 +172,152 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // ==========================================================================
+    // 8. Cookie Engine & Management Suite
+    // ==========================================================================
+    const CookieManager = {
+        set: function(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/; SameSite=Lax";
+        },
+        get: function(name) {
+            const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? decodeURIComponent(match[2]) : null;
+        },
+        delete: function(name) {
+            document.cookie = name + '=; Max-Age=-99999999; path=/; SameSite=Lax';
+        }
+    };
+
+    // Expose CookieManager globally
+    window.CookieManager = CookieManager;
+
+    // A. Cookie Consent Banner Logic
+    const cookieBanner = document.getElementById('cookieBanner');
+    const btnAcceptAll = document.getElementById('btnCookieAcceptAll');
+    const btnEssential = document.getElementById('btnCookieEssential');
+
+    if (cookieBanner) {
+        const consent = CookieManager.get('cookie_consent');
+        if (!consent) {
+            setTimeout(() => {
+                cookieBanner.style.display = 'block';
+            }, 800);
+        }
+
+        if (btnAcceptAll) {
+            btnAcceptAll.addEventListener('click', () => {
+                CookieManager.set('cookie_consent', 'accepted', 365);
+                cookieBanner.style.display = 'none';
+                notifyToast('Cookie preferences saved: All cookies accepted.', 'success', 3000);
+            });
+        }
+
+        if (btnEssential) {
+            btnEssential.addEventListener('click', () => {
+                CookieManager.set('cookie_consent', 'essential', 365);
+                cookieBanner.style.display = 'none';
+                notifyToast('Cookie preferences saved: Essential cookies only.', 'info', 3000);
+            });
+        }
+    }
+
+    // B. Theme Cookie Integration
+    window.set360ITTheme = function(theme) {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('theme-dark');
+            localStorage.setItem('360it_theme', 'dark');
+            CookieManager.set('360it_theme', 'dark', 365);
+        } else {
+            document.documentElement.classList.remove('theme-dark');
+            localStorage.setItem('360it_theme', 'light');
+            CookieManager.set('360it_theme', 'light', 365);
+        }
+    };
+
+    // C. Marketing Campaign Lead Source Cookie Tracking
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmSource = urlParams.get('utm_source') || urlParams.get('ref');
+    const utmCampaign = urlParams.get('utm_campaign');
+    if (utmSource) {
+        const sourceVal = `source:${utmSource}` + (utmCampaign ? `|campaign:${utmCampaign}` : '');
+        CookieManager.set('lead_source', sourceVal, 30);
+    }
+
+    // D. Recently Viewed Bootcamps Cookie
+    const pageHeading = document.querySelector('h1')?.innerText || '';
+    if (pageHeading.includes('Bootcamp') || window.location.pathname.includes('/courses/')) {
+        const courseTitle = pageHeading.replace(' Bootcamp', '').trim();
+        if (courseTitle) {
+            let recent = [];
+            try {
+                recent = JSON.parse(CookieManager.get('recent_courses') || '[]');
+            } catch (e) {
+                recent = [];
+            }
+            recent = recent.filter(c => c !== courseTitle);
+            recent.unshift(courseTitle);
+            if (recent.length > 3) recent = recent.slice(0, 3);
+            CookieManager.set('recent_courses', JSON.stringify(recent), 30);
+        }
+    }
+
+    // Auto-suggest recently viewed course in enrollment modal if no course selected
+    document.querySelectorAll('[data-open-modal="enrollment"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const selectElem = document.querySelector('#enrollmentModal select[name="course_title"]');
+            if (selectElem && (!selectElem.value || selectElem.value === '')) {
+                try {
+                    const recent = JSON.parse(CookieManager.get('recent_courses') || '[]');
+                    if (recent.length > 0 && Array.from(selectElem.options).some(o => o.value === recent[0])) {
+                        selectElem.value = recent[0];
+                        notifyToast(`Auto-selected your recently viewed bootcamp: ${recent[0]}`, 'info', 3000);
+                    }
+                } catch (e) {}
+            }
+        });
+    });
+
+    // E. Unsaved Form Draft Recovery Cookie Persistence
+    const formsToSave = document.querySelectorAll('#main-contact-form, #contact-page-form, #consultationModal form');
+    formsToSave.forEach(form => {
+        const formId = form.id || 'form_draft';
+        // Restore saved draft input if present
+        const savedDraft = CookieManager.get(`draft_${formId}`);
+        if (savedDraft) {
+            try {
+                const fields = JSON.parse(savedDraft);
+                Object.keys(fields).forEach(name => {
+                    const input = form.querySelector(`[name="${name}"]`);
+                    if (input && !input.value) {
+                        input.value = fields[name];
+                    }
+                });
+            } catch (e) {}
+        }
+
+        // Save draft on input change
+        form.addEventListener('input', () => {
+            const formData = {};
+            const inputs = form.querySelectorAll('input:not([type="hidden"]), textarea');
+            inputs.forEach(input => {
+                if (input.name && input.value) {
+                    formData[input.name] = input.value;
+                }
+            });
+            CookieManager.set(`draft_${formId}`, JSON.stringify(formData), 7);
+        });
+
+        // Clear draft cookie upon form submission
+        form.addEventListener('submit', () => {
+            CookieManager.delete(`draft_${formId}`);
+        });
+    });
 });
+

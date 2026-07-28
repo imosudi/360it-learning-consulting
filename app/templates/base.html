@@ -50,6 +50,20 @@
   <!-- FontAwesome & Custom CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script>
+    (function() {
+      function getCookie(name) {
+        var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? decodeURIComponent(match[2]) : null;
+      }
+      var theme = getCookie('360it_theme') || localStorage.getItem('360it_theme');
+      if (theme === 'dark') {
+        document.documentElement.classList.add('theme-dark');
+      } else if (theme === 'light') {
+        document.documentElement.classList.remove('theme-dark');
+      }
+    })();
+  </script>
 </head>
 <body>
 
@@ -83,6 +97,9 @@
 
   <!-- Footer -->
   {% include '_includes/footer.html' %}
+
+  <!-- Cookie Consent Banner -->
+  {% include '_includes/cookie_banner.html' %}
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
