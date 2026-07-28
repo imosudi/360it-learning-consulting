@@ -117,3 +117,64 @@ This section evaluates the security posture of the platform across credential ma
 * **Impact**: Legal non-compliance risk under GDPR Article 6 (Lawfulness of processing) and Article 17 (Right to erasure).
 
 ---
+
+## Step 3 — Architecture & Reliability Audit
+
+This section evaluates the application's infrastructure resilience, database handling, asynchronous processing, test coverage, observability, and scalability boundaries.
+
+---
+
+### 1. Dual-Database Fallback Risk (Split-Brain Vulnerability)
+* **Code Evidence**:
+  * `app/__init__.py` lines 15–36 attempts a 3-second connection test to primary remote MySQL (`pymysql.connect(...)`). If connection fails or times out, it silently switches the active URI to local SQLite (`app.config['SQLALCHEMY_DATABASE_URI'] = Config.LOCAL_SQLITE_URI`).
+* **Severity / Score**: **Critical / Severe Reliability & Data Integrity Risk**.
+* **Architectural Gap**:
+  * **Split-Brain Data Divergence**: In production, if MySQL experiences transient network latency during a worker boot or restart, writes silently divert to `instance/360it_learning.db`. Data written to SQLite during the outage is lost to primary MySQL operations once connections recover. Zero reconciliation or dual-write sync exists.
+  * **Top-5% Standard**: Enterprise architectures fail loudly, emit automated alerts (PagerDuty/Sentry), and leverage managed High Availability clusters (AWS RDS Multi-AZ / ProxySQL failover). They never silently fallback to local SQLite for production transactional data.
+
+---
+
+### 2. Database Schema Migration Strategy
+* **Code Evidence**:
+  * `app/__init__.py` lines 50–82 retains legacy startup code inspecting database tables (`db.inspect(db.engine)`) and running ad-hoc raw SQL `ALTER TABLE` statements.
+  * `migrations/` directory contains Alembic migration scripts (`migrations/versions/b8e1f024803f_initial_migration_with_flask_security_.py`), creating duplicate migration pathways.
+* **Severity / Score**: **Moderate / Architectural Inconsistency**.
+* **Architectural Gap**: Running unversioned DDL statements inside the app initialization block risks table locks on application startup and lacks transaction-safe rollback capabilities.
+
+---
+
+### 3. Synchronous Email Dispatch Overhead
+* **Code Evidence**:
+  * `app/admin/routes.py` lines 224–256 processes user replies via `mail.send(msg)` synchronously within the HTTP POST request lifecycle.
+* **Severity / Score**: **High / Scalability & Performance Bottleneck**.
+* **Architectural Gap**:
+  * Under SMTP network latency or AWS SES rate limits, administrative HTTP requests block until email transmission completes, causing 504 Gateway Timeouts.
+  * **Top-5% Standard**: Asynchronous queue processing (Celery / Redis Queue / AWS SQS) utilizing exponential retry logic and outbox persistence.
+
+---
+
+### 4. Automated Testing & CI/CD Pipeline
+* **Code Evidence**:
+  * Repository audit confirms complete absence of a `tests/` directory or Pytest suite.
+  * `.github/workflows/` is absent from the repository root.
+* **Severity / Score**: **Critical / Disqualifying for Top 5%**.
+* **Architectural Gap**: Deploying code directly to production without automated unit, integration, or linting checks introduces high risk of regression bugs.
+
+---
+
+### 5. Observability & Telemetry
+* **Code Evidence**:
+  * Logging is restricted to standard Python `print()` statements in `app/__init__.py` lines 28, 82, and 89.
+  * No Sentry, Datadog, or OpenTelemetry SDK is initialized in `app/__init__.py` or `config.py`.
+* **Severity / Score**: **High / Below Enterprise Standard**.
+* **Architectural Gap**: Unhandled 500 runtime exceptions fail silently without real-time alert notifications to the engineering team.
+
+---
+
+### 6. Scalability Ceiling & Resource Utilization
+* **Code Evidence**:
+  * `export_contact_messages` (`app/admin/routes.py` lines 548–572) executes unbounded queries (`ContactMessage.query.all()`) and streams CSV output directly from memory (`io.StringIO`).
+* **Severity / Score**: **Moderate / Scalability Ceiling**.
+* **Architectural Gap**: As record counts grow into tens of thousands, unbounded queries will cause memory spikes and WSGI worker process crashes.
+
+---
