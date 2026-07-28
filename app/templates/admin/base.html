@@ -327,8 +327,52 @@
             flex: 1;
         }
 
-        /* Mobile & Tablet Media Queries */
-        @media (max-width: 992px) {
+        /* Mobile Hamburger & Overlay */
+        .btn-sidebar-toggle {
+            display: none;
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.45rem 0.75rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sidebar-toggle:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Responsive Breakpoints: Extra Large, Desktop, Laptop, Tablet, Mobile, Mini */
+        @media (min-width: 1400px) {
+            .admin-content {
+                max-width: 1600px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (min-width: 992px) and (max-width: 1199px) {
             .admin-sidebar {
                 width: 240px;
             }
@@ -340,45 +384,84 @@
                 padding: 0 1.25rem;
             }
             .admin-content {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .btn-sidebar-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .admin-sidebar {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                z-index: 999;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+            }
+            .admin-sidebar.sidebar-open {
+                left: 0;
+            }
+            .admin-main {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .admin-header {
+                padding: 0.75rem 1.25rem;
+                height: auto;
+                min-height: 64px;
+                gap: 0.75rem;
+            }
+            .admin-content {
                 padding: 1.25rem;
             }
         }
 
-        @media (max-width: 768px) {
-            .admin-main {
-                margin-left: 0;
-                width: 100%;
-            }
+        @media (max-width: 767px) {
             .admin-header {
-                min-height: 60px;
-                height: auto;
-                padding: 0.75rem 1rem;
+                padding: 0.65rem 0.85rem;
                 flex-wrap: wrap;
-                gap: 0.5rem;
             }
             .header-title-area h1 {
                 font-size: 1.05rem;
-                word-break: break-word;
             }
             .header-actions {
-                gap: 0.5rem;
-                flex-wrap: wrap;
+                gap: 0.4rem;
+            }
+            .btn-header-action span,
+            #themeToggleLabel {
+                display: none;
             }
             .btn-header-action,
             .btn-theme-toggle {
                 padding: 0.4rem 0.65rem;
                 font-size: 0.8rem;
             }
-            .btn-header-action span,
-            #themeToggleLabel {
-                display: none;
-            }
             .admin-content {
-                padding: 1rem;
+                padding: 0.85rem;
             }
             .table-responsive {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .header-title-area h1 {
+                font-size: 0.95rem;
+            }
+            .btn-sidebar-toggle {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.9rem;
+            }
+            .alert {
+                padding: 0.75rem;
+                font-size: 0.825rem;
             }
         }
 
@@ -906,10 +989,16 @@
         </div>
     </aside>
 
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
     <!-- Main Wrapper -->
     <main class="admin-main">
         <header class="admin-header">
-            <div class="header-title-area">
+            <div class="header-title-area" style="display: flex; align-items: center; gap: 0.75rem;">
+                <button id="sidebarToggleBtn" class="btn-sidebar-toggle" aria-label="Toggle Sidebar Menu" title="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
                 <h1>{{ page_title or title or 'Admin Dashboard' }}</h1>
             </div>
             <div class="header-actions">
@@ -958,6 +1047,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Theme Toggle Logic
             var toggleBtn = document.getElementById('themeToggleBtn');
             var themeIconSun = document.getElementById('themeIconSun');
             var themeIconMoon = document.getElementById('themeIconMoon');
@@ -986,6 +1076,25 @@
                     localStorage.setItem('admin_theme', newTheme);
                     updateToggleUI(newTheme);
                 });
+            }
+
+            // Mobile Sidebar Drawer Toggle Logic
+            var sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+            var sidebarOverlay = document.getElementById('sidebarOverlay');
+            var adminSidebar = document.querySelector('.admin-sidebar');
+
+            function toggleSidebar() {
+                if (adminSidebar && sidebarOverlay) {
+                    adminSidebar.classList.toggle('sidebar-open');
+                    sidebarOverlay.classList.toggle('active');
+                }
+            }
+
+            if (sidebarToggleBtn) {
+                sidebarToggleBtn.addEventListener('click', toggleSidebar);
+            }
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', toggleSidebar);
             }
         });
     </script>
