@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,13 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Early Theme Setup to prevent flash of wrong theme -->
     <script>
-        (function() {
+        (function () {
             var savedTheme = localStorage.getItem('admin_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
@@ -350,7 +352,8 @@
             color: #6ee7b7;
         }
 
-        .alert-danger, .alert-error {
+        .alert-danger,
+        .alert-error {
             background: rgba(244, 63, 94, 0.15);
             border: 1px solid var(--accent-rose);
             color: #fda4af;
@@ -390,25 +393,31 @@
             letter-spacing: 0.5px;
         }
 
-        .badge-new, .badge-pending {
+        .badge-new,
+        .badge-pending {
             background: rgba(245, 158, 11, 0.2);
             color: #fcd34d;
             border: 1px solid rgba(245, 158, 11, 0.4);
         }
 
-        .badge-in-review, .badge-reviewed {
+        .badge-in-review,
+        .badge-reviewed {
             background: rgba(59, 130, 246, 0.2);
             color: #93c5fd;
             border: 1px solid rgba(59, 130, 246, 0.4);
         }
 
-        .badge-replied, .badge-accepted, .badge-enrolled, .badge-completed {
+        .badge-replied,
+        .badge-accepted,
+        .badge-enrolled,
+        .badge-completed {
             background: rgba(16, 185, 129, 0.2);
             color: #6ee7b7;
             border: 1px solid rgba(16, 185, 129, 0.4);
         }
 
-        .badge-archived, .badge-rejected {
+        .badge-archived,
+        .badge-rejected {
             background: rgba(244, 63, 94, 0.2);
             color: #fda4af;
             border: 1px solid rgba(244, 63, 94, 0.4);
@@ -527,7 +536,8 @@
             color: var(--text-secondary);
         }
 
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
             width: 100%;
             padding: 0.65rem 0.9rem;
             background: rgba(15, 23, 42, 0.6);
@@ -540,7 +550,8 @@
             transition: border-color 0.2s ease;
         }
 
-        .form-control:focus, .form-select:focus {
+        .form-control:focus,
+        .form-select:focus {
             border-color: var(--accent-cyan);
             box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
         }
@@ -623,7 +634,7 @@
             color: #0f172a;
         }
 
-        [data-theme="light"] .form-control, 
+        [data-theme="light"] .form-control,
         [data-theme="light"] .form-select {
             background: #ffffff;
             border-color: #cbd5e1;
@@ -644,30 +655,30 @@
             color: #475569;
         }
 
-        [data-theme="light"] .badge-new, 
+        [data-theme="light"] .badge-new,
         [data-theme="light"] .badge-pending {
             background: rgba(245, 158, 11, 0.15);
             color: #b45309;
             border-color: rgba(245, 158, 11, 0.3);
         }
 
-        [data-theme="light"] .badge-in-review, 
+        [data-theme="light"] .badge-in-review,
         [data-theme="light"] .badge-reviewed {
             background: rgba(59, 130, 246, 0.12);
             color: #1d4ed8;
             border-color: rgba(59, 130, 246, 0.3);
         }
 
-        [data-theme="light"] .badge-replied, 
-        [data-theme="light"] .badge-accepted, 
-        [data-theme="light"] .badge-enrolled, 
+        [data-theme="light"] .badge-replied,
+        [data-theme="light"] .badge-accepted,
+        [data-theme="light"] .badge-enrolled,
         [data-theme="light"] .badge-completed {
             background: rgba(16, 185, 129, 0.12);
             color: #047857;
             border-color: rgba(16, 185, 129, 0.3);
         }
 
-        [data-theme="light"] .badge-archived, 
+        [data-theme="light"] .badge-archived,
         [data-theme="light"] .badge-rejected {
             background: rgba(244, 63, 94, 0.12);
             color: #be123c;
@@ -715,13 +726,15 @@
     </style>
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 
     <!-- Sidebar -->
     <aside class="admin-sidebar">
         <a href="{{ url_for('admin.dashboard') }}" class="sidebar-brand">
             <div class="brand-icon">
-                <img src="{{ url_for('static', filename='images/dashboard-icon.png') }}" alt="360IT Control Center Logo">
+                <img src="{{ url_for('static', filename='images/dashboard-icon.png') }}"
+                    alt="360IT Control Center Logo">
             </div>
             <div class="brand-text">
                 <span class="brand-title">360IT Control Center</span>
@@ -731,49 +744,55 @@
 
         <nav class="sidebar-nav">
             <div class="nav-section-label">Core Management</div>
-            
-            <a href="{{ url_for('admin.dashboard') }}" class="nav-item {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+
+            <a href="{{ url_for('admin.dashboard') }}"
+                class="nav-item {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-chart-line"></i>
                     <span>Dashboard Overview</span>
                 </div>
             </a>
 
-            <a href="{{ url_for('admin.kanban_pipeline') }}" class="nav-item {% if 'kanban' in request.endpoint %}active{% endif %}">
+            <a href="{{ url_for('admin.kanban_pipeline') }}"
+                class="nav-item {% if 'kanban' in request.endpoint %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-table-columns"></i>
                     <span>Lead Pipeline (Kanban)</span>
                 </div>
             </a>
 
-            <a href="{{ url_for('admin.manage_courses') }}" class="nav-item {% if 'courses' in request.endpoint or 'course' in request.endpoint and not 'enrollment' in request.endpoint %}active{% endif %}">
+            <a href="{{ url_for('admin.manage_courses') }}"
+                class="nav-item {% if 'courses' in request.endpoint or 'course' in request.endpoint and not 'enrollment' in request.endpoint %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-graduation-cap"></i>
                     <span>Training Courses</span>
                 </div>
             </a>
 
-            <a href="{{ url_for('admin.course_enrollments') }}" class="nav-item {% if 'course_enrollment' in request.endpoint %}active{% endif %}">
+            <a href="{{ url_for('admin.course_enrollments') }}"
+                class="nav-item {% if 'course_enrollment' in request.endpoint %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-user-graduate"></i>
                     <span>Course Applications</span>
                 </div>
                 {% if g.pending_enrollments_count %}
-                    <span class="nav-badge blue">{{ g.pending_enrollments_count }}</span>
+                <span class="nav-badge blue">{{ g.pending_enrollments_count }}</span>
                 {% endif %}
             </a>
 
-            <a href="{{ url_for('admin.contact_messages') }}" class="nav-item {% if 'contact_message' in request.endpoint %}active{% endif %}">
+            <a href="{{ url_for('admin.contact_messages') }}"
+                class="nav-item {% if 'contact_message' in request.endpoint %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-envelope-open-text"></i>
                     <span>Contact Messages</span>
                 </div>
                 {% if g.unread_messages_count %}
-                    <span class="nav-badge">{{ g.unread_messages_count }}</span>
+                <span class="nav-badge">{{ g.unread_messages_count }}</span>
                 {% endif %}
             </a>
 
-            <a href="{{ url_for('admin.consultations') }}" class="nav-item {% if 'consultation' in request.endpoint %}active{% endif %}">
+            <a href="{{ url_for('admin.consultations') }}"
+                class="nav-item {% if 'consultation' in request.endpoint %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-handshake"></i>
                     <span>Consultation Requests</span>
@@ -782,7 +801,8 @@
 
             {% if g.admin_user and g.admin_user.is_super_admin %}
             <div class="nav-section-label" style="margin-top: 1rem;">System Control</div>
-            <a href="{{ url_for('admin.manage_users') }}" class="nav-item {% if 'users' in request.endpoint %}active{% endif %}">
+            <a href="{{ url_for('admin.manage_users') }}"
+                class="nav-item {% if 'users' in request.endpoint %}active{% endif %}">
                 <div class="nav-item-content">
                     <i class="fa-solid fa-users-gear"></i>
                     <span>Dashboard Users</span>
@@ -838,7 +858,8 @@
                 <h1>{{ page_title or title or 'Admin Dashboard' }}</h1>
             </div>
             <div class="header-actions">
-                <button id="themeToggleBtn" class="btn-theme-toggle" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme">
+                <button id="themeToggleBtn" class="btn-theme-toggle" title="Toggle Light/Dark Theme"
+                    aria-label="Toggle Light/Dark Theme">
                     <i class="fa-solid fa-sun" id="themeIconSun"></i>
                     <i class="fa-solid fa-moon" id="themeIconMoon" style="display: none;"></i>
                     <span id="themeToggleLabel">Light Mode</span>
@@ -857,27 +878,31 @@
         <div class="admin-content">
             <!-- Flash Message Alerts -->
             {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="flash-alerts">
-                        {% for category, message in messages %}
-                            <div class="alert alert-{{ category }}">
-                                <i class="fa-solid {% if category == 'success' %}fa-circle-check{% elif category == 'danger' %}fa-circle-exclamation{% elif category == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-info{% endif %}"></i>
-                                <span>{{ message }}</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+            {% if messages %}
+            <div class="flash-alerts">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <i
+                        class="fa-solid {% if category == 'success' %}fa-circle-check{% elif category == 'danger' %}fa-circle-exclamation{% elif category == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-info{% endif %}"></i>
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             {% endwith %}
 
             {% block content %}{% endblock %}
         </div>
-        <footer style="padding: 1.25rem 2rem; border-top: 1px solid var(--border-color); font-size: 0.825rem; color: var(--text-secondary); text-align: center; background: var(--bg-sidebar);">
-            &copy; 2026 360IT Learning &amp; Consulting. Developed with ❤️ by <a href="https://daybreakafrika.com.ng" target="_blank" style="color: var(--accent-cyan); font-weight: 600; text-decoration: none;">Daybreak Afrika Technologies</a>. All rights reserved. Host: mio3.serverafrica.net
+        <footer
+            style="padding: 1.25rem 2rem; border-top: 1px solid var(--border-color); font-size: 0.825rem; color: var(--text-secondary); text-align: center; background: var(--bg-sidebar);">
+            &copy; 2026 360IT Learning &amp; Consulting. Developed with ❤️ by <a href="https://daybreakafrika.com.ng"
+                target="_blank" style="color: var(--accent-cyan); font-weight: 600; text-decoration: none;">Daybreak
+                Afrika Technologies</a>. All rights reserved.
         </footer>
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var toggleBtn = document.getElementById('themeToggleBtn');
             var themeIconSun = document.getElementById('themeIconSun');
             var themeIconMoon = document.getElementById('themeIconMoon');
@@ -899,7 +924,7 @@
             updateToggleUI(currentTheme);
 
             if (toggleBtn) {
-                toggleBtn.addEventListener('click', function() {
+                toggleBtn.addEventListener('click', function () {
                     var activeTheme = document.documentElement.getAttribute('data-theme');
                     var newTheme = activeTheme === 'light' ? 'dark' : 'light';
                     document.documentElement.setAttribute('data-theme', newTheme);
@@ -911,4 +936,5 @@
     </script>
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>
