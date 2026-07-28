@@ -26,10 +26,15 @@ if HAS_PYMYSQL:
         )
         connection.close()
     except Exception as e:
-        print(f"Notice: Primary MySQL database ({Config.DB_HOST}) not directly reachable from local environment ({e}). Using local SQLite database.")
-        use_sqlite = True
+        if Config.ALLOW_SQLITE_FALLBACK:
+            print(f"Warning: Primary MySQL database ({Config.DB_HOST}) unreachable. ALLOW_SQLITE_FALLBACK is active, falling back to local SQLite: {e}")
+            use_sqlite = True
+        else:
+            print(f"CRITICAL: Primary MySQL database ({Config.DB_HOST}) is unreachable ({e}). Silent SQLite fallback is disabled to prevent split-brain data corruption.")
+            use_sqlite = False
 else:
-    use_sqlite = True
+    if Config.ALLOW_SQLITE_FALLBACK:
+        use_sqlite = True
 
 if use_sqlite:
     os.makedirs(os.path.join(app.root_path, '..', 'instance'), exist_ok=True)

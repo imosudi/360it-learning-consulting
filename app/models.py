@@ -27,6 +27,7 @@ class AdminUser(db.Model, UserMixin):
     full_name = db.Column(db.String(100), default='Administrator')
     role = db.Column(db.String(50), default='Super Admin')
     active = db.Column(db.Boolean(), default=True)
+    must_change_password = db.Column(db.Boolean(), default=False)
     fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

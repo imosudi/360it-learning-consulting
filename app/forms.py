@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SelectField, SubmitField
+from wtforms import StringField, TextAreaField, SelectField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Email, Optional, Length
 
 class ContactForm(FlaskForm):
@@ -14,6 +14,7 @@ class ContactForm(FlaskForm):
     ], validators=[DataRequired()])
     subject = StringField('Subject Line', validators=[Optional(), Length(max=200)])
     message = TextAreaField('Your Message', validators=[DataRequired(), Length(min=10)])
+    privacy_consent = BooleanField('I consent to the processing of my personal data in accordance with the Privacy Policy.', validators=[DataRequired(message='You must accept the Privacy Policy to submit.')])
     submit = SubmitField('Send Message')
 
 class ConsultationForm(FlaskForm):
@@ -34,6 +35,7 @@ class ConsultationForm(FlaskForm):
         ('Technology Advisory', 'Technology Advisory')
     ], validators=[DataRequired()])
     message = TextAreaField('Project / Consultation Details', validators=[Optional()])
+    privacy_consent = BooleanField('I consent to the processing of my personal data in accordance with the Privacy Policy.', validators=[DataRequired(message='You must accept the Privacy Policy to submit.')])
     submit = SubmitField('Request Consultation')
 
 class EnrollmentForm(FlaskForm):
@@ -58,4 +60,5 @@ class EnrollmentForm(FlaskForm):
         ('Hybrid', 'Hybrid')
     ], validators=[DataRequired()])
     message = TextAreaField('Additional Notes / Questions', validators=[Optional()])
+    privacy_consent = BooleanField('I consent to the processing of my personal data in accordance with the Privacy Policy.', validators=[DataRequired(message='You must accept the Privacy Policy to submit.')])
     submit = SubmitField('Submit Enrollment')

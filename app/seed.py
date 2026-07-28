@@ -419,13 +419,15 @@ def seed_database():
 
     # 5. Default Admin User
     if AdminUser.query.filter_by(username='admin').first() is None:
+        admin_password = os.environ.get('DEFAULT_ADMIN_PASSWORD', 'Admin@360it!2026')
         admin_user = AdminUser(
             username='admin',
             email='admin@360it-learning.com',
             full_name='360IT Administrator',
-            role='Super Admin'
+            role='Super Admin',
+            must_change_password=True
         )
-        admin_user.set_password('Admin@360it!2026')
+        admin_user.set_password(admin_password)
         db.session.add(admin_user)
 
     # 6. Sample Contact Messages

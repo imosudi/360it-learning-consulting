@@ -27,6 +27,13 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or os.environ.get('360_MAIL_PASSWORD') or 'BHo62PF5AJhI8DTvIxr7u0K1Se1dEI/sG9GoY+b9jXK9'
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER') or os.environ.get('360_MAIL_DEFAULT_SENDER') or 'noreply@serverafrica.net'
 
+    # Session & Cookie Security Configuration
+    SESSION_COOKIE_SECURE = str(os.environ.get('SESSION_COOKIE_SECURE', 'False')).lower() in ['true', 'on', '1']
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    PERMANENT_SESSION_LIFETIME = 86400  # 24 hours in seconds
+    ALLOW_SQLITE_FALLBACK = str(os.environ.get('ALLOW_SQLITE_FALLBACK', 'False')).lower() in ['true', 'on', '1']
+
     # Flask-Security-Too Config
     SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT', '360it-learning-security-salt-2026')
     SECURITY_REGISTERABLE = False

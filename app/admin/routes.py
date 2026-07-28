@@ -7,7 +7,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_mail import Message
 from ..extensions import db, mail
 from ..models import AdminUser, ContactMessage, EnrollmentRequest, ConsultationRequest, TrainingCourse
-from .forms import AdminLoginForm, StatusUpdateForm, SendReplyForm, CreateAdminUserForm
+from .forms import AdminLoginForm, StatusUpdateForm, SendReplyForm, CreateAdminUserForm, ChangePasswordForm
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -25,6 +25,9 @@ def admin_required(f):
         if 'admin_user_id' not in session:
             flash('Please log in to access the Admin Dashboard.', 'warning')
             return redirect(url_for('admin.login', next=request.url))
+        if g.admin_user and g.admin_user.must_change_password and request.endpoint != 'admin.change_password':
+            flash('Security Requirement: You must change your default password before proceeding.', 'warning')
+            return redirect(url_for('admin.change_password'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -89,6 +92,22 @@ def logout():
     session.clear()
     flash('You have been logged out.', 'info')
     return redirect(url_for('admin.login'))
+
+@admin_bp.route('/change-password', methods=['GET', 'POST'])
+@admin_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if not g.admin_user.check_password(form.current_password.data):
+            flash('Current password entered is incorrect.', 'danger')
+        else:
+            g.admin_user.set_password(form.new_password.data)
+            g.admin_user.must_change_password = False
+            db.session.commit()
+            flash('Your password has been updated successfully.', 'success')
+            return redirect(url_for('admin.dashboard'))
+            
+    return render_template('admin/change_password.html', title='Change Password | 360IT Admin', form=form)
 
 @admin_bp.route('/')
 @admin_bp.route('/dashboard')
