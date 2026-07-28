@@ -1,26 +1,26 @@
 {% extends 'admin/base.html' %}
 
 {% block content %}
-<div class="dashboard-header" style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">
+<div class="dashboard-header" style="margin-bottom: 2rem; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
     <div>
         <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); padding: 0.35rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem; display: inline-block;">
             Academy Catalog
         </span>
-        <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">Training Courses</h1>
-        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem;">
+        <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.25rem;">Training Courses</h1>
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
             Manage and publish professional IT bootcamp courses on the 360IT platform.
         </p>
     </div>
     {% if not g.admin_user.is_readonly %}
-    <a href="{{ url_for('admin.create_course') }}" class="btn btn-gold" style="padding: 0.75rem 1.25rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.5rem; border-radius: 8px;">
+    <a href="{{ url_for('admin.create_course') }}" class="btn btn-gold" style="padding: 0.75rem 1.25rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.5rem; border-radius: 8px; white-space: nowrap;">
         <i class="fa-solid fa-plus"></i> Create New Course
     </a>
     {% endif %}
 </div>
 
 <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+    <div class="table-responsive">
+        <table class="data-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; white-space: nowrap;">
             <thead>
                 <tr style="background: var(--bg-surface); border-bottom: 1px solid var(--border-color); color: var(--text-secondary); font-weight: 700;">
                     <th style="padding: 1rem 1.25rem;">Course Title</th>
