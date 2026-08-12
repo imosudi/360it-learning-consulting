@@ -35,7 +35,7 @@ def test_duplicate_newsletter_subscription(client, app):
     assert b'already subscribed' in response.data
 
 
-def test_admin_newsletter_subscribers_management(client, app):
+def test_admin_newsletter_subscribers_management(client, app, admin_user):
     """Test admin newsletter management dashboard, status filtering, and toggling."""
     with app.app_context():
         sub1 = NewsletterSubscriber(email='user1@example.com', status='Subscribed')
@@ -45,7 +45,7 @@ def test_admin_newsletter_subscribers_management(client, app):
         sub1_id = sub1.id
 
     with client.session_transaction() as sess:
-        sess['admin_user_id'] = 1
+        sess['admin_user_id'] = admin_user.id
 
     # Access management dashboard
     response = client.get('/admin/newsletter-subscribers')
@@ -62,7 +62,7 @@ def test_admin_newsletter_subscribers_management(client, app):
         assert updated_sub.status == 'Unsubscribed'
 
 
-def test_admin_newsletter_export_csv(client, app):
+def test_admin_newsletter_export_csv(client, app, admin_user):
     """Test admin CSV export of subscribers."""
     with app.app_context():
         sub = NewsletterSubscriber(email='export@example.com', status='Subscribed', source='Homepage')
@@ -70,10 +70,11 @@ def test_admin_newsletter_export_csv(client, app):
         db.session.commit()
 
     with client.session_transaction() as sess:
-        sess['admin_user_id'] = 1
+        sess['admin_user_id'] = admin_user.id
 
     response = client.get('/admin/export/newsletter-subscribers')
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'text/csv; charset=utf-8'
     assert b'export@example.com' in response.data
     assert b'Homepage' in response.data
+

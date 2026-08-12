@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from .extensions import db
 from .models import Service, TrainingCourse, Project, Testimonial, AdminUser, ContactMessage, ConsultationRequest, EnrollmentRequest
@@ -240,121 +241,132 @@ def seed_database():
             db.session.add(TrainingCourse(**c))
 
     # 3. Projects & Contracts
-    if Project.query.count() == 0:
-        projects_data = [
-            {
-                'title': 'Enterprise Multi-Region Cloud Migration',
-                'slug': 'cloud-migration-enterprise',
-                'industry': 'Financial Services',
-                'tech_stack': 'AWS, Terraform, EC2, RDS PostgreSQL, CloudFront',
-                'category': 'Cloud Migration',
-                'short_desc': 'Migrated 45+ core banking and analytical microservices from legacy on-premises servers to high-availability multi-region AWS cloud.',
-                'long_desc': '360IT Learning & Consulting executed a zero-downtime migration strategy for a leading regional bank. Built automated Infrastructure as Code using Terraform and implemented automated failover.',
-                'image': '/static/images/projects/project-cloud-migration.svg',
-                'featured': True
-            },
-            {
-                'title': 'Government Health Portal DevOps Pipeline',
-                'slug': 'government-health-devops',
-                'industry': 'Government & Healthcare',
-                'tech_stack': 'Kubernetes, Docker, GitLab CI, Helm, Prometheus',
-                'category': 'DevOps Implementation',
-                'short_desc': 'Designed and implemented automated CI/CD pipelines and Kubernetes container clusters for nationwide public healthcare portal.',
-                'long_desc': 'Engineered a resilient container infrastructure capable of scaling to over 500,000 daily active users while maintaining compliance with health data security protocols.',
-                'image': '/static/images/projects/project-devops.svg',
-                'featured': True
-            },
-            {
-                'title': 'Telecom Infrastructure Modernization',
-                'slug': 'telecom-infrastructure-modernization',
-                'industry': 'Telecommunications',
-                'tech_stack': 'KVM Virtualization, GlusterFS, Active Directory, Icinga2',
-                'category': 'Infrastructure Modernization',
-                'short_desc': 'Upgraded enterprise virtualisation clusters, SAN storage, and centralized monitoring for major telecommunications provider.',
-                'long_desc': 'Replaced legacy blade servers with redundant KVM virtualization clusters and GlusterFS distributed storage, delivering 40% performance gain and 99.999% system availability.',
-                'image': '/static/images/projects/project-telecom.svg',
-                'featured': True
-            },
-            {
-                'title': 'Government Agency Digital Transformation',
-                'slug': 'government-digital-transformation',
-                'industry': 'Government',
-                'tech_stack': 'Python, Flask, PostgreSQL, Docker, Azure AD',
-                'category': 'Government Technology Projects',
-                'short_desc': 'Digitized manual document approval workflows and public service request tracking for state government ministry.',
-                'long_desc': 'Transformed legacy paper-based government operations into a secure web portal featuring role-based access control and digital signature verification.',
-                'image': '/static/images/projects/project-gov-transformation.svg',
-                'featured': True
-            },
-            {
-                'title': 'High-Availability Database Cluster Deployment',
-                'slug': 'high-availability-database-cluster',
-                'industry': 'Logistics & Supply Chain',
-                'tech_stack': 'MySQL Galera Cluster, ProxySQL, Keepalived, Linux',
-                'category': 'Enterprise Systems Deployment',
-                'short_desc': 'Built real-time multi-master MySQL cluster for global logistics tracking system handling millions of daily sensor events.',
-                'long_desc': 'Architected high-speed database replication and automated failover proxying with ProxySQL and Keepalived to guarantee zero data loss during hardware failures.',
-                'image': '/static/images/projects/project-database.svg',
-                'featured': True
-            },
-            {
-                'title': 'FinTech Cybersecurity Audit & Hardening',
-                'slug': 'fintech-cybersecurity-hardening',
-                'industry': 'Financial Services',
-                'tech_stack': 'OpenVAS, Suricata IDS, Wazuh SIEM, Ansible',
-                'category': 'Cybersecurity Assessment',
-                'short_desc': 'Executed comprehensive vulnerability assessment, intrusion detection integration, and security policy automation for payment gateway.',
-                'long_desc': 'Delivered end-to-end security assessment, closed 30+ critical infrastructure vulnerabilities, and implemented automated security compliance playbooks using Ansible.',
-                'image': '/static/images/projects/project-security.svg',
-                'featured': True
-            },
-            {
-                'title': 'Higher Education LMS Digital Modernization',
-                'slug': 'education-lms-modernization',
-                'industry': 'Education',
-                'tech_stack': 'AWS Lambda, DynamoDB, React, Node.js',
-                'category': 'Digital Transformation',
-                'short_desc': 'Modernized digital learning platform supporting over 25,000 active university students with online exams and video lectures.',
-                'long_desc': 'Refactored monolith learning management system into serverless cloud microservices, reducing server hosting costs by 65% while handling peak exam load effortlessly.',
-                'image': '/static/images/projects/project-education.svg',
-                'featured': True
-            },
-            {
-                'title': 'Manufacturing BI & Analytics Pipeline',
-                'slug': 'manufacturing-bi-analytics',
-                'industry': 'Manufacturing',
-                'tech_stack': 'Python, SQL Server, Power BI, Apache Airflow',
-                'category': 'Business Intelligence Solutions',
-                'short_desc': 'Built automated ETL pipelines and real-time executive analytics dashboards for multi-plant manufacturing group.',
-                'long_desc': 'Integrated plant IoT sensor data and ERP inventory records into centralized data warehouse, enabling real-time equipment efficiency tracking and predictive maintenance alerts.',
-                'image': '/static/images/projects/project-bi.svg',
-                'featured': True
-            },
-            {
-                'title': 'Retail E-Commerce Microservices Platform',
-                'slug': 'retail-ecommerce-microservices',
-                'industry': 'Retail & E-Commerce',
-                'tech_stack': 'JavaScript, Python, Docker, NGINX, Redis',
-                'category': 'Software Development',
-                'short_desc': 'Custom software development for nationwide retail chain featuring real-time inventory management and payment gateway integration.',
-                'long_desc': 'Developed modular, scalable web application backend with Redis caching and NGINX load balancing, powering seamless shopping experiences across mobile and web.',
-                'image': '/static/images/projects/project-retail.svg',
-                'featured': True
-            },
-            {
-                'title': '24/7 Managed IT Infrastructure Support',
-                'slug': 'managed-it-infrastructure-support',
-                'industry': 'Energy & Utilities',
-                'tech_stack': 'Icinga2, Grafana, Ansible, OpenVPN, Linux',
-                'category': 'Managed IT Services',
-                'short_desc': 'Full 24/7 managed infrastructure support for utility provider managing remote solar and grid station nodes.',
-                'long_desc': 'Configured secure VPN tunnels to remote telemetry nodes, implemented automated alert escalation via Grafana & Icinga2, and maintained 99.98% operational uptime.',
-                'image': '/static/images/projects/project-managed-it.svg',
-                'featured': True
-            }
-        ]
-        for p in projects_data:
-            db.session.add(Project(**p))
+    Project.query.delete()
+    projects_data = [
+        {
+            'title': 'Enterprise Multi-Region Cloud Migration',
+            'slug': 'enterprise-multi-region-cloud-migration',
+            'industry': 'Financial Services',
+            'tech_stack': 'AWS • Cloud Infrastructure • PostgreSQL • Infrastructure Automation',
+            'category': 'Cloud Migration',
+            'short_desc': 'Delivered a secure multi-region cloud migration program that modernized enterprise infrastructure, improved scalability, strengthened resilience, and enhanced operational continuity.',
+            'long_desc': '360IT delivered a secure multi-region cloud migration program that modernized enterprise infrastructure, improved scalability, strengthened resilience, and enhanced operational continuity for financial services systems.',
+            'image': '/static/images/projects/project-cloud-migration.svg',
+            'featured': True
+        },
+        {
+            'title': 'Government Health Platform Modernization',
+            'slug': 'government-health-platform-modernization',
+            'industry': 'Government & Healthcare',
+            'tech_stack': 'Kubernetes • Docker • CI/CD • Cloud Monitoring',
+            'category': 'DevOps Implementation',
+            'short_desc': 'Delivered a modern application platform that streamlined software delivery, improved platform reliability, and accelerated the deployment of critical public health services.',
+            'long_desc': 'Delivered a modern application platform using Kubernetes, Docker, automated CI/CD pipelines, and cloud monitoring that streamlined software delivery and accelerated public health services.',
+            'image': '/static/images/projects/project-devops.svg',
+            'featured': True
+        },
+        {
+            'title': 'Telecommunications Infrastructure Modernization',
+            'slug': 'telecommunications-infrastructure-modernization',
+            'industry': 'Telecommunications',
+            'tech_stack': 'Linux • Virtualization • Enterprise Monitoring • Active Directory',
+            'category': 'Infrastructure Modernization',
+            'short_desc': 'Modernized enterprise infrastructure through virtualization, centralized monitoring, and resilient platform architecture to improve performance, availability, and operational efficiency.',
+            'long_desc': 'Modernized enterprise infrastructure through Linux virtualization, centralized enterprise monitoring, and resilient platform architecture to maximize availability and performance.',
+            'image': '/static/images/projects/project-telecom.svg',
+            'featured': True
+        },
+        {
+            'title': 'Government Digital Transformation',
+            'slug': 'government-digital-transformation',
+            'industry': 'Government',
+            'tech_stack': 'Enterprise Applications • Azure • PostgreSQL • Workflow Automation',
+            'category': 'Government Technology Projects',
+            'short_desc': 'Digitized government operations through enterprise applications, workflow automation, and secure digital services, improving operational efficiency and service delivery.',
+            'long_desc': 'Digitized government operations through secure enterprise applications, PostgreSQL database clusters, Azure cloud, and automated document approval workflows.',
+            'image': '/static/images/projects/project-gov-transformation.svg',
+            'featured': True
+        },
+        {
+            'title': 'Enterprise Workflow & Business Rules Automation',
+            'slug': 'enterprise-workflow-business-rules-automation',
+            'industry': 'Multi-Industry',
+            'tech_stack': 'Workflow Automation • Business Rules • Enterprise Applications • API Integration',
+            'category': 'Business Automation',
+            'short_desc': 'Configured enterprise workflows, approval processes, and business rules that automated critical operations, standardized processes, and supported successful implementations across multiple industries.',
+            'long_desc': 'Configured enterprise workflows, approval processes, and business rules that automated critical operations, standardized processes, and supported successful implementations across multiple industries.',
+            'image': '/static/images/projects/project-managed-it.svg',
+            'featured': True
+        },
+        {
+            'title': 'Enterprise Document Automation',
+            'slug': 'enterprise-document-automation',
+            'industry': 'Business Process Automation',
+            'tech_stack': 'Document Automation • Template Management • Workflow Integration • Enterprise Applications',
+            'category': 'Business Automation',
+            'short_desc': 'Implemented intelligent document automation solutions for checks, letters, invoices, reports, certificates, compliance documentation, and business forms, reducing manual effort while improving consistency, accuracy, and compliance.',
+            'long_desc': 'Implemented intelligent document automation solutions for checks, letters, invoices, reports, certificates, compliance documentation, and business forms, reducing manual effort while improving consistency, accuracy, and compliance.',
+            'image': '/static/images/projects/project-education.svg',
+            'featured': True
+        },
+        {
+            'title': 'High-Availability Database Solutions',
+            'slug': 'high-availability-database-solutions',
+            'industry': 'Logistics & Supply Chain',
+            'tech_stack': 'MySQL • High Availability • Database Clustering • Linux',
+            'category': 'Infrastructure Modernization',
+            'short_desc': 'Delivered highly available database platforms that strengthened business continuity, improved application performance, and supported mission-critical logistics operations.',
+            'long_desc': 'Delivered highly available database platforms with MySQL Galera clustering and proxy failover, strengthening business continuity and performance for global logistics.',
+            'image': '/static/images/projects/project-database.svg',
+            'featured': True
+        },
+        {
+            'title': 'Cybersecurity Assessment & Infrastructure Hardening',
+            'slug': 'cybersecurity-assessment-infrastructure-hardening',
+            'industry': 'Financial Services',
+            'tech_stack': 'SIEM • Vulnerability Management • Security Automation • Endpoint Protection',
+            'category': 'Cybersecurity Assessment',
+            'short_desc': 'Strengthened enterprise security through comprehensive assessments, infrastructure hardening, and proactive security improvements that enhanced organizational resilience.',
+            'long_desc': 'Strengthened enterprise security through comprehensive assessments, SIEM integration, vulnerability management, endpoint protection, and security automation playbooks.',
+            'image': '/static/images/projects/project-security.svg',
+            'featured': True
+        },
+        {
+            'title': 'Enterprise Analytics & Business Intelligence',
+            'slug': 'enterprise-analytics-business-intelligence',
+            'industry': 'Manufacturing',
+            'tech_stack': 'Power BI • SQL • Data Engineering • Analytics',
+            'category': 'Business Intelligence',
+            'short_desc': 'Delivered enterprise reporting and analytics solutions that transformed operational data into actionable insights, enabling informed business decisions and improved operational visibility.',
+            'long_desc': 'Delivered enterprise reporting and analytics solutions using Power BI dashboards and SQL data engineering, converting plant data into actionable business intelligence.',
+            'image': '/static/images/projects/project-bi.svg',
+            'featured': True
+        },
+        {
+            'title': 'Enterprise Commerce Platform',
+            'slug': 'enterprise-commerce-platform',
+            'industry': 'Retail & E-Commerce',
+            'tech_stack': 'JavaScript • Python • APIs • Cloud Applications',
+            'category': 'Software Development',
+            'short_desc': 'Developed scalable digital commerce solutions that integrated inventory management, payment processing, and customer engagement to support business growth.',
+            'long_desc': 'Developed scalable digital commerce solutions with JavaScript, Python, REST APIs, and cloud applications to power real-time inventory management and checkout.',
+            'image': '/static/images/projects/project-retail.svg',
+            'featured': True
+        },
+        {
+            'title': '24/7 Managed Infrastructure Services',
+            'slug': '24-7-managed-infrastructure-services',
+            'industry': 'Energy & Utilities',
+            'tech_stack': 'Infrastructure Monitoring • Linux • Automation • Secure Remote Access',
+            'category': 'Managed IT Services',
+            'short_desc': 'Delivered proactive infrastructure management, monitoring, maintenance, and technical support to ensure secure, reliable, and highly available enterprise environments.',
+            'long_desc': 'Delivered 24/7 proactive infrastructure management, continuous monitoring, maintenance, and technical support to ensure secure and highly available environments.',
+            'image': '/static/images/projects/project-managed-it.svg',
+            'featured': True
+        }
+    ]
+    for p in projects_data:
+        db.session.add(Project(**p))
 
     # 4. Testimonials
     Testimonial.query.delete()

@@ -20,6 +20,8 @@ def app():
 
     with flask_app.app_context():
         db.create_all()
+        from app.seed import seed_database
+        seed_database()
         yield flask_app
         db.session.remove()
         db.drop_all()

@@ -3,12 +3,12 @@
 {% block content %}
 <section class="hero-section" style="min-height: 35vh; padding-top: 8rem; padding-bottom: 3rem;">
   <div class="container" style="text-align: center;">
-    <span class="badge" style="display: inline-block; padding: 0.4rem 1rem; background: rgba(13,110,253,0.08); border: 1px solid rgba(13,110,253,0.25); color: var(--primary-blue); border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem;">
-      Delivered Engagements
+    <span class="badge" style="display: inline-block; padding: 0.4rem 1rem; background: rgba(13,110,253,0.08); border: 1px solid rgba(13,110,253,0.25); color: var(--primary-blue); border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase;">
+      DELIVERED ENGAGEMENTS
     </span>
-    <h1 style="font-size: 2.8rem; color: var(--text-dark);">Projects & Contracts Portfolio</h1>
-    <p style="color: var(--text-muted); max-width: 700px; margin: 1rem auto 0 auto;">
-      Explore our enterprise technology projects across Cloud Migration, DevOps Pipelines, Government Digital Transformation, and Managed Services.
+    <h1 style="font-size: 2.8rem; color: var(--text-dark);">Proven Delivery. Trusted Enterprise Solutions.</h1>
+    <p style="color: var(--text-muted); max-width: 800px; margin: 1rem auto 0 auto; font-size: 1.05rem;">
+      A selection of enterprise engagements showcasing our expertise in cloud transformation, enterprise applications, infrastructure modernization, business automation, cybersecurity, and managed technology services across public and private sector organizations.
     </p>
   </div>
 </section>
@@ -26,13 +26,26 @@
             <h3>{{ p.title }}</h3>
             <div class="project-tech"><i class="fas fa-microchip" style="color: var(--primary-blue);"></i> {{ p.tech_stack }}</div>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">{{ p.short_desc }}</p>
-            <a href="{{ url_for('main.project_detail', slug=p.slug) }}" class="btn-link" style="margin-top: auto;">
-              View Full Engagement Summary <i class="fas fa-arrow-right"></i>
+            <a href="{{ url_for('main.project_detail', slug=p.slug) }}" class="btn-link" style="margin-top: auto;" id="project-link-{{ p.slug }}">
+              View Engagement Details <i class="fas fa-arrow-right"></i>
             </a>
           </div>
         </div>
       {% endfor %}
     </div>
+  </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="section-padding" style="background-color: var(--bg-section-alt);">
+  <div class="container text-center" style="text-align: center; max-width: 850px;">
+    <h2 style="font-size: 2.2rem; margin-bottom: 1rem; color: var(--text-dark);">Ready to Transform Your Business?</h2>
+    <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 2rem;">
+      Whether you’re planning a cloud migration, ERP implementation, infrastructure modernization, business automation initiative, or managed IT engagement, 360IT delivers the expertise to help you innovate, modernize, and scale with confidence.
+    </p>
+    <button class="btn btn-primary" data-open-modal="consultation" id="projects-cta-consultation">
+      <i class="fas fa-calendar-check"></i> Schedule a Consultation
+    </button>
   </div>
 </section>
 {% endblock %}
