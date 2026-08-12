@@ -22,7 +22,7 @@
 
 <section class="section-padding">
   <div class="container">
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3.5rem;">
+    <div class="detail-grid">
       <div>
         <h2 style="font-size: 1.8rem; margin-bottom: 1.25rem;">Overview & Capability</h2>
         <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem;">
@@ -31,7 +31,7 @@
 
         {% if service.features_list %}
           <h3 style="font-size: 1.4rem; margin-bottom: 1.25rem;">Key Offerings & Scope</h3>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 3rem;">
+          <div class="two-col-grid-sm" style="margin-bottom: 3rem;">
             {% for item in service.features_list.split(',') %}
               <div class="card" style="padding: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
                 <i class="fas fa-check-circle" style="color: var(--primary-blue); font-size: 1.2rem;"></i>

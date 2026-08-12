@@ -51,7 +51,7 @@
       <p>Helping organizations design, implement, and support secure, scalable, and intelligent technology solutions.</p>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center;">
+    <div class="two-col-grid">
       <div>
         <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--text-dark);">Technology That Moves Business Forward</h3>
         <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 1.25rem;">
@@ -62,7 +62,7 @@
         </p>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+      <div class="two-col-grid-sm">
         <div class="card" style="padding: 1.5rem; text-align: center;">
           <div class="service-icon" style="margin: 0 auto 1rem auto;"><i class="fas fa-bullseye"></i></div>
           <h4>Our Mission</h4>
@@ -452,7 +452,7 @@
             <label for="contact-name">Full Name *</label>
             {{ contact_form.name(class="form-control", id="contact-name", placeholder="Your Name") }}
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-row-2col">
             <div class="form-group">
               <label for="contact-email">Email Address *</label>
               {{ contact_form.email(class="form-control", id="contact-email", placeholder="email@domain.com") }}

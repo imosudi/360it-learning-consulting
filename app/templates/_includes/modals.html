@@ -14,7 +14,7 @@
         <label for="consult-name">Full Name *</label>
         {{ consultation_form.name(class="form-control", id="consult-name", placeholder="e.g. Sarah Jenkins") }}
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="form-row-2col">
         <div class="form-group">
           <label for="consult-email">Business Email *</label>
           {{ consultation_form.email(class="form-control", id="consult-email", placeholder="sarah@company.com") }}
@@ -65,7 +65,7 @@
         <label for="enroll-name">Full Name *</label>
         {{ enrollment_form.name(class="form-control", id="enroll-name", placeholder="Your Full Name") }}
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="form-row-2col">
         <div class="form-group">
           <label for="enroll-email">Email Address *</label>
           {{ enrollment_form.email(class="form-control", id="enroll-email", placeholder="you@domain.com") }}

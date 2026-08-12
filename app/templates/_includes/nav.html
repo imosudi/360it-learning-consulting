@@ -12,10 +12,15 @@
       <li><a href="{{ url_for('main.projects') }}" class="nav-link {% if request.endpoint == 'main.projects' or request.endpoint == 'main.project_detail' %}active{% endif %}">Projects</a></li>
       <li><a href="{{ url_for('main.technologies') }}" class="nav-link {% if request.endpoint == 'main.technologies' %}active{% endif %}">Technologies</a></li>
       <li><a href="{{ url_for('main.contact') }}" class="nav-link {% if request.endpoint == 'main.contact' %}active{% endif %}">Contact</a></li>
+      <li class="mobile-cta-item">
+        <button class="btn-nav-gold" data-open-modal="consultation" style="width: 100%; justify-content: center; margin-top: 1rem;" id="nav-cta-btn-mobile">
+          <i class="fas fa-shield-halved"></i> IT Stability Services
+        </button>
+      </li>
     </ul>
 
     <div class="nav-cta">
-      <button class="btn-nav-gold" data-open-modal="consultation" id="nav-cta-btn">
+      <button class="btn-nav-gold btn-nav-gold-desktop" data-open-modal="consultation" id="nav-cta-btn">
         <i class="fas fa-shield-halved"></i> IT Stability Services
       </button>
       <button class="mobile-toggle" aria-label="Toggle Menu" id="mobile-menu-toggle">

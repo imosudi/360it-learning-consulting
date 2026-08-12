@@ -424,6 +424,36 @@ nav.navbar.scrolled {
   border-color: rgba(91, 111, 227, 0.4);
 }
 
+/* Responsive Grid Utilities */
+.two-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.two-col-grid-sm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3.5rem;
+}
+
+.form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.mobile-cta-item {
+  display: none !important;
+}
+
 /* Services Section */
 .services-grid {
   display: grid;
@@ -1032,8 +1062,11 @@ footer::before {
     line-height: 1.25;
   }
   
-  .contact-grid {
-    grid-template-columns: 1fr;
+  .contact-grid,
+  .two-col-grid,
+  .detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
   }
 
   .nav-links {
@@ -1088,6 +1121,15 @@ footer::before {
     padding: 3.5rem 0;
   }
 
+  .btn-nav-gold-desktop {
+    display: none !important;
+  }
+
+  .mobile-cta-item {
+    display: block !important;
+    width: 100%;
+  }
+
   .hero-actions {
     flex-direction: column;
     gap: 0.75rem;
@@ -1098,13 +1140,8 @@ footer::before {
   }
 
   .brand-logo-img {
-    height: 50px;
-    max-width: 240px;
-  }
-
-  .btn-nav-gold {
-    padding: 0.45rem 0.9rem;
-    font-size: 0.8rem;
+    height: 48px;
+    max-width: 220px;
   }
 
   .contact-form-card {
@@ -1128,6 +1165,12 @@ footer::before {
 
   .section-padding {
     padding: 2.75rem 0;
+  }
+
+  .two-col-grid-sm,
+  .form-row-2col {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
   }
 
   .hero-content h1 {
