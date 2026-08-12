@@ -1028,7 +1028,8 @@ footer::before {
   }
   
   .hero-content h1 {
-    font-size: 2.25rem;
+    font-size: 2.1rem;
+    line-height: 1.25;
   }
   
   .contact-grid {
@@ -1040,17 +1041,26 @@ footer::before {
     top: 0;
     right: -100%;
     width: 280px;
+    max-width: 85vw;
     height: 100vh;
     background: var(--header-gradient);
     flex-direction: column;
-    padding: 6rem 2rem 2rem 2rem;
+    padding: 5.5rem 1.5rem 2rem 1.5rem;
     transition: var(--transition-smooth);
     box-shadow: -10px 0 30px rgba(0,0,0,0.3);
     z-index: 999;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .nav-links.active {
     right: 0;
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: 0.75rem 1.25rem !important;
+    border-radius: var(--border-radius-sm);
   }
 
   .mobile-toggle {
@@ -1067,9 +1077,17 @@ footer::before {
     gap: 1rem;
     text-align: center;
   }
+
+  .tech-pill-grid {
+    gap: 0.65rem;
+  }
 }
 
 @media (max-width: 768px) {
+  .section-padding {
+    padding: 3.5rem 0;
+  }
+
   .hero-actions {
     flex-direction: column;
     gap: 0.75rem;
@@ -1080,26 +1098,58 @@ footer::before {
   }
 
   .brand-logo-img {
-    height: 52px;
+    height: 50px;
+    max-width: 240px;
+  }
+
+  .btn-nav-gold {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8rem;
   }
 
   .contact-form-card {
     padding: 1.5rem;
   }
+
+  .projects-filter {
+    gap: 0.4rem;
+  }
+
+  .filter-btn {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.825rem;
+  }
 }
 
 @media (max-width: 576px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .section-padding {
+    padding: 2.75rem 0;
+  }
+
+  .hero-content h1 {
+    font-size: 1.75rem;
+  }
+
   .hero-stats {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
-  
-  .footer-grid {
+
+  .services-grid, .training-grid, .projects-grid, .features-grid, .testimonials-grid, .industries-grid {
     grid-template-columns: 1fr;
   }
   
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  
   .section-header h2 {
-    font-size: 1.7rem;
+    font-size: 1.55rem;
   }
 
   .tech-pill-grid {
@@ -1109,6 +1159,26 @@ footer::before {
   .tech-pill {
     padding: 0.5rem 0.85rem;
     font-size: 0.825rem;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .modal-container {
+    width: 95%;
+    max-height: 92vh;
+    padding: 1.5rem 1.15rem;
+  }
+
+  .modal-close {
+    top: 0.85rem;
+    right: 0.85rem;
+  }
+
+  #flash-toast-container {
+    left: 12px !important;
+    right: 12px !important;
+    max-width: calc(100vw - 24px) !important;
+    top: 75px !important;
   }
 }
 
