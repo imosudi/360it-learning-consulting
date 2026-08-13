@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             projectCards.forEach(card => {
                 const category = card.getAttribute('data-category');
-                if (filterValue === 'all' || category === filterValue) {
+                if (filterValue === 'all' || category === filterValue || (category && category.toLowerCase().includes(filterValue.toLowerCase()))) {
                     card.style.display = 'flex';
                     card.style.opacity = '1';
                     card.classList.add('aos-animate');
