@@ -7,100 +7,149 @@ def seed_database():
     """Seed sample catalog data based on dev_requirements.txt specifications."""
     
     # 1. Services
-    if Service.query.count() == 0:
-        services_data = [
-            {
-                'title': 'Cloud Consulting',
-                'slug': 'cloud-consulting',
-                'icon': 'fa-cloud',
-                'category': 'Cloud & Infrastructure',
-                'short_desc': 'Architect, migrate, and optimize enterprise workloads across AWS, Azure, and Google Cloud with multi-cloud reliability.',
-                'long_desc': 'Our Cloud Consulting services enable organizations to modernize legacy infrastructure, optimize cloud expenditure, and implement resilient multi-cloud architectures. We deliver full lifecycle support from cloud readiness assessment to seamless migration and continuous security monitoring.',
-                'features_list': 'AWS & Azure Cloud Migration, Cloud Cost Optimization (FinOps), Cloud-Native Architecture, Disaster Recovery & High Availability'
-            },
-            {
-                'title': 'DevOps Consulting',
-                'slug': 'devops-consulting',
-                'icon': 'fa-code-branch',
-                'category': 'DevOps & Automation',
-                'short_desc': 'Streamline software delivery cycles with CI/CD pipelines, Infrastructure as Code (IaC), and automated compliance.',
-                'long_desc': 'Empower your development and operations teams with modern DevOps methodologies. We build fully automated continuous integration and continuous deployment (CI/CD) pipelines, implement GitOps workflows, and manage infrastructure declaratively with Terraform and Ansible.',
-                'features_list': 'Automated CI/CD Pipelines, Infrastructure as Code (Terraform/Ansible), Container Orchestration, GitOps Workflows'
-            },
-            {
-                'title': 'Infrastructure Solutions',
-                'slug': 'infrastructure-solutions',
-                'icon': 'fa-server',
-                'category': 'Cloud & Infrastructure',
-                'short_desc': 'Design and deploy robust enterprise server, storage, and networking architectures tailored for hybrid environments.',
-                'long_desc': 'We provide end-to-end data center and cloud infrastructure design, virtualisation (KVM/VMware), storage area networks, and high-performance network topology engineered for 99.99% uptime and zero data loss resiliency.',
-                'features_list': 'Enterprise Server Virtualization, Network Topology Design, SAN/NAS Storage Configuration, Hybrid Cloud Integration'
-            },
-            {
-                'title': 'Digital Transformation',
-                'slug': 'digital-transformation',
-                'icon': 'fa-rocket',
-                'category': 'Strategy & Advisory',
-                'short_desc': 'Modernize business processes, legacy monoliths, and operational workflows through state-of-the-art tech adoption.',
-                'long_desc': 'Accelerate your business agility by transitioning from monolithic legacy systems to microservices and cloud-native solutions. Our digital transformation experts work closely with executives to execute strategic tech roadmaps.',
-                'features_list': 'Legacy Codebase Modernization, Business Process Automation, Enterprise API Integration, Technology Governance Roadmap'
-            },
-            {
-                'title': 'Systems Administration',
-                'slug': 'systems-administration',
-                'icon': 'fa-terminal',
-                'category': 'Systems & IT Ops',
-                'short_desc': 'Comprehensive Linux and Windows server administration, patch management, security hardening, and performance tuning.',
-                'long_desc': 'Ensure rock-solid stability across your server fleet. Our certified system administrators handle OS installations, kernel optimization, Active Directory configuration, backup execution, and proactive kernel patching.',
-                'features_list': 'Linux (RHEL/Ubuntu/Debian) Management, Windows Server & Active Directory, Automated Patching & Security Hardening, Performance Tuning'
-            },
-            {
-                'title': 'Application Deployment',
-                'slug': 'application-deployment',
-                'icon': 'fa-cubes',
-                'category': 'DevOps & Automation',
-                'short_desc': 'Seamless production deployment of web applications, microservices, and mobile backend services with zero downtime.',
-                'long_desc': 'Deploy software faster and without user disruption. We implement blue-green deployments, canary releases, and rolling updates across Kubernetes clusters and traditional web application server pools.',
-                'features_list': 'Blue-Green & Canary Deployments, Microservices Containerization, Load Balancing & Reverse Proxies, SSL/TLS Encryption Management'
-            },
-            {
-                'title': 'Database Administration',
-                'slug': 'database-administration',
-                'icon': 'fa-database',
-                'category': 'Database & Analytics',
-                'short_desc': 'Enterprise MySQL, PostgreSQL, and SQL Server DBA services: replication, indexing, backup, and high availability.',
-                'long_desc': 'Keep your vital business data safe, fast, and accessible. We handle complex database cluster setups, master-slave replication, query performance tuning, automated backup validation, and point-in-time recovery.',
-                'features_list': 'MySQL/MariaDB & PostgreSQL Clustering, Performance Optimization & Indexing, Disaster Recovery & Automated Backups, Database Security Hardening'
-            },
-            {
-                'title': 'Managed IT Services',
-                'slug': 'managed-it-services',
-                'icon': 'fa-headset',
-                'category': 'Managed Services',
-                'short_desc': '24/7 proactive infrastructure monitoring, helpdesk support, incident management, and SLA-driven maintenance.',
-                'long_desc': 'Outsource your IT operations to a dedicated team of experts. We monitor server metrics round-the-clock using Icinga2, Prometheus, and Grafana, guaranteeing swift incident response and proactive system health management.',
-                'features_list': '24/7 System Health Monitoring, Incident Response & SLA Guarantees, Proactive Maintenance, Executive IT Health Reporting'
-            },
-            {
-                'title': 'IT Support',
-                'slug': 'it-support',
-                'icon': 'fa-tools',
-                'category': 'Managed Services',
-                'short_desc': 'On-demand technical troubleshooting, hardware/software support, remote desktop assistance, and user access management.',
-                'long_desc': 'Provide your employees with rapid resolution for workplace tech issues. We manage helpdesk tickets, workstation setup, software licensing, anti-malware enforcement, and remote user support.',
-                'features_list': 'Tier 1 to Tier 3 Helpdesk Support, Remote Desktop Troubleshooting, Workstation Deployment & Security, User Access Provisioning'
-            },
-            {
-                'title': 'Technology Advisory',
-                'slug': 'technology-advisory',
-                'icon': 'fa-lightbulb',
-                'category': 'Strategy & Advisory',
-                'short_desc': 'Strategic IT consulting, CTO-as-a-Service, technology procurement, compliance auditing, and security assessments.',
-                'long_desc': 'Gain expert technical leadership without the overhead of a full-time executive. Our advisory practice guides tech stack selection, vendor evaluations, cybersecurity risk audits, and IT budget optimization.',
-                'features_list': 'Fractional CTO / Technical Leadership, Cybersecurity Compliance Auditing, Vendor Evaluation & Contract Negotiation, IT Strategy & Budget Planning'
-            }
-        ]
-        for s in services_data:
+    services_data = [
+        {
+            'title': 'Cloud Consulting',
+            'slug': 'cloud-consulting',
+            'icon': 'fa-cloud',
+            'category': 'Cloud & Infrastructure',
+            'short_desc': 'Architect, migrate, and optimize enterprise workloads across AWS, Azure, and Google Cloud with multi-cloud reliability.',
+            'long_desc': 'Our Cloud Consulting services enable organizations to modernize legacy infrastructure, optimize cloud expenditure, and implement resilient multi-cloud architectures. We deliver full lifecycle support from cloud readiness assessment to seamless migration and continuous security monitoring.',
+            'features_list': 'AWS & Azure Cloud Migration, Cloud Cost Optimization (FinOps), Cloud-Native Architecture, Disaster Recovery & High Availability',
+            'platforms': 'AWS • Azure • Google Cloud • Cloud Native'
+        },
+        {
+            'title': 'DevOps Consulting',
+            'slug': 'devops-consulting',
+            'icon': 'fa-code-branch',
+            'category': 'DevOps & Automation',
+            'short_desc': 'Streamline software delivery cycles with CI/CD pipelines, Infrastructure as Code (IaC), and automated compliance.',
+            'long_desc': 'Empower your development and operations teams with modern DevOps methodologies. We build fully automated continuous integration and continuous deployment (CI/CD) pipelines, implement GitOps workflows, and manage infrastructure declaratively with Terraform and Ansible.',
+            'features_list': 'Automated CI/CD Pipelines, Infrastructure as Code (Terraform/Ansible), Container Orchestration, GitOps Workflows',
+            'platforms': 'Docker • Kubernetes • Terraform • Ansible • Jenkins'
+        },
+        {
+            'title': 'Infrastructure Solutions',
+            'slug': 'infrastructure-solutions',
+            'icon': 'fa-server',
+            'category': 'Cloud & Infrastructure',
+            'short_desc': 'Design and deploy robust enterprise server, storage, and networking architectures tailored for hybrid environments.',
+            'long_desc': 'We provide end-to-end data center and cloud infrastructure design, virtualisation (KVM/VMware), storage area networks, and high-performance network topology engineered for 99.99% uptime and zero data loss resiliency.',
+            'features_list': 'Enterprise Server Virtualization, Network Topology Design, SAN/NAS Storage Configuration, Hybrid Cloud Integration',
+            'platforms': 'VMware • KVM • SAN/NAS • Hybrid Cloud'
+        },
+        {
+            'title': 'ERP Implementation & Support',
+            'slug': 'erp-implementation-support',
+            'icon': 'fa-layer-group',
+            'category': 'Enterprise Systems',
+            'short_desc': 'Transform business operations with connected ERP solutions that streamline processes, automate workflows, and improve enterprise-wide visibility.',
+            'long_desc': 'Transform business operations with connected ERP solutions that streamline processes, automate workflows, and improve enterprise-wide visibility across leading enterprise platforms.',
+            'features_list': 'ERP Implementation & Configuration, System Integration & APIs, Data Migration & Modernization, Workflow Automation, Upgrades & Optimization, Managed ERP Support',
+            'platforms': 'SAP • NetSuite • Dynamics 365 • Odoo • Oracle'
+        },
+        {
+            'title': 'CRM Solutions & Integration',
+            'slug': 'crm-solutions-integration',
+            'icon': 'fa-users-gear',
+            'category': 'Customer Experience & CRM',
+            'short_desc': 'Build smarter customer experiences with integrated CRM solutions that connect sales, service, data, and automation.',
+            'long_desc': 'Build smarter customer experiences with integrated CRM solutions that connect sales, service, data, and automation across enterprise platforms.',
+            'features_list': 'CRM Implementation, System & API Integration, Sales & Service Automation, Custom CRM Development, Data Migration & Analytics, CRM Support & Optimization',
+            'platforms': 'Salesforce • Dynamics 365 • HubSpot • Zoho • Custom CRM'
+        },
+        {
+            'title': 'Lean Six Sigma & IT Process Optimization',
+            'slug': 'lean-six-sigma-it-process-optimization',
+            'icon': 'fa-sliders',
+            'category': 'Process Optimization & Advisory',
+            'short_desc': 'Optimize IT operations through data-driven process improvement that reduces waste, lowers costs, improves service delivery, and increases system efficiency.',
+            'long_desc': 'Optimize IT operations through data-driven process improvement that reduces waste, lowers costs, improves service delivery, and increases system efficiency.',
+            'features_list': 'IT Process Optimization, Cost & Waste Reduction, Incident & Service Management Improvement, Workflow & Deployment Optimization, Root Cause & Problem Analysis, Automation Opportunity Assessment, System & Resource Optimization, KPI & Performance Improvement',
+            'platforms': 'Lean • Six Sigma • DMAIC • Root Cause Analysis • Process Mapping • KPI Analysis'
+        },
+        {
+            'title': 'Digital Transformation',
+            'slug': 'digital-transformation',
+            'icon': 'fa-rocket',
+            'category': 'Strategy & Advisory',
+            'short_desc': 'Modernize business processes, legacy monoliths, and operational workflows through state-of-the-art tech adoption.',
+            'long_desc': 'Accelerate your business agility by transitioning from monolithic legacy systems to microservices and cloud-native solutions. Our digital transformation experts work closely with executives to execute strategic tech roadmaps.',
+            'features_list': 'Legacy Codebase Modernization, Business Process Automation, Enterprise API Integration, Technology Governance Roadmap',
+            'platforms': 'Microservices • Cloud-Native • Enterprise APIs'
+        },
+        {
+            'title': 'Systems Administration',
+            'slug': 'systems-administration',
+            'icon': 'fa-terminal',
+            'category': 'Systems & IT Ops',
+            'short_desc': 'Comprehensive Linux and Windows server administration, patch management, security hardening, and performance tuning.',
+            'long_desc': 'Ensure rock-solid stability across your server fleet. Our certified system administrators handle OS installations, kernel optimization, Active Directory configuration, backup execution, and proactive kernel patching.',
+            'features_list': 'Linux (RHEL/Ubuntu/Debian) Management, Windows Server & Active Directory, Automated Patching & Security Hardening, Performance Tuning',
+            'platforms': 'Linux RHEL/Ubuntu • Windows Server • Active Directory'
+        },
+        {
+            'title': 'Application Deployment',
+            'slug': 'application-deployment',
+            'icon': 'fa-cubes',
+            'category': 'DevOps & Automation',
+            'short_desc': 'Seamless production deployment of web applications, microservices, and mobile backend services with zero downtime.',
+            'long_desc': 'Deploy software faster and without user disruption. We implement blue-green deployments, canary releases, and rolling updates across Kubernetes clusters and traditional web application server pools.',
+            'features_list': 'Blue-Green & Canary Deployments, Microservices Containerization, Load Balancing & Reverse Proxies, SSL/TLS Encryption Management',
+            'platforms': 'Kubernetes • NGINX • Microservices • Docker'
+        },
+        {
+            'title': 'Database Administration',
+            'slug': 'database-administration',
+            'icon': 'fa-database',
+            'category': 'Database & Analytics',
+            'short_desc': 'Enterprise MySQL, PostgreSQL, and SQL Server DBA services: replication, indexing, backup, and high availability.',
+            'long_desc': 'Keep your vital business data safe, fast, and accessible. We handle complex database cluster setups, master-slave replication, query performance tuning, automated backup validation, and point-in-time recovery.',
+            'features_list': 'MySQL/MariaDB & PostgreSQL Clustering, Performance Optimization & Indexing, Disaster Recovery & Automated Backups, Database Security Hardening',
+            'platforms': 'MySQL • PostgreSQL • MariaDB • SQL Server'
+        },
+        {
+            'title': 'Managed IT Services',
+            'slug': 'managed-it-services',
+            'icon': 'fa-headset',
+            'category': 'Managed Services',
+            'short_desc': '24/7 proactive infrastructure monitoring, helpdesk support, incident management, and SLA-driven maintenance.',
+            'long_desc': 'Outsource your IT operations to a dedicated team of experts. We monitor server metrics round-the-clock using Icinga2, Prometheus, and Grafana, guaranteeing swift incident response and proactive system health management.',
+            'features_list': '24/7 System Health Monitoring, Incident Response & SLA Guarantees, Proactive Maintenance, Executive IT Health Reporting',
+            'platforms': 'Prometheus • Grafana • Icinga2 • SLA Helpdesk'
+        },
+        {
+            'title': 'IT Support',
+            'slug': 'it-support',
+            'icon': 'fa-tools',
+            'category': 'Managed Services',
+            'short_desc': 'On-demand technical troubleshooting, hardware/software support, remote desktop assistance, and user access management.',
+            'long_desc': 'Provide your employees with rapid resolution for workplace tech issues. We manage helpdesk tickets, workstation setup, software licensing, anti-malware enforcement, and remote user support.',
+            'features_list': 'Tier 1 to Tier 3 Helpdesk Support, Remote Desktop Troubleshooting, Workstation Deployment & Security, User Access Provisioning',
+            'platforms': 'Tier 1-3 Support • Remote Admin • Security Policy'
+        },
+        {
+            'title': 'Technology Advisory',
+            'slug': 'technology-advisory',
+            'icon': 'fa-lightbulb',
+            'category': 'Strategy & Advisory',
+            'short_desc': 'Strategic IT consulting, CTO-as-a-Service, technology procurement, compliance auditing, and security assessments.',
+            'long_desc': 'Gain expert technical leadership without the overhead of a full-time executive. Our advisory practice guides tech stack selection, vendor evaluations, cybersecurity risk audits, and IT budget optimization.',
+            'features_list': 'Fractional CTO / Technical Leadership, Cybersecurity Compliance Auditing, Vendor Evaluation & Contract Negotiation, IT Strategy & Budget Planning',
+            'platforms': 'CTO Advisory • Compliance • IT Architecture'
+        }
+    ]
+    for s in services_data:
+        existing = Service.query.filter_by(slug=s['slug']).first()
+        if existing:
+            existing.title = s['title']
+            existing.icon = s['icon']
+            existing.category = s['category']
+            existing.short_desc = s['short_desc']
+            existing.long_desc = s['long_desc']
+            existing.features_list = s['features_list']
+            existing.platforms = s.get('platforms')
+        else:
             db.session.add(Service(**s))
 
     # 2. Professional Training Courses

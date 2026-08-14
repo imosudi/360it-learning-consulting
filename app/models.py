@@ -68,6 +68,7 @@ class Service(db.Model):
     long_desc = db.Column(db.Text)
     features_list = db.Column(db.Text) # Comma or newline separated
     category = db.Column(db.String(100), default='Consulting')
+    platforms = db.Column(db.String(255))
 
 class TrainingCourse(db.Model):
     __tablename__ = 'training_courses'

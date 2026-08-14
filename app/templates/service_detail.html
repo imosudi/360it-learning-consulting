@@ -31,11 +31,23 @@
 
         {% if service.features_list %}
           <h3 style="font-size: 1.4rem; margin-bottom: 1.25rem;">Key Offerings & Scope</h3>
-          <div class="two-col-grid-sm" style="margin-bottom: 3rem;">
+          <div class="two-col-grid-sm" style="margin-bottom: 2.5rem;">
             {% for item in service.features_list.split(',') %}
               <div class="card" style="padding: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
                 <i class="fas fa-check-circle" style="color: var(--primary-blue); font-size: 1.2rem;"></i>
                 <span style="font-weight: 600; color: var(--text-dark);">{{ item.strip() }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if service.platforms %}
+          <h3 style="font-size: 1.4rem; margin-bottom: 1.25rem;">Platforms & Methodologies</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 3rem;">
+            {% for platform in service.platforms.split('•') %}
+              <div class="card" style="padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 0.6rem; border-radius: 10px; background: rgba(13, 110, 253, 0.04);">
+                <i class="fas fa-cubes" style="color: var(--primary-blue); font-size: 1rem;"></i>
+                <span style="font-weight: 600; color: var(--text-dark); font-size: 0.95rem;">{{ platform.strip() }}</span>
               </div>
             {% endfor %}
           </div>

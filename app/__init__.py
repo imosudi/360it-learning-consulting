@@ -104,6 +104,9 @@ with app.app_context():
                 ('admin_notes', 'TEXT'),
                 ('is_read', 'BOOLEAN DEFAULT 0'),
                 ('updated_at', 'DATETIME')
+            ],
+            'services': [
+                ('platforms', 'VARCHAR(255)')
             ]
         }
         for table, columns in tables_columns.items():
