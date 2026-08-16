@@ -1,11 +1,44 @@
 import os
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, flash, request, send_from_directory, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_from_directory, current_app, Response
 from .extensions import db
 from .models import Service, TrainingCourse, Project, Testimonial, ContactMessage, ConsultationRequest, EnrollmentRequest, NewsletterSubscriber
 from .forms import ContactForm, ConsultationForm, EnrollmentForm
 
 bp = Blueprint('main', __name__)
+
+STOP_WORDS = {'and', 'or', 'the', 'for', 'with', 'in', 'on', 'at', 'to', 'a', 'an', 'is', 'of', 'by', 'it', 'its', 'our', 'your', 'about'}
+
+def calculate_relevance(item, query, words, title_attr='title', desc_attr='short_desc', long_desc_attr='long_desc', cat_attr='category'):
+    score = 0
+    query_lower = query.lower()
+    
+    title_val = getattr(item, title_attr, '') or ''
+    desc_val = getattr(item, desc_attr, '') or ''
+    long_desc_val = getattr(item, long_desc_attr, '') or ''
+    cat_val = getattr(item, cat_attr, '') or ''
+    
+    # Phrase matches
+    if query_lower in title_val.lower():
+        score += 30
+    if query_lower in cat_val.lower():
+        score += 20
+    if query_lower in desc_val.lower():
+        score += 15
+        
+    # Keyword matches
+    for word in words:
+        w_lower = word.lower()
+        if w_lower in title_val.lower():
+            score += 10
+        if w_lower in cat_val.lower():
+            score += 7
+        if w_lower in desc_val.lower():
+            score += 5
+        if w_lower in long_desc_val.lower():
+            score += 2
+            
+    return score
 
 @bp.route('/favicon.ico')
 def favicon():
@@ -86,9 +119,10 @@ def search():
         'pages': []
     }
     if query:
-        words = [w.strip() for w in query.split() if len(w.strip()) > 1]
+        raw_words = [w.strip() for w in query.split() if len(w.strip()) > 1]
+        words = [w for w in raw_words if w.lower() not in STOP_WORDS]
         if not words:
-            words = [query]
+            words = raw_words or [query]
 
         # 1. Services
         service_filters = []
@@ -102,7 +136,12 @@ def search():
                 (Service.category.ilike(pattern)) |
                 (Service.platforms.ilike(pattern))
             )
-        results['services'] = Service.query.filter(db.or_(*service_filters)).all() if service_filters else []
+        matched_services = Service.query.filter(db.or_(*service_filters)).all() if service_filters else []
+        results['services'] = sorted(
+            matched_services,
+            key=lambda s: calculate_relevance(s, query, words, 'title', 'short_desc', 'long_desc', 'category'),
+            reverse=True
+        )
 
         # 2. Training Courses
         course_filters = []
@@ -116,7 +155,12 @@ def search():
                 (TrainingCourse.delivery_mode.ilike(pattern)) |
                 (TrainingCourse.skill_level.ilike(pattern))
             )
-        results['courses'] = TrainingCourse.query.filter(db.or_(*course_filters)).all() if course_filters else []
+        matched_courses = TrainingCourse.query.filter(db.or_(*course_filters)).all() if course_filters else []
+        results['courses'] = sorted(
+            matched_courses,
+            key=lambda c: calculate_relevance(c, query, words, 'title', 'short_desc', 'long_desc', 'syllabus_list'),
+            reverse=True
+        )
 
         # 3. Projects
         project_filters = []
@@ -130,7 +174,12 @@ def search():
                 (Project.long_desc.ilike(pattern)) |
                 (Project.category.ilike(pattern))
             )
-        results['projects'] = Project.query.filter(db.or_(*project_filters)).all() if project_filters else []
+        matched_projects = Project.query.filter(db.or_(*project_filters)).all() if project_filters else []
+        results['projects'] = sorted(
+            matched_projects,
+            key=lambda p: calculate_relevance(p, query, words, 'title', 'short_desc', 'long_desc', 'tech_stack'),
+            reverse=True
+        )
 
         # 4. Testimonials
         testimonial_filters = []
@@ -143,7 +192,12 @@ def search():
                 (Testimonial.quote.ilike(pattern)) |
                 (Testimonial.service_type.ilike(pattern))
             )
-        results['testimonials'] = Testimonial.query.filter(db.or_(*testimonial_filters)).all() if testimonial_filters else []
+        matched_testimonials = Testimonial.query.filter(db.or_(*testimonial_filters)).all() if testimonial_filters else []
+        results['testimonials'] = sorted(
+            matched_testimonials,
+            key=lambda t: calculate_relevance(t, query, words, 'name', 'quote', 'organization', 'service_type'),
+            reverse=True
+        )
 
         # 5. Information Pages
         static_pages = [
@@ -154,10 +208,19 @@ def search():
             {'title': 'Terms & Conditions', 'url': url_for('main.terms'), 'desc': 'Terms of service, consulting agreements, and website use guidelines.'}
         ]
         
+        scored_pages = []
         for page in static_pages:
+            score = 0
             combined_text = f"{page['title']} {page['desc']}".lower()
-            if any(w.lower() in combined_text for w in words):
-                results['pages'].append(page)
+            if query.lower() in combined_text:
+                score += 20
+            for w in words:
+                if w.lower() in combined_text:
+                    score += 5
+            if score > 0:
+                scored_pages.append((score, page))
+        
+        results['pages'] = [p for s, p in sorted(scored_pages, key=lambda x: x[0], reverse=True)]
 
     total_count = (len(results['services']) + len(results['courses']) + 
                    len(results['projects']) + len(results['testimonials']) + 
@@ -168,6 +231,37 @@ def search():
                            query=query,
                            results=results,
                            total_count=total_count)
+
+@bp.route('/sitemap.xml')
+def sitemap():
+    services = Service.query.all()
+    courses = TrainingCourse.query.all()
+    projects = Project.query.all()
+    
+    xml = ['<?xml version="1.0" encoding="UTF-8"?>']
+    xml.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+    
+    static_endpoints = ['main.index', 'main.about', 'main.services', 'main.training', 'main.projects', 'main.contact', 'main.faqs', 'main.privacy', 'main.terms']
+    for ep in static_endpoints:
+        xml.append(f'  <url><loc>{url_for(ep, _external=True)}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>')
+        
+    for s in services:
+        xml.append(f'  <url><loc>{url_for("main.service_detail", slug=s.slug, _external=True)}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>')
+        
+    for c in courses:
+        xml.append(f'  <url><loc>{url_for("main.course_detail", slug=c.slug, _external=True)}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>')
+        
+    for p in projects:
+        xml.append(f'  <url><loc>{url_for("main.project_detail", slug=p.slug, _external=True)}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>')
+        
+    xml.append('</urlset>')
+    
+    return Response('\n'.join(xml), mimetype='application/xml')
+
+@bp.route('/robots.txt')
+def robots():
+    content = f"User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: {url_for('main.sitemap', _external=True)}\n"
+    return Response(content, mimetype='text/plain')
 
 @bp.route('/faqs')
 def faqs():

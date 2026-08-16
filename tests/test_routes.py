@@ -66,4 +66,15 @@ def test_search_route(client):
     assert b'Search Results for' in response.data
     assert b'Cloud' in response.data
 
+def test_sitemap_and_robots(client):
+    res_sitemap = client.get('/sitemap.xml')
+    assert res_sitemap.status_code == 200
+    assert b'<?xml version="1.0" encoding="UTF-8"?>' in res_sitemap.data
+    assert b'<urlset' in res_sitemap.data
+    
+    res_robots = client.get('/robots.txt')
+    assert res_robots.status_code == 200
+    assert b'User-agent: *' in res_robots.data
+    assert b'Sitemap:' in res_robots.data
+
 
