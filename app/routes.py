@@ -75,9 +75,44 @@ def project_detail(slug):
     tech_list = [t.strip() for t in project.tech_stack.split(',')]
     return render_template('project_detail.html', title=f'{project.title} | 360IT Projects', project=project, tech_list=tech_list)
 
-@bp.route('/technologies')
-def technologies():
-    return redirect(url_for('main.index'))
+@bp.route('/search')
+def search():
+    query = request.args.get('q', '').strip()
+    results = {
+        'services': [],
+        'courses': [],
+        'projects': []
+    }
+    if query:
+        search_pattern = f"%{query}%"
+        results['services'] = Service.query.filter(
+            (Service.title.ilike(search_pattern)) |
+            (Service.short_desc.ilike(search_pattern)) |
+            (Service.long_desc.ilike(search_pattern)) |
+            (Service.category.ilike(search_pattern))
+        ).all()
+        
+        results['courses'] = TrainingCourse.query.filter(
+            (TrainingCourse.title.ilike(search_pattern)) |
+            (TrainingCourse.short_desc.ilike(search_pattern)) |
+            (TrainingCourse.long_desc.ilike(search_pattern)) |
+            (TrainingCourse.syllabus_list.ilike(search_pattern))
+        ).all()
+        
+        results['projects'] = Project.query.filter(
+            (Project.title.ilike(search_pattern)) |
+            (Project.industry.ilike(search_pattern)) |
+            (Project.tech_stack.ilike(search_pattern)) |
+            (Project.short_desc.ilike(search_pattern)) |
+            (Project.long_desc.ilike(search_pattern))
+        ).all()
+        
+    total_count = len(results['services']) + len(results['courses']) + len(results['projects'])
+    return render_template('search_results.html',
+                           title=f'Search Results for "{query}" | 360IT' if query else 'Search | 360IT',
+                           query=query,
+                           results=results,
+                           total_count=total_count)
 
 @bp.route('/faqs')
 def faqs():

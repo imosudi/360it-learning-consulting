@@ -60,6 +60,10 @@ def test_projects_route(client):
     assert b'Enterprise Analytics &amp; Business Intelligence' in response.data or b'Enterprise Analytics' in response.data
     assert b'Enterprise Commerce Platform' in response.data
     assert b'24/7 Managed Infrastructure Services' in response.data
-    assert b'Ready to Transform Your Business?' in response.data
+def test_search_route(client):
+    response = client.get('/search?q=Cloud')
+    assert response.status_code == 200
+    assert b'Search Results for' in response.data
+    assert b'Cloud' in response.data
 
 

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero-section" style="min-height: 25vh; padding-top: 7rem; padding-bottom: 2.5rem; background: var(--bg-section-alt);">
+  <div class="container" style="text-align: center; max-width: 800px;">
+    <span class="badge" style="display: inline-block; margin-bottom: 0.75rem;">Site Search</span>
+    <h1 style="font-size: 2.4rem; color: var(--text-dark); margin-bottom: 1rem;">
+      {% if query %}
+        Search Results for <span style="color: var(--primary-blue);">"{{ query }}"</span>
+      {% else %}
+        Search 360IT Platform
+      {% endif %}
+    </h1>
+    
+    <form action="{{ url_for('main.search') }}" method="GET" style="margin-top: 1.5rem;" id="search-page-form">
+      <div style="display: flex; gap: 0.5rem; justify-content: center; max-width: 600px; margin: 0 auto;">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search services, bootcamps, technologies..." class="form-control" style="padding: 0.8rem 1.2rem; font-size: 1rem; border-radius: 8px; border: 1px solid rgba(0,0,0,0.15);" id="search-page-input" required>
+        <button type="submit" class="btn btn-gold" style="padding: 0.8rem 1.5rem;" id="search-page-btn">
+          <i class="fas fa-search"></i> Search
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="section-padding">
+  <div class="container">
+    {% if query %}
+      <p style="font-size: 1.05rem; color: var(--text-muted); margin-bottom: 2rem;">
+        Found <strong>{{ total_count }}</strong> matching result{% if total_count != 1 %}s{% endif %} for "<strong>{{ query }}</strong>".
+      </p>
+
+      {% if total_count == 0 %}
+        <div class="card text-center" style="padding: 3rem; max-width: 600px; margin: 2rem auto;">
+          <div style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"><i class="fas fa-magnifying-glass"></i></div>
+          <h3>No matching information found</h3>
+          <p style="color: var(--text-muted); margin-top: 0.5rem;">Try refining your search terms or explore our primary service categories below.</p>
+          <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('main.services') }}" class="btn btn-primary"><i class="fas fa-cubes"></i> Browse Services</a>
+            <a href="{{ url_for('main.training') }}" class="btn btn-gold"><i class="fas fa-graduation-cap"></i> Browse Bootcamps</a>
+          </div>
+        </div>
+      {% else %}
+
+        <!-- Services Results -->
+        {% if results.services %}
+          <div style="margin-bottom: 3rem;">
+            <h2 style="font-size: 1.6rem; border-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+              <i class="fas fa-concierge-bell" style="color: var(--primary-blue);"></i> Services ({{ results.services|length }})
+            </h2>
+            <div class="services-grid">
+              {% for s in results.services %}
+                <div class="service-card">
+                  <div class="service-icon"><i class="fas {{ s.icon }}"></i></div>
+                  <h3>{{ s.title }}</h3>
+                  <p>{{ s.short_desc }}</p>
+                  <a href="{{ url_for('main.service_detail', slug=s.slug) }}" class="btn-link">View Service Details <i class="fas fa-arrow-right"></i></a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Training Courses Results -->
+        {% if results.courses %}
+          <div style="margin-bottom: 3rem;">
+            <h2 style="font-size: 1.6rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-graduation-cap" style="color: var(--accent-gold);"></i> Training Bootcamps ({{ results.courses|length }})
+            </h2>
+            <div class="training-grid">
+              {% for c in results.courses %}
+                <div class="course-card">
+                  <div class="course-content">
+                    <div class="course-tags">
+                      <span class="tag tag-cyan">{{ c.skill_level }}</span>
+                      <span class="tag">{{ c.duration }}</span>
+                    </div>
+                    <h3>{{ c.title }}</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">{{ c.short_desc }}</p>
+                    <div class="course-actions">
+                      <a href="{{ url_for('main.course_detail', slug=c.slug) }}" style="font-size: 0.9rem; font-weight: 600; color: var(--primary-blue);">
+                        View Syllabus
+                      </a>
+                      <button class="btn btn-gold" style="padding: 0.45rem 1rem; font-size: 0.85rem;" data-open-modal="enrollment" data-course="{{ c.title }}">
+                        Enroll Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Projects / Portfolio Results -->
+        {% if results.projects %}
+          <div style="margin-bottom: 3rem;">
+            <h2 style="font-size: 1.6rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-briefcase" style="color: var(--accent-cyan);"></i> Delivered Projects ({{ results.projects|length }})
+            </h2>
+            <div class="projects-grid">
+              {% for p in results.projects %}
+                <div class="project-card">
+                  <div class="project-content">
+                    <div class="project-industry">{{ p.industry }}</div>
+                    <h3>{{ p.title }}</h3>
+                    <div class="project-tech"><i class="fas fa-microchip" style="color: var(--primary-blue);"></i> {{ p.tech_stack }}</div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">{{ p.short_desc }}</p>
+                    <a href="{{ url_for('main.project_detail', slug=p.slug) }}" class="btn-link">View Engagement Details <i class="fas fa-arrow-right"></i></a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+      {% endif %}
+    {% else %}
+      <div class="text-center" style="padding: 3rem; max-width: 600px; margin: 0 auto;">
+        <p style="color: var(--text-muted);">Type a keyword above to search through our enterprise services, technical bootcamps, and project portfolios.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
