@@ -64,21 +64,10 @@ def seed_database():
         db.session.add(Service(**s))
 
     # 2. Professional Training Courses
+    TrainingCourse.query.filter_by(slug='aws-cloud-engineering').delete()
+    db.session.commit()
     if TrainingCourse.query.count() == 0:
         courses_data = [
-            {
-                'title': 'AWS Cloud Engineering',
-                'slug': 'aws-cloud-engineering',
-                'icon': 'fa-aws',
-                'image': 'images/courses/aws-cloud.svg',
-                'short_desc': 'Master AWS core services (EC2, S3, VPC, IAM, RDS) and build enterprise cloud solutions. Prepares for AWS Solutions Architect Certification.',
-                'long_desc': 'This comprehensive bootcamp covers hands-on AWS architecture, networking, security controls, serverless application building with Lambda, and automated infrastructure deployment.',
-                'duration': '10 Weeks',
-                'delivery_mode': 'Online Live & Hybrid',
-                'skill_level': 'Beginner to Advanced',
-                'syllabus_list': 'AWS Architecture Fundamentals|VPC & Networking Security|EC2, Auto-Scaling & Load Balancing|RDS & DynamoDB Management|AWS Lambda & Serverless|Certification Exam Prep',
-                'featured': True
-            },
             {
                 'title': 'Microsoft Azure',
                 'slug': 'microsoft-azure',

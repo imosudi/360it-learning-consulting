@@ -38,7 +38,6 @@ class EnrollmentForm(FlaskForm):
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     phone = StringField('Phone Number', validators=[DataRequired(), Length(max=30)])
     course_title = SelectField('Training Course', choices=[
-        ('AWS Cloud Engineering', 'AWS Cloud Engineering'),
         ('Microsoft Azure', 'Microsoft Azure'),
         ('DevOps Engineering', 'DevOps Engineering'),
         ('Cybersecurity', 'Cybersecurity'),
