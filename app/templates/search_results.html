@@ -114,6 +114,42 @@
           </div>
         {% endif %}
 
+        <!-- Information & Key Pages Results -->
+        {% if results.pages %}
+          <div style="margin-bottom: 3rem;">
+            <h2 style="font-size: 1.6rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-file-alt" style="color: var(--primary-blue);"></i> Platform Pages ({{ results.pages|length }})
+            </h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+              {% for pg in results.pages %}
+                <div class="card" style="padding: 1.5rem; border-radius: 12px;">
+                  <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;"><a href="{{ pg.url }}" style="color: var(--text-dark); text-decoration: none;">{{ pg.title }}</a></h3>
+                  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">{{ pg.desc }}</p>
+                  <a href="{{ pg.url }}" class="btn-link" style="font-size: 0.85rem; font-weight: 600;">Visit Page <i class="fas fa-arrow-right"></i></a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Testimonials Results -->
+        {% if results.testimonials %}
+          <div style="margin-bottom: 3rem;">
+            <h2 style="font-size: 1.6rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-quote-left" style="color: var(--accent-gold);"></i> Client Stories &amp; Reviews ({{ results.testimonials|length }})
+            </h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+              {% for t in results.testimonials %}
+                <div class="card" style="padding: 1.5rem; border-radius: 12px;">
+                  <p style="font-style: italic; color: var(--text-dark); font-size: 0.95rem; margin-bottom: 1rem;">"{{ t.quote }}"</p>
+                  <div style="font-weight: 600; font-size: 0.9rem; color: var(--primary-blue);">{{ t.name }}</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">{{ t.position }}, {{ t.organization }}</div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
       {% endif %}
     {% else %}
       <div class="text-center" style="padding: 3rem; max-width: 600px; margin: 0 auto;">

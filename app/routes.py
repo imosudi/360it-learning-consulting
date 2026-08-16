@@ -81,33 +81,88 @@ def search():
     results = {
         'services': [],
         'courses': [],
-        'projects': []
+        'projects': [],
+        'testimonials': [],
+        'pages': []
     }
     if query:
-        search_pattern = f"%{query}%"
-        results['services'] = Service.query.filter(
-            (Service.title.ilike(search_pattern)) |
-            (Service.short_desc.ilike(search_pattern)) |
-            (Service.long_desc.ilike(search_pattern)) |
-            (Service.category.ilike(search_pattern))
-        ).all()
+        words = [w.strip() for w in query.split() if len(w.strip()) > 1]
+        if not words:
+            words = [query]
+
+        # 1. Services
+        service_filters = []
+        for word in words:
+            pattern = f"%{word}%"
+            service_filters.append(
+                (Service.title.ilike(pattern)) |
+                (Service.short_desc.ilike(pattern)) |
+                (Service.long_desc.ilike(pattern)) |
+                (Service.features_list.ilike(pattern)) |
+                (Service.category.ilike(pattern)) |
+                (Service.platforms.ilike(pattern))
+            )
+        results['services'] = Service.query.filter(db.or_(*service_filters)).all() if service_filters else []
+
+        # 2. Training Courses
+        course_filters = []
+        for word in words:
+            pattern = f"%{word}%"
+            course_filters.append(
+                (TrainingCourse.title.ilike(pattern)) |
+                (TrainingCourse.short_desc.ilike(pattern)) |
+                (TrainingCourse.long_desc.ilike(pattern)) |
+                (TrainingCourse.syllabus_list.ilike(pattern)) |
+                (TrainingCourse.delivery_mode.ilike(pattern)) |
+                (TrainingCourse.skill_level.ilike(pattern))
+            )
+        results['courses'] = TrainingCourse.query.filter(db.or_(*course_filters)).all() if course_filters else []
+
+        # 3. Projects
+        project_filters = []
+        for word in words:
+            pattern = f"%{word}%"
+            project_filters.append(
+                (Project.title.ilike(pattern)) |
+                (Project.industry.ilike(pattern)) |
+                (Project.tech_stack.ilike(pattern)) |
+                (Project.short_desc.ilike(pattern)) |
+                (Project.long_desc.ilike(pattern)) |
+                (Project.category.ilike(pattern))
+            )
+        results['projects'] = Project.query.filter(db.or_(*project_filters)).all() if project_filters else []
+
+        # 4. Testimonials
+        testimonial_filters = []
+        for word in words:
+            pattern = f"%{word}%"
+            testimonial_filters.append(
+                (Testimonial.name.ilike(pattern)) |
+                (Testimonial.position.ilike(pattern)) |
+                (Testimonial.organization.ilike(pattern)) |
+                (Testimonial.quote.ilike(pattern)) |
+                (Testimonial.service_type.ilike(pattern))
+            )
+        results['testimonials'] = Testimonial.query.filter(db.or_(*testimonial_filters)).all() if testimonial_filters else []
+
+        # 5. Information Pages
+        static_pages = [
+            {'title': 'About Us', 'url': url_for('main.about'), 'desc': 'Learn about 360IT Learning & Consulting, our mission, core values, and enterprise solutions.'},
+            {'title': 'Contact Us', 'url': url_for('main.contact'), 'desc': 'Get in touch with 360IT consultants, request inquiries, or visit our office location.'},
+            {'title': 'Frequently Asked Questions (FAQs)', 'url': url_for('main.faqs'), 'desc': 'Common questions about our consulting services, bootcamp training, delivery options, and certifications.'},
+            {'title': 'Privacy Policy', 'url': url_for('main.privacy'), 'desc': 'Information governance, data privacy, security practices, and compliance.'},
+            {'title': 'Terms & Conditions', 'url': url_for('main.terms'), 'desc': 'Terms of service, consulting agreements, and website use guidelines.'}
+        ]
         
-        results['courses'] = TrainingCourse.query.filter(
-            (TrainingCourse.title.ilike(search_pattern)) |
-            (TrainingCourse.short_desc.ilike(search_pattern)) |
-            (TrainingCourse.long_desc.ilike(search_pattern)) |
-            (TrainingCourse.syllabus_list.ilike(search_pattern))
-        ).all()
-        
-        results['projects'] = Project.query.filter(
-            (Project.title.ilike(search_pattern)) |
-            (Project.industry.ilike(search_pattern)) |
-            (Project.tech_stack.ilike(search_pattern)) |
-            (Project.short_desc.ilike(search_pattern)) |
-            (Project.long_desc.ilike(search_pattern))
-        ).all()
-        
-    total_count = len(results['services']) + len(results['courses']) + len(results['projects'])
+        for page in static_pages:
+            combined_text = f"{page['title']} {page['desc']}".lower()
+            if any(w.lower() in combined_text for w in words):
+                results['pages'].append(page)
+
+    total_count = (len(results['services']) + len(results['courses']) + 
+                   len(results['projects']) + len(results['testimonials']) + 
+                   len(results['pages']))
+                   
     return render_template('search_results.html',
                            title=f'Search Results for "{query}" | 360IT' if query else 'Search | 360IT',
                            query=query,
