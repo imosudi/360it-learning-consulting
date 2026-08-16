@@ -51,29 +51,17 @@
       <p>Helping organizations design, implement, and support secure, scalable, and intelligent technology solutions.</p>
     </div>
 
-    <div class="two-col-grid">
-      <div>
-        <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: var(--text-dark);">Technology That Moves Business Forward</h3>
-        <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 1.25rem;">
-          360IT is an enterprise technology company helping organizations design, implement, and support secure, scalable, and intelligent technology solutions.
-        </p>
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
-          From enterprise software and cloud infrastructure to automation, managed services, and innovation, we build technology that enables long-term business growth.
-        </p>
+    <div class="two-col-grid-sm" style="max-width: 900px; margin: 0 auto;">
+      <div class="card" style="padding: 2rem; text-align: center;">
+        <div class="service-icon" style="margin: 0 auto 1rem auto;"><i class="fas fa-bullseye"></i></div>
+        <h4>Our Mission</h4>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">Deliver innovative technology solutions that simplify, automate, and accelerate business success.</p>
       </div>
 
-      <div class="two-col-grid-sm">
-        <div class="card" style="padding: 1.5rem; text-align: center;">
-          <div class="service-icon" style="margin: 0 auto 1rem auto;"><i class="fas fa-bullseye"></i></div>
-          <h4>Our Mission</h4>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Deliver innovative technology solutions that simplify, automate, and accelerate business success.</p>
-        </div>
-
-        <div class="card" style="padding: 1.5rem; text-align: center;">
-          <div class="service-icon" style="margin: 0 auto 1rem auto;"><i class="fas fa-eye"></i></div>
-          <h4>Our Vision</h4>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">To become a trusted global partner in enterprise technology and digital transformation.</p>
-        </div>
+      <div class="card" style="padding: 2rem; text-align: center;">
+        <div class="service-icon" style="margin: 0 auto 1rem auto;"><i class="fas fa-eye"></i></div>
+        <h4>Our Vision</h4>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">To become a trusted global partner in enterprise technology and digital transformation.</p>
       </div>
     </div>
   </div>
@@ -119,11 +107,6 @@
     <div class="training-grid">
       {% for c in courses %}
       <div class="course-card" id="course-card-{{ c.id }}" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
-        <div class="course-image">
-          <img
-            src="{% if c.image.startswith('/static/') %}{{ url_for('static', filename=c.image[8:]) }}{% elif c.image.startswith('http') %}{{ c.image }}{% else %}{{ url_for('static', filename=c.image) }}{% endif %}"
-            alt="{{ c.title }}" loading="lazy">
-        </div>
         <div class="course-content">
           <div class="course-tags">
             <span class="tag tag-cyan">{{ c.skill_level }}</span>
@@ -203,59 +186,7 @@
   </div>
 </section>
 
-<!-- 6. TECHNOLOGY EXPERTISE SECTION -->
-<section class="section-padding" id="technologies" style="background-color: var(--bg-section-alt);">
-  <div class="container">
-    <div class="section-header">
-      <span class="badge">Core Skills & Technologies</span>
-      <h2>Core Skills & Technologies</h2>
-      <p>We leverage proven enterprise platforms and open-source frameworks to deliver scalable digital solutions.</p>
-    </div>
-
-    <div class="tech-category-box">
-      <h3><i class="fab fa-aws"></i> Datacentre & Cloud Infrastructure</h3>
-      <div class="tech-pill-grid">
-        <div class="tech-pill"><i class="fab fa-aws"></i> AWS (EC2, S3, RDS, VPC)</div>
-        <div class="tech-pill"><i class="fab fa-microsoft"></i> Microsoft Azure</div>
-        <div class="tech-pill"><i class="fab fa-google"></i> Google Cloud Platform</div>
-        <div class="tech-pill"><i class="fas fa-server"></i> KVM & VMware Virtualisation</div>
-      </div>
-    </div>
-
-    <div class="tech-category-box">
-      <h3><i class="fas fa-shield-halved"></i> Network & Security</h3>
-      <div class="tech-pill-grid">
-        <div class="tech-pill"><i class="fas fa-network-wired"></i> VLAN Design & Routing</div>
-        <div class="tech-pill"><i class="fas fa-shield-cat"></i> Firewall & VPN Config</div>
-        <div class="tech-pill"><i class="fas fa-lock"></i> Cyber Security & Hardening</div>
-        <div class="tech-pill"><i class="fas fa-user-shield"></i> Access Control & Isolation</div>
-      </div>
-    </div>
-
-    <div class="tech-category-box">
-      <h3><i class="fas fa-infinity"></i> Automation & DevOps</h3>
-      <div class="tech-pill-grid">
-        <div class="tech-pill"><i class="fab fa-docker"></i> Docker Containerization</div>
-        <div class="tech-pill"><i class="fas fa-dharmachakra"></i> Kubernetes</div>
-        <div class="tech-pill"><i class="fab fa-jenkins"></i> Jenkins CI/CD</div>
-        <div class="tech-pill"><i class="fas fa-cubes"></i> Terraform IaC</div>
-        <div class="tech-pill"><i class="fas fa-terminal"></i> Ansible Automation</div>
-      </div>
-    </div>
-
-    <div class="tech-category-box">
-      <h3><i class="fas fa-code"></i> Backend & API Systems</h3>
-      <div class="tech-pill-grid">
-        <div class="tech-pill"><i class="fab fa-python"></i> Python (Flask, FastAPI)</div>
-        <div class="tech-pill"><i class="fab fa-js"></i> JavaScript & Node.js</div>
-        <div class="tech-pill"><i class="fas fa-database"></i> MySQL & PostgreSQL</div>
-        <div class="tech-pill"><i class="fas fa-plug"></i> REST & GraphQL APIs</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 7. WHY CHOOSE US SECTION -->
+<!-- 6. WHY CHOOSE US SECTION -->
 <section class="section-padding" id="why-us">
   <div class="container">
     <div class="section-header">

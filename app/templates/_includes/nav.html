@@ -10,8 +10,7 @@
       <li><a href="{{ url_for('main.services') }}" class="nav-link {% if request.endpoint == 'main.services' or request.endpoint == 'main.service_detail' %}active{% endif %}">Services</a></li>
       <li><a href="{{ url_for('main.training') }}" class="nav-link {% if request.endpoint == 'main.training' or request.endpoint == 'main.course_detail' %}active{% endif %}">Training</a></li>
       <li><a href="{{ url_for('main.projects') }}" class="nav-link {% if request.endpoint == 'main.projects' or request.endpoint == 'main.project_detail' %}active{% endif %}">Projects</a></li>
-      <li><a href="{{ url_for('main.technologies') }}" class="nav-link {% if request.endpoint == 'main.technologies' %}active{% endif %}">Technologies</a></li>
-      <li><a href="{{ url_for('main.contact') }}" class="nav-link {% if request.endpoint == 'main.contact' %}active{% endif %}">Contact</a></li>
+      <li><a href="{{ url_for('main.contact') }}" class="nav-link {% if request.endpoint == 'main.contact' %}active{% endif %}">Contact Us</a></li>
       <li class="mobile-cta-item">
         <button class="btn-nav-gold" data-open-modal="consultation" style="width: 100%; justify-content: center; margin-top: 1rem;" id="nav-cta-btn-mobile">
           <i class="fas fa-shield-halved"></i> IT Stability Services

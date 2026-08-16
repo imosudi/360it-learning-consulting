@@ -9,7 +9,6 @@ def test_homepage_route(client):
     assert b'Years of Experience' in response.data
     assert b'Enterprise Projects' in response.data
     assert b'Professionals Trained' in response.data
-    assert b'Technology That Moves Business Forward' in response.data
     assert b'Deliver innovative technology solutions that simplify, automate, and accelerate business success.' in response.data
     assert b'To become a trusted global partner in enterprise technology and digital transformation.' in response.data
     assert b'Enterprise Technology Solutions' in response.data
@@ -18,21 +17,20 @@ def test_homepage_route(client):
 def test_about_route(client):
     response = client.get('/about')
     assert response.status_code == 200
-    assert b'Technology That Moves Business Forward' in response.data
+    assert b'Engineering the Future of Enterprise Technology' in response.data
 
 def test_services_route(client):
     response = client.get('/services')
     assert response.status_code == 200
     assert b'Enterprise Technology Solutions' in response.data
-    assert b'ERP Implementation &amp; Support' in response.data or b'ERP Implementation' in response.data
-    assert b'CRM Solutions &amp; Integration' in response.data or b'CRM Solutions' in response.data
-    assert b'Lean Six Sigma &amp; IT Process Optimization' in response.data or b'Lean Six Sigma' in response.data
+    assert b'Digital Transformation &amp; Enterprise Systems' in response.data or b'Digital Transformation' in response.data
+    assert b'Cloud, Infrastructure &amp; DevOps' in response.data or b'Cloud, Infrastructure' in response.data
 
 def test_service_detail_routes(client):
     for slug, title_bytes in [
-        ('erp-implementation-support', b'ERP Implementation'),
-        ('crm-solutions-integration', b'CRM Solutions'),
-        ('lean-six-sigma-it-process-optimization', b'Lean Six Sigma')
+        ('digital-transformation-enterprise-systems', b'Digital Transformation'),
+        ('cloud-infrastructure-devops', b'Cloud, Infrastructure'),
+        ('managed-technology-operational-excellence', b'Managed Technology')
     ]:
         res = client.get(f'/services/{slug}')
         assert res.status_code == 200

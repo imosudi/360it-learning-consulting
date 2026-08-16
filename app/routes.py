@@ -27,7 +27,7 @@ def index():
     services = Service.query.all()
     courses = TrainingCourse.query.filter_by(featured=True).all()
     projects = Project.query.filter_by(featured=True).all()
-    testimonials = Testimonial.query.all()
+    testimonials = Testimonial.query.limit(3).all()
     contact_form = ContactForm()
     
     return render_template('index.html',
@@ -77,7 +77,7 @@ def project_detail(slug):
 
 @bp.route('/technologies')
 def technologies():
-    return render_template('technologies.html', title='Technology Stack & Competencies | 360IT')
+    return redirect(url_for('main.index'))
 
 @bp.route('/faqs')
 def faqs():

@@ -23,19 +23,11 @@ class ConsultationForm(FlaskForm):
     phone = StringField('Phone Number', validators=[DataRequired(), Length(max=30)])
     organization = StringField('Company / Organization', validators=[Optional(), Length(max=150)])
     service_interest = SelectField('Primary Service of Interest', choices=[
-        ('Cloud Consulting', 'Cloud Consulting'),
-        ('DevOps Consulting', 'DevOps Consulting'),
-        ('Infrastructure Solutions', 'Infrastructure Solutions'),
-        ('ERP Implementation & Support', 'ERP Implementation & Support'),
-        ('CRM Solutions & Integration', 'CRM Solutions & Integration'),
-        ('Lean Six Sigma & IT Process Optimization', 'Lean Six Sigma & IT Process Optimization'),
-        ('Digital Transformation', 'Digital Transformation'),
-        ('Systems Administration', 'Systems Administration'),
-        ('Application Deployment', 'Application Deployment'),
-        ('Database Administration', 'Database Administration'),
-        ('Managed IT Services', 'Managed IT Services'),
-        ('IT Support', 'IT Support'),
-        ('Technology Advisory', 'Technology Advisory')
+        ('Digital Transformation & Enterprise Systems', 'Digital Transformation & Enterprise Systems'),
+        ('Cloud, Infrastructure & DevOps', 'Cloud, Infrastructure & DevOps'),
+        ('Industrial Technology & Intelligent Operations', 'Industrial Technology & Intelligent Operations'),
+        ('Government & Mission Technology Solutions', 'Government & Mission Technology Solutions'),
+        ('Managed Technology & Operational Excellence', 'Managed Technology & Operational Excellence')
     ], validators=[DataRequired()])
     message = TextAreaField('Project / Consultation Details', validators=[Optional()])
     privacy_consent = BooleanField('I consent to the processing of my personal data in accordance with the Privacy Policy.', validators=[DataRequired(message='You must accept the Privacy Policy to submit.')])
