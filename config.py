@@ -43,5 +43,16 @@ class Config:
     SECURITY_REGISTERABLE = False
     SECURITY_SEND_REGISTER_EMAIL = False
 
-IP_ADDRESS='0.0.0.0'
-PORT=5000
+    # Server & WSGI Runtime Parameters
+    IP_ADDRESS = os.environ.get('IP_ADDRESS') or os.environ.get('HOST') or '0.0.0.0'
+    PORT = int(os.environ.get('PORT', 5000))
+    MULTITHREADING = str(os.environ.get('MULTITHREADING', 'True')).lower() in ['true', 'on', '1']
+    WORKERS = int(os.environ.get('WORKERS', 4))
+    WSGI_PASS_AUTHORIZATION = str(os.environ.get('WSGI_PASS_AUTHORIZATION', 'True')).lower() in ['true', 'on', '1']
+
+# Module-level exports for backward compatibility (e.g., main.py importing config.IP_ADDRESS)
+IP_ADDRESS = Config.IP_ADDRESS
+PORT = Config.PORT
+MULTITHREADING = Config.MULTITHREADING
+WORKERS = Config.WORKERS
+WSGI_PASS_AUTHORIZATION = Config.WSGI_PASS_AUTHORIZATION
